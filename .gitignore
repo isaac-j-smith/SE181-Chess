@@ -1,0 +1,12 @@
+.idea
+.idea/*
+out
+out/*
+*.iml
+*.eml
+.classpath
+.project
+*.userlibraries
+bin
+bin/*
+.settings

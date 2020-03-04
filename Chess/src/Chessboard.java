@@ -20,14 +20,14 @@ public class Chessboard {
 		setupBoard();
 		
 		// USED FOR TESTING, REMOVE LATER
-		DebugGame();
+		DEBUGGame();
 	}
 	
 	/*
 	 * USED FOR DEBUGGING, NOT INTENDED TO BE INCLUDED IN FINAL BUILD.
 	 * USEFUL FOR TESTING WITHOUT UI
 	 */
-	public void DebugGame() {
+	public void DEBUGGame() {
 		while (true) {
 			DEBUGPrintBoard();
 			
@@ -65,6 +65,16 @@ public class Chessboard {
 				if (isValid == true) {
 					movePiece(piece, destination);
 					piece.setLocation(destination);
+					
+					// Check for winner
+					if (isInCheckmate(PieceColor.White) == true) {
+						System.out.println("BLACK WINS");
+						break;
+					}
+					if (isInCheckmate(PieceColor.Black) == true) {
+						System.out.println("White WINS");
+						break;
+					}
 				}
 				else {
 					System.out.println("INVALID MOVE");
@@ -238,6 +248,7 @@ public class Chessboard {
 	 * @return boolean - if it is in check
 	 */
 	public boolean isInCheck(PieceColor color) {
+		// Get each of the opponent's pieces
 		ArrayList<ChessPiece> opponentPieces = null;
 		if (color == PieceColor.Black) {
 			opponentPieces = getPieces(PieceColor.White);
@@ -261,6 +272,32 @@ public class Chessboard {
 		}
 		
 		return false;
+	}
+	
+	/*
+	 * Sees if a color set of pieces is in checkmate
+	 * @param PieceColor - the color set to check
+	 * @return boolean - if it is in check
+	 */
+	public boolean isInCheckmate(PieceColor color) {
+		// Get all of the current color's pieces
+		ArrayList<ChessPiece> pieces = null;
+		if (color == PieceColor.Black) {
+			pieces = getPieces(PieceColor.Black);
+		}
+		else {
+			pieces = getPieces(PieceColor.White);
+		}
+
+		// For any piece check if there is at least one move that is valid
+		for (ChessPiece piece: pieces) {
+			ArrayList<PieceLocation> moveableLocations = getValidMoves(piece);
+			if (moveableLocations.size() > 0) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	public ChessPiece getPiece(PieceLocation location) {

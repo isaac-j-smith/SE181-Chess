@@ -13,13 +13,16 @@ public class Pawn extends ChessPiece {
 		PieceMovement move = getMovementInDirection(this.direction, MovementCondition.OnlyMove);
 		
 		// If it has moved then only allow moving one space else let it move 2 from its starting location
-		if (this.hasMoved == true) {
-			move.removeNextMoveInSameDirection();
-		}
-		else {
-			if (move.getNextMoveInSameDirection() != null)
-			{
-				move.getNextMoveInSameDirection().removeNextMoveInSameDirection();
+		if (move != null) {
+			if (this.hasMoved == true) {
+				if (move.getNextMoveInSameDirection() != null) {
+					move.removeNextMoveInSameDirection();
+				}
+			}
+			else {
+				if (move.getNextMoveInSameDirection() != null) {
+					move.getNextMoveInSameDirection().removeNextMoveInSameDirection();
+				}
 			}
 		}
 		

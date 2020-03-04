@@ -17,77 +17,10 @@ public class Chessboard {
 			}
 		}
 		
-		
-		// TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// FILL BOARD WITH THE SET OF PIECES
-		////// BELOW IS TESTING OF CHESSBOARD
-//		PieceLocation loc1 = new PieceLocation(1,1);
-//		Rook rk = new Rook(loc1, PieceColor.White, PieceMovementDirection.UpColumn);
-//		movePiece(rk, loc1);
-//		PieceLocation loc2 = new PieceLocation(1,4);
-//		Rook rk2 = new Rook(loc2, PieceColor.Black, PieceMovementDirection.DownColumn);
-//		
-//		movePiece(rk2, loc2);
-//		PieceLocation loc3 = new PieceLocation(1,0);
-//		King rk3 = new King(loc3, PieceColor.White, PieceMovementDirection.DownColumn);
-//		movePiece(rk3, loc3);
+		setupBoard();
 		
 		
-		/////////////////////////////////////
-		ChessPiece wKing = new King(new PieceLocation(0,3), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece wQueen = new Queen(new PieceLocation(0,4), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece wKnight1 = new Knight(new PieceLocation(0,1), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece wKnight2 = new Knight(new PieceLocation(0,6), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece wRook1 = new Rook(new PieceLocation(0,0), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece wRook2 = new Rook(new PieceLocation(0,7), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece wBishop1 = new Bishop(new PieceLocation(0,5), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece wBishop2 = new Bishop(new PieceLocation(0,2), PieceColor.White, PieceMovementDirection.DownColumn);
-		for (int i =0; i < this.MAX_COLUMN; i++) {
-			ChessPiece pawn = new Pawn(new PieceLocation(1,i), PieceColor.White, PieceMovementDirection.UpColumn);
-			movePiece(pawn, pawn.location);
-		}
-		movePiece(wKing, wKing.location);
-		movePiece(wQueen,wQueen.location);
-		movePiece(wKnight1,wKnight1.location);
-		movePiece(wKnight2, wKnight2.location);
-		movePiece(wRook1,wRook1.location);
-		movePiece(wRook2,wRook2.location);
-		movePiece(wBishop1, wBishop1.location);
-		movePiece(wBishop2, wBishop2.location);
-		
-		ChessPiece bKing = new King(new PieceLocation(7,3), PieceColor.Black, PieceMovementDirection.UpColumn);
-		ChessPiece bQueen = new Queen(new PieceLocation(7,4), PieceColor.Black, PieceMovementDirection.UpColumn);
-		ChessPiece bKnight1 = new Knight(new PieceLocation(7,1), PieceColor.Black, PieceMovementDirection.UpColumn);
-		ChessPiece bKnight2 = new Knight(new PieceLocation(7,6), PieceColor.Black, PieceMovementDirection.UpColumn);
-		ChessPiece bRook1 = new Rook(new PieceLocation(7,0), PieceColor.Black, PieceMovementDirection.UpColumn);
-		ChessPiece bRook2 = new Rook(new PieceLocation(7,7), PieceColor.Black, PieceMovementDirection.UpColumn);
-		ChessPiece bBishop1 = new Bishop(new PieceLocation(7,5), PieceColor.Black, PieceMovementDirection.UpColumn);
-		ChessPiece bBishop2 = new Bishop(new PieceLocation(7,2), PieceColor.Black, PieceMovementDirection.UpColumn);
-		
-		movePiece(bKing, bKing.location);
-		movePiece(bQueen,bQueen.location);
-		movePiece(bKnight1,bKnight1.location);
-		movePiece(bKnight2, bKnight2.location);
-		movePiece(bRook1,bRook1.location);
-		movePiece(bRook2,bRook2.location);
-		movePiece(bBishop1, bBishop1.location);
-		movePiece(bBishop2, bBishop2.location);
-		for (int i =0; i < this.MAX_COLUMN; i++) {
-			ChessPiece pawn = new Pawn(new PieceLocation(6,i), PieceColor.Black, PieceMovementDirection.DownColumn);
-			movePiece(pawn, pawn.location);
-		}
-		////////////////////
-		
-		
-//		ArrayList<PieceLocation> a = getValidMoves(rk);
-//		printer(a);
-//		Pawn p = new Pawn(new PieceLocation(1,0), PieceColor.White, PieceMovementDirection.UpColumn);
-//		movePiece(p,p.location);
-		printBoard();
-//		printer(this.getCollisionFreeMoves(this.getPiece(0, 0)));
-//		printer(this.getCollisionFreeMoves(p));
 		game();
-		System.out.println("END");
 	}
 	
 	////////////////FOR TESTING
@@ -128,10 +61,6 @@ public class Chessboard {
 		}
 	}
 	
-	public ChessPiece getPiece(int row, int column) {
-		return this.board.get(row).get(column);
-	}
-	
 	//////////////// FOR TESTING
 	public void printer(ArrayList<PieceLocation> a) {
 		for (int i = 0; i < a.size(); i++) {
@@ -155,6 +84,59 @@ public class Chessboard {
 				}
 			}
 			System.out.println(s);
+		}
+	}
+	
+	/*
+	 * Setup the board with the standard 16 chess pieces for each color
+	 */
+	public void setupBoard() {
+		// White pieces
+		ChessPiece whiteKing = new King(new PieceLocation(0,3), PieceColor.White, PieceMovementDirection.DownColumn);
+		ChessPiece whiteQueen = new Queen(new PieceLocation(0,4), PieceColor.White, PieceMovementDirection.DownColumn);
+		ChessPiece whiteKnight1 = new Knight(new PieceLocation(0,1), PieceColor.White, PieceMovementDirection.DownColumn);
+		ChessPiece whiteKnight2 = new Knight(new PieceLocation(0,6), PieceColor.White, PieceMovementDirection.DownColumn);
+		ChessPiece whiteRook1 = new Rook(new PieceLocation(0,0), PieceColor.White, PieceMovementDirection.DownColumn);
+		ChessPiece whiteRook2 = new Rook(new PieceLocation(0,7), PieceColor.White, PieceMovementDirection.DownColumn);
+		ChessPiece whiteBishop1 = new Bishop(new PieceLocation(0,5), PieceColor.White, PieceMovementDirection.DownColumn);
+		ChessPiece whiteBishop2 = new Bishop(new PieceLocation(0,2), PieceColor.White, PieceMovementDirection.DownColumn);
+		
+		movePiece(whiteKing, whiteKing.location);
+		movePiece(whiteQueen,whiteQueen.location);
+		movePiece(whiteKnight1,whiteKnight1.location);
+		movePiece(whiteKnight2, whiteKnight2.location);
+		movePiece(whiteRook1,whiteRook1.location);
+		movePiece(whiteRook2,whiteRook2.location);
+		movePiece(whiteBishop1, whiteBishop1.location);
+		movePiece(whiteBishop2, whiteBishop2.location);
+		
+		for (int i =0; i < this.MAX_COLUMN; i++) {
+			ChessPiece whitePawn = new Pawn(new PieceLocation(1,i), PieceColor.White, PieceMovementDirection.UpColumn);
+			movePiece(whitePawn, whitePawn.location);
+		}
+		
+		// Black pieces
+		ChessPiece blackKing = new King(new PieceLocation(7,3), PieceColor.Black, PieceMovementDirection.DownColumn);
+		ChessPiece blackQueen = new Queen(new PieceLocation(7,4), PieceColor.Black, PieceMovementDirection.DownColumn);
+		ChessPiece blackKnight1 = new Knight(new PieceLocation(7,1), PieceColor.Black, PieceMovementDirection.DownColumn);
+		ChessPiece blackKnight2 = new Knight(new PieceLocation(7,6), PieceColor.Black, PieceMovementDirection.DownColumn);
+		ChessPiece blackRook1 = new Rook(new PieceLocation(7,0), PieceColor.Black, PieceMovementDirection.DownColumn);
+		ChessPiece blackRook2 = new Rook(new PieceLocation(7,7), PieceColor.Black, PieceMovementDirection.DownColumn);
+		ChessPiece blackBishop1 = new Bishop(new PieceLocation(7,5), PieceColor.Black, PieceMovementDirection.DownColumn);
+		ChessPiece blackBishop2 = new Bishop(new PieceLocation(7,2), PieceColor.Black, PieceMovementDirection.DownColumn);
+		
+		movePiece(blackKing, blackKing.location);
+		movePiece(blackQueen,blackQueen.location);
+		movePiece(blackKnight1,blackKnight1.location);
+		movePiece(blackKnight2, blackKnight2.location);
+		movePiece(blackRook1,blackRook1.location);
+		movePiece(blackRook2,blackRook2.location);
+		movePiece(blackBishop1, blackBishop1.location);
+		movePiece(blackBishop2, blackBishop2.location);
+		
+		for (int i =0; i < this.MAX_COLUMN; i++) {
+			ChessPiece blackPawn = new Pawn(new PieceLocation(6,i), PieceColor.Black, PieceMovementDirection.DownColumn);
+			movePiece(blackPawn, blackPawn.location);
 		}
 	}
 	
@@ -263,6 +245,10 @@ public class Chessboard {
 	
 	public ChessPiece getPiece(PieceLocation location) {
 		return this.board.get(location.row).get(location.column);
+	}
+	
+	public ChessPiece getPiece(int row, int column) {
+		return this.board.get(row).get(column);
 	}
 	
 	/*

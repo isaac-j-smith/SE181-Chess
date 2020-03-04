@@ -19,71 +19,91 @@ public class Chessboard {
 		
 		setupBoard();
 		
-		
-		game();
+		// USED FOR TESTING, REMOVE LATER
+		DebugGame();
 	}
 	
-	////////////////FOR TESTING
-	public void game() {
+	/*
+	 * USED FOR DEBUGGING, NOT INTENDED TO BE INCLUDED IN FINAL BUILD.
+	 * USEFUL FOR TESTING WITHOUT UI
+	 */
+	public void DebugGame() {
 		while (true) {
-			printBoard();
+			DEBUGPrintBoard();
+			
+			System.out.println("MOVE: 2 digit number (row, column) and another 2 digit number, EX: 12 22");
 			Scanner in = new Scanner(System.in);
 			String line = in.nextLine();
 			String[] s = line.split("");
+			
 			int startRow = Integer.parseInt(s[0]);
 			int startColumn = Integer.parseInt(s[1]);
 			int endRow = Integer.parseInt(s[3]);
 			int endColumn = Integer.parseInt(s[4]);
+			
 			PieceLocation start = new PieceLocation(startRow, startColumn);
-			PieceLocation dest = new PieceLocation(endRow, endColumn);
+			PieceLocation destination = new PieceLocation(endRow, endColumn);
 			ChessPiece piece = this.getPiece(start);
+			
 			if (piece == null) {
-				System.out.println("NULL SQUARE");
+				System.out.println("EMPTY SQUARE");
 			}
 			else {
-				ArrayList<PieceLocation> moves = this.getValidMoves(piece);
+				ArrayList<PieceLocation> locations = this.getValidMoves(piece);
 				boolean isValid = false;
-				for (PieceLocation move: moves) {
-					if (move.row == dest.row) {
-						if (move.column == dest.column) {
+				
+				// Check if the given destination is actually a valid move for the selected piece
+				for (PieceLocation location: locations) {
+					if (location.row == destination.row) {
+						if (location.column == destination.column) {
 							isValid = true;
 						}
 					}
 				}
-				if (isValid) {
-					movePiece(piece, dest);
-					piece.setLocation(dest);
+				
+				// Move the piece if it is a valid move
+				if (isValid == true) {
+					movePiece(piece, destination);
+					piece.setLocation(destination);
 				}
 				else {
-					System.out.println("invalid");
+					System.out.println("INVALID MOVE");
 				}
 			}
 		}
 	}
 	
-	//////////////// FOR TESTING
-	public void printer(ArrayList<PieceLocation> a) {
-		for (int i = 0; i < a.size(); i++) {
-			System.out.println(a.get(i).row + "," + a.get(i).column);
+	/*
+	 * USED FOR DEBUGGING, NOT INTENDED TO BE INCLUDED IN FINAL BUILD.
+	 * USEFUL FOR TESTING WITHOUT UI
+	 */
+	public void DEBUGPrintLocations(ArrayList<PieceLocation> pieceLocations) {
+		for (int i = 0; i < pieceLocations.size(); i++) {
+			System.out.println(pieceLocations.get(i).row + "," + pieceLocations.get(i).column);
 		}
 	}
 	
-	////////////////FOR TESTING
-	public void printBoard() {
-		System.out.println("" + "\t" + "0" + "\t" + "1" + "\t" + "2" + "\t" + "3" + "\t" + "4" + "\t" + "5" + "\t" + "6" + "\t" + "7" + "\t");
-		int rowNum = 0;
+	/*
+	 * USED FOR DEBUGGING, NOT INTENDED TO BE INCLUDED IN FINAL BUILD.
+	 * USEFUL FOR TESTING WITHOUT UI
+	 */
+	public void DEBUGPrintBoard() {
+		System.out.println("" + "\t" + "  0" + "\t" + "  1" + "\t" + "  2" + "\t" + "  3" + "\t" + "  4" + "\t" + "  5" + "\t" + "  6" + "\t" + "  7" + "\t");
+		int rowNumber = 0;
 		for (ArrayList<ChessPiece> row: board) {
-			String s = rowNum + "\t";
-			rowNum++;
+			String line = "    " + rowNumber + "\t";
+			rowNumber++;
+			
 			for (ChessPiece column: row) {
 				if (column != null) {
-					s += column.color.toString().substring(0,1) + column.toString().split("@")[0] + "\t";
+					line += column.color.toString().substring(0,1) + column.toString().split("@")[0] + "\t";
 				}
 				else {
-					s += "NULL" + "\t";
+					line += "[   ]" + "\t";
 				}
 			}
-			System.out.println(s);
+			
+			System.out.println(line);
 		}
 	}
 	

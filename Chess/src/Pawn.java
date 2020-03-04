@@ -10,7 +10,7 @@ public class Pawn extends ChessPiece {
 	@Override
 	public ArrayList<PieceMovement> getListOfMoves() {
 		ArrayList<PieceMovement> moves = new ArrayList<PieceMovement>();
-		PieceMovement move = getMovementInDirection(this.direction, false);
+		PieceMovement move = getMovementInDirection(this.direction, MovementCondition.OnlyMove);
 		
 		// If it has moved then only allow moving one space else let it move 2 from its starting location
 		if (this.hasMoved == true) {
@@ -27,13 +27,13 @@ public class Pawn extends ChessPiece {
 		
 		// Add possible diagonal attack moves
 		if (this.direction == PieceMovementDirection.UpColumn) {
-			move = getMovementInDirection(PieceMovementDirection.UpLeftDiagonal, true);
+			move = getMovementInDirection(PieceMovementDirection.UpLeftDiagonal, MovementCondition.OnlyCapture);
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
 				moves.add(move);
 			}
 			
-			move = getMovementInDirection(PieceMovementDirection.UpRightDiagonal, true);
+			move = getMovementInDirection(PieceMovementDirection.UpRightDiagonal, MovementCondition.OnlyCapture);
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
 				moves.add(move);
@@ -41,13 +41,13 @@ public class Pawn extends ChessPiece {
 			
 		}
 		else if (this.direction == PieceMovementDirection.DownColumn) {
-			move = getMovementInDirection(PieceMovementDirection.DownLeftDiagonal, true);
+			move = getMovementInDirection(PieceMovementDirection.DownLeftDiagonal, MovementCondition.OnlyCapture);
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
 				moves.add(move);
 			}
 			
-			move = getMovementInDirection(PieceMovementDirection.DownRightDiagonal, true);
+			move = getMovementInDirection(PieceMovementDirection.DownRightDiagonal, MovementCondition.OnlyCapture);
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
 				moves.add(move);

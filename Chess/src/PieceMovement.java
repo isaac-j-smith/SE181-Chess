@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public class PieceMovement {
 	private PieceLocation destination;
-	private boolean onlyAttackMovement;
+	private MovementCondition movementCondition;
 	private PieceMovement nextMoveInSameDirection;
 	
-	public PieceMovement(PieceLocation destination, boolean onlyAttackMovement, PieceMovement nextMoveInSameDirection) {
+	public PieceMovement(PieceLocation destination, MovementCondition movementConditions, PieceMovement nextMoveInSameDirection) {
 		this.destination = destination;
-		this.onlyAttackMovement = onlyAttackMovement;
+		this.movementCondition = movementConditions;
 		this.nextMoveInSameDirection = nextMoveInSameDirection;
 	}
 	
@@ -15,8 +15,8 @@ public class PieceMovement {
 		return this.destination;
 	}
 	
-	public boolean isOnlyAttackMovement() {
-		return this.onlyAttackMovement;
+	public MovementCondition getMovementCondition() {
+		return this.movementCondition;
 	}
 	
 	public PieceMovement getNextMoveInSameDirection() {

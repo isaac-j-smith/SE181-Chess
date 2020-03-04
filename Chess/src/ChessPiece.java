@@ -28,7 +28,7 @@ public abstract class ChessPiece {
 	 * @param boolean - if the move is only valid as an attack
 	 * @return PieceMovement - Link list of PieceMovement in the given direction 
 	*/
-	protected PieceMovement getMovementInDirection(PieceMovementDirection direction, boolean onlyAttackMovement) {
+	protected PieceMovement getMovementInDirection(PieceMovementDirection direction, MovementCondition movementCondition) {
 		ArrayList<PieceLocation> locations = new ArrayList<PieceLocation>();
 		int row;
 		int column;
@@ -106,9 +106,9 @@ public abstract class ChessPiece {
 		// If there are locations then link it in the order that the parent link is closer the piece than the child link
 		if (locations.size() > 0) {
 			Collections.reverse(locations);
-			movements = new PieceMovement(locations.get(0), onlyAttackMovement, null);
+			movements = new PieceMovement(locations.get(0), movementCondition, null);
 			for (int index = 1; index < locations.size(); index++) {
-				movements = new PieceMovement(locations.get(index), onlyAttackMovement, movements);
+				movements = new PieceMovement(locations.get(index), movementCondition, movements);
 			}
 		}
 		

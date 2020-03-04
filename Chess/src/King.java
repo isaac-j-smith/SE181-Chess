@@ -10,14 +10,14 @@ public class King extends ChessPiece {
 	public ArrayList<PieceMovement> getListOfMoves() {
 		ArrayList<PieceMovement> moves = new ArrayList<PieceMovement>();
 		
-		moves.add(getMovementInDirection(PieceMovementDirection.LeftRow, false));
-		moves.add(getMovementInDirection(PieceMovementDirection.RightRow, false));
-		moves.add(getMovementInDirection(PieceMovementDirection.UpColumn, false));
-		moves.add(getMovementInDirection(PieceMovementDirection.DownColumn, false));
-		moves.add(getMovementInDirection(PieceMovementDirection.UpLeftDiagonal, false));
-		moves.add(getMovementInDirection(PieceMovementDirection.UpRightDiagonal, false));
-		moves.add(getMovementInDirection(PieceMovementDirection.DownLeftDiagonal, false));
-		moves.add(getMovementInDirection(PieceMovementDirection.DownRightDiagonal, false));
+		moves.add(getMovementInDirection(PieceMovementDirection.LeftRow, MovementCondition.None));
+		moves.add(getMovementInDirection(PieceMovementDirection.RightRow, MovementCondition.None));
+		moves.add(getMovementInDirection(PieceMovementDirection.UpColumn, MovementCondition.None));
+		moves.add(getMovementInDirection(PieceMovementDirection.DownColumn, MovementCondition.None));
+		moves.add(getMovementInDirection(PieceMovementDirection.UpLeftDiagonal, MovementCondition.None));
+		moves.add(getMovementInDirection(PieceMovementDirection.UpRightDiagonal, MovementCondition.None));
+		moves.add(getMovementInDirection(PieceMovementDirection.DownLeftDiagonal, MovementCondition.None));
+		moves.add(getMovementInDirection(PieceMovementDirection.DownRightDiagonal, MovementCondition.None));
 		
 		// Since king can only move 1 in each direction, unlink each movement so it is only 1 in each direction
 		for (PieceMovement move: moves) {

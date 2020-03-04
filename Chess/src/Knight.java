@@ -18,12 +18,12 @@ public class Knight extends ChessPiece {
 		if (this.location.row + jumpAmount < Chessboard.MAX_ROW) {
 			if (this.location.column - 1 >= 0) {
 				location = new PieceLocation(this.location.row + jumpAmount, this.location.column - 1);
-				move = new PieceMovement(location, false, null);
+				move = new PieceMovement(location, MovementCondition.None, null);
 				moves.add(move);
 			}
 			if (this.location.column + 1 < Chessboard.MAX_COLUMN) {
 				location = new PieceLocation(this.location.row + jumpAmount, this.location.column + 1);
-				move = new PieceMovement(location, false, null);
+				move = new PieceMovement(location, MovementCondition.None, null);
 				moves.add(move);
 			}
 		}
@@ -32,12 +32,12 @@ public class Knight extends ChessPiece {
 		if (this.location.row - jumpAmount >= 0) {
 			if (this.location.column - 1 >= 0) {
 				location = new PieceLocation(this.location.row - jumpAmount, this.location.column - 1);
-				move = new PieceMovement(location, false, null);
+				move = new PieceMovement(location, MovementCondition.None, null);
 				moves.add(move);
 			}
 			if (this.location.column + 1 < Chessboard.MAX_COLUMN) {
 				location = new PieceLocation(this.location.row - jumpAmount, this.location.column + 1);
-				move = new PieceMovement(location, false, null);
+				move = new PieceMovement(location, MovementCondition.None, null);
 				moves.add(move);
 			}
 		}
@@ -46,12 +46,12 @@ public class Knight extends ChessPiece {
 		if (this.location.column - jumpAmount >= 0) {
 			if (this.location.row - 1 >= 0) {
 				location = new PieceLocation(this.location.row - 1, this.location.column - jumpAmount);
-				move = new PieceMovement(location, false, null);
+				move = new PieceMovement(location, MovementCondition.None, null);
 				moves.add(move);
 			}
 			if (this.location.row + 1 < Chessboard.MAX_ROW) {
 				location = new PieceLocation(this.location.row + 1, this.location.column - jumpAmount);
-				move = new PieceMovement(location, false, null);
+				move = new PieceMovement(location, MovementCondition.None, null);
 				moves.add(move);
 			}
 		}
@@ -60,12 +60,12 @@ public class Knight extends ChessPiece {
 		if (this.location.column + jumpAmount < Chessboard.MAX_COLUMN) {
 			if (this.location.row - 1 >= 0) {
 				location = new PieceLocation(this.location.row - 1, this.location.column + jumpAmount);
-				move = new PieceMovement(location, false, null);
+				move = new PieceMovement(location, MovementCondition.None, null);
 				moves.add(move);
 			}
 			if (this.location.row + 1 < Chessboard.MAX_ROW) {
 				location = new PieceLocation(this.location.row + 1, this.location.column + jumpAmount);
-				move = new PieceMovement(location, false, null);
+				move = new PieceMovement(location, MovementCondition.None, null);
 				moves.add(move);
 			}
 		}

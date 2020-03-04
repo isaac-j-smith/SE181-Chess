@@ -102,7 +102,7 @@ public class Chessboard {
 			int endColumn = Integer.parseInt(s[4]);
 			PieceLocation start = new PieceLocation(startRow, startColumn);
 			PieceLocation dest = new PieceLocation(endRow, endColumn);
-			ChessPiece piece = this.getPieceAtLocation(start);
+			ChessPiece piece = this.getPiece(start);
 			if (piece == null) {
 				System.out.println("NULL SQUARE");
 			}
@@ -173,12 +173,12 @@ public class Chessboard {
 	
 	public ArrayList<PieceLocation> getValidMoves(ChessPiece piece) {
 		ArrayList<PieceLocation> validMoves = new ArrayList<PieceLocation>();
-		ArrayList<PieceLocation> collisionFreeMoves = getCollisionFreeMoves(piece);
+		ArrayList<PieceLocation> collisionFreeMoves = getUnblockedMoveLocations(piece);
 		
 		// For each collision free move, check if it won't result in the player in check
 		for (PieceLocation collisionFreeMove: collisionFreeMoves) {
 			// Save info of current state to restore back
-			ChessPiece pieceAtDestination = getPieceAtLocation(collisionFreeMove);
+			ChessPiece pieceAtDestination = getPiece(collisionFreeMove);
 			PieceLocation savePieceOriginalLocation = piece.location;
 			
 			// Temporarily move piece
@@ -196,7 +196,11 @@ public class Chessboard {
 		return validMoves;
 	}
 	
-	public ArrayList<PieceLocation> getCollisionFreeMoves(ChessPiece piece) {
+	/*
+	 * Get the locations of moves that a piece can go to without running into another piece
+	 * 
+	 */
+	public ArrayList<PieceLocation> getUnblockedMoveLocations(ChessPiece piece) {
 		ArrayList<PieceMovement> movements = piece.getListOfMoves();
 		ArrayList<PieceLocation> locations = new ArrayList<PieceLocation>();
 		
@@ -205,14 +209,14 @@ public class Chessboard {
 			
 			while (move != null) {
 				// Check if there is already a piece there
-				ChessPiece pieceAtDestination = getPieceAtLocation(move.getDestination());
-				// If there isn't a piece and the move is valid even when not attacking then the move is valid
-				if (pieceAtDestination == null && move.isOnlyAttackMovement() == false) {
+				ChessPiece pieceAtDestination = getPiece(move.getDestination());
+				// If there isn't a piece and the move is valid even when not capturing then the move is valid
+				if (pieceAtDestination == null && move.getMovementCondition() != MovementCondition.OnlyCapture) {
 					locations.add(move.getDestination());
 					move = move.getNextMoveInSameDirection();
 				}
-				// Else if there is a piece, check if it is the same player's or opponent's
-				else if (pieceAtDestination != null) {
+				// Else if there is a piece, check if it is the same player's or opponent's and if the piece can capture it
+				else if (pieceAtDestination != null && move.getMovementCondition() != MovementCondition.OnlyMove) {
 					// If it is the same color then the move is not valid
 					if (pieceAtDestination.color == piece.color) {
 						move = null;
@@ -234,23 +238,20 @@ public class Chessboard {
 	public boolean checkIfColorInCheck(PieceColor color) {
 		ArrayList<ChessPiece> opponentPieces = null;
 		if (color == PieceColor.Black) {
-			opponentPieces = getPiecesOfColor(PieceColor.White);
+			opponentPieces = getPieces(PieceColor.White);
 		}
 		else {
-			opponentPieces = getPiecesOfColor(PieceColor.Black);
+			opponentPieces = getPieces(PieceColor.Black);
 		}
 		
 		// For each enemy piece check if it can hit the king in a turn
 		for (int i = 0; i < opponentPieces.size(); i++) {
 			ChessPiece piece = opponentPieces.get(i);
-			ArrayList<PieceLocation> locations = getCollisionFreeMoves(piece);
-//			printer(locations);
-//			System.out.println(board.get(1).get(1));
-//			System.out.println("");
+			ArrayList<PieceLocation> locations = getUnblockedMoveLocations(piece);
 
 			// Check if any location contains the king
 			for (PieceLocation location: locations) {
-				ChessPiece pieceAtLocation = getPieceAtLocation(location);
+				ChessPiece pieceAtLocation = getPiece(location);
 				if (pieceAtLocation instanceof King) {
 					return true;
 				}
@@ -260,11 +261,16 @@ public class Chessboard {
 		return false;
 	}
 	
-	public ChessPiece getPieceAtLocation (PieceLocation location) {
+	public ChessPiece getPiece(PieceLocation location) {
 		return this.board.get(location.row).get(location.column);
 	}
 	
-	public ArrayList<ChessPiece> getPiecesOfColor (PieceColor color) {
+	/*
+	 * Gets all the pieces on the board of a given color
+	 * @param PieceColor - the color pieces to get
+	 * @return ArrayList<ChessPiece> - the list of pieces on the board with the same color as the given color
+	 */
+	public ArrayList<ChessPiece> getPieces(PieceColor color) {
 		ArrayList<ChessPiece> pieces = new ArrayList<ChessPiece>();
 		// Go through the board to get all the pieces of the color
 		for (ArrayList<ChessPiece> row: this.board) {
@@ -276,20 +282,27 @@ public class Chessboard {
 				}
 			}
 		}
+		
 		return pieces;
 	}
 	
-	public void movePiece (ChessPiece piece, PieceLocation location) {
+	/*
+	 * Moves a piece to a location
+	 * @param ChessPiece - the piece to move
+	 * @param PieceLocation - the location to move the piece
+	 */
+	public void movePiece (ChessPiece piece, PieceLocation destination) {
 		// Remove piece at old location
 		if (piece != null)
 		{
 			this.board.get(piece.location.row).remove(piece.location.column);
 			this.board.get(piece.location.row).add(piece.location.column, null);
 			
-			piece.location = (location);
+			piece.location = destination;
 		}
-		// Move piece to location
-		this.board.get(location.row).remove(location.column);
-		this.board.get(location.row).add(location.column, piece);
+		
+		// Move piece to new location
+		this.board.get(destination.row).remove(destination.column);
+		this.board.get(destination.row).add(destination.column, piece);
 	}
 }

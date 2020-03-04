@@ -1,4 +1,3 @@
-
 public enum PieceMovementDirection {
 	LeftRow, RightRow,
 	UpColumn, DownColumn,

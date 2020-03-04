@@ -12,15 +12,28 @@ public abstract class ChessPiece {
 		this.direction = direction;
 	}
 	
+	/*
+	 * Get list of moves the piece could do on a chess board at its location (as if there was no other piece on the board)
+	 * @return ArrayList<PieceMovement> - All the movements the piece can do
+	 */
 	public abstract ArrayList<PieceMovement> getListOfMoves();
 	
+	public void setLocation(PieceLocation destination) {
+		this.location = destination;
+	}
 	
+	/*
+	 * Helper function used to generate movements to all locations in a direction
+	 * @param PieceMovementDirection - direction of movements
+	 * @param boolean - if the move is only valid as an attack
+	 * @return PieceMovement - Link list of PieceMovement in the given direction 
+	*/
 	protected PieceMovement getMovementInDirection(PieceMovementDirection direction, boolean onlyAttackMovement) {
 		ArrayList<PieceLocation> locations = new ArrayList<PieceLocation>();
 		int row;
 		int column;
 		
-		// Get list of locations in a direction
+		// Generate list of locations in a direction until it reaches the end of the board
 		switch (direction) {
 			case UpColumn:
 				for (row = this.location.row + 1; row < Chessboard.MAX_ROW; row++) {
@@ -88,8 +101,9 @@ public abstract class ChessPiece {
 				break;
 		}
 		
-		// Convert the locations into movements and link them together if there are moves
+		// Convert each locations into movements and link them together
 		PieceMovement movements = null;
+		// If there are locations then link it in the order that the parent link is closer the piece than the child link
 		if (locations.size() > 0) {
 			Collections.reverse(locations);
 			movements = new PieceMovement(locations.get(0), onlyAttackMovement, null);
@@ -99,10 +113,5 @@ public abstract class ChessPiece {
 		}
 		
 		return movements;
-	}
-	
-	
-	public void move(PieceLocation destination) {
-		this.location = destination;
 	}
 }

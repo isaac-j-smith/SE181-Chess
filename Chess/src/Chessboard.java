@@ -118,7 +118,7 @@ public class Chessboard {
 				}
 				if (isValid) {
 					movePiece(piece, dest);
-					piece.move(dest);
+					piece.setLocation(dest);
 				}
 				else {
 					System.out.println("invalid");

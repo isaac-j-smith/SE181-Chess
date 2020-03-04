@@ -1,4 +1,3 @@
-
 public class PieceLocation {
 	public int row;
 	public int column;

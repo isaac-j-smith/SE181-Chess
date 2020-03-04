@@ -8,6 +8,7 @@ public class Queen extends ChessPiece {
 	@Override
 	public ArrayList<PieceMovement> getListOfMoves() {
 		ArrayList<PieceMovement> moves = new ArrayList<PieceMovement>();
+		
 		moves.add(getMovementInDirection(PieceMovementDirection.LeftRow, false));
 		moves.add(getMovementInDirection(PieceMovementDirection.RightRow, false));
 		moves.add(getMovementInDirection(PieceMovementDirection.UpColumn, false));
@@ -16,6 +17,7 @@ public class Queen extends ChessPiece {
 		moves.add(getMovementInDirection(PieceMovementDirection.UpRightDiagonal, false));
 		moves.add(getMovementInDirection(PieceMovementDirection.DownLeftDiagonal, false));
 		moves.add(getMovementInDirection(PieceMovementDirection.DownRightDiagonal, false));
+		
 		return moves;
 	}
 }

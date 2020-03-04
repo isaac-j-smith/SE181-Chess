@@ -9,11 +9,12 @@ public class Rook extends ChessPiece {
 	@Override
 	public ArrayList<PieceMovement> getListOfMoves() {
 		ArrayList<PieceMovement> moves = new ArrayList<PieceMovement>();
+		
 		moves.add(getMovementInDirection(PieceMovementDirection.LeftRow, false));
 		moves.add(getMovementInDirection(PieceMovementDirection.RightRow, false));
 		moves.add(getMovementInDirection(PieceMovementDirection.UpColumn, false));
-		moves.add(getMovementInDirection(PieceMovementDirection.DownColumn, false));	
+		moves.add(getMovementInDirection(PieceMovementDirection.DownColumn, false));
+		
 		return moves;
 	}
-
 }

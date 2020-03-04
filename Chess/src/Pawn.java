@@ -1,13 +1,11 @@
 import java.util.ArrayList;
 
-public class Pawn extends ChessPiece{
-	
+public class Pawn extends ChessPiece {
 	private boolean hasMoved = false;
 	
 	public Pawn(PieceLocation startLocation, PieceColor color, PieceMovementDirection direction) {
 		super(startLocation, color, direction);
 	}
-	
 
 	@Override
 	public ArrayList<PieceMovement> getListOfMoves() {
@@ -15,17 +13,20 @@ public class Pawn extends ChessPiece{
 		PieceMovement move = getMovementInDirection(this.direction, false);
 		
 		// If it has moved then only allow moving one space else let it move 2 from its starting location
-		if (hasMoved == true) {
+		if (this.hasMoved == true) {
 			move.removeNextMoveInSameDirection();
 		}
 		else {
 			if (move.getNextMoveInSameDirection() != null)
-			move.getNextMoveInSameDirection().removeNextMoveInSameDirection();
+			{
+				move.getNextMoveInSameDirection().removeNextMoveInSameDirection();
+			}
 		}
+		
 		moves.add(move);
 		
 		// Add possible diagonal attack moves
-		if (this.direction == PieceMovementDirection.UpColumn && move != null) {
+		if (this.direction == PieceMovementDirection.UpColumn) {
 			move = getMovementInDirection(PieceMovementDirection.UpLeftDiagonal, true);
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
@@ -39,7 +40,7 @@ public class Pawn extends ChessPiece{
 			}
 			
 		}
-		else if (this.direction == PieceMovementDirection.DownColumn && move != null) {
+		else if (this.direction == PieceMovementDirection.DownColumn) {
 			move = getMovementInDirection(PieceMovementDirection.DownLeftDiagonal, true);
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
@@ -47,19 +48,17 @@ public class Pawn extends ChessPiece{
 			}
 			
 			move = getMovementInDirection(PieceMovementDirection.DownRightDiagonal, true);
-			
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
 				moves.add(move);
 			}
-			
 		}
 		
 		return moves;
 	}
 	
 	@Override
-	public void move(PieceLocation destination) {
+	public void setLocation(PieceLocation destination) {
 		this.location = destination;
 		this.hasMoved = true;
 	}

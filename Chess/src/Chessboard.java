@@ -90,6 +90,7 @@ public class Chessboard {
 		System.out.println("END");
 	}
 	
+	////////////////FOR TESTING
 	public void game() {
 		while (true) {
 			printBoard();
@@ -131,14 +132,14 @@ public class Chessboard {
 		return this.board.get(row).get(column);
 	}
 	
-	//////////////// FOR TESTING PRINTER
-	////////////////////////////////////
+	//////////////// FOR TESTING
 	public void printer(ArrayList<PieceLocation> a) {
 		for (int i = 0; i < a.size(); i++) {
 			System.out.println(a.get(i).row + "," + a.get(i).column);
 		}
 	}
 	
+	////////////////FOR TESTING
 	public void printBoard() {
 		System.out.println("" + "\t" + "0" + "\t" + "1" + "\t" + "2" + "\t" + "3" + "\t" + "4" + "\t" + "5" + "\t" + "6" + "\t" + "7" + "\t");
 		int rowNum = 0;
@@ -157,42 +158,34 @@ public class Chessboard {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	/*
+	 * Gets a list of locations that a piece can move to without getting into check
+	 * @param ChessPiece - the piece to get moves for
+	 * @return ArrayList<PieceLocation> - list of locations the piece can go to that is not blocked nor result in check
+	 */
 	public ArrayList<PieceLocation> getValidMoves(ChessPiece piece) {
 		ArrayList<PieceLocation> validMoves = new ArrayList<PieceLocation>();
-		ArrayList<PieceLocation> collisionFreeMoves = getUnblockedMoveLocations(piece);
+		ArrayList<PieceLocation> unblockedMoves = getUnblockedMoveLocations(piece);
 		
 		// For each collision free move, check if it won't result in the player in check
-		for (PieceLocation collisionFreeMove: collisionFreeMoves) {
-			// Save info of current state to restore back
-			ChessPiece pieceAtDestination = getPiece(collisionFreeMove);
+		for (PieceLocation unblockedMove: unblockedMoves) {
+			// Save info of current state to restore back after checking
+			ChessPiece pieceAtDestination = getPiece(unblockedMove);
 			PieceLocation savePieceOriginalLocation = piece.location;
 			
 			// Temporarily move piece
-			movePiece(piece, collisionFreeMove);
+			movePiece(piece, unblockedMove);
 			
 			// If the move will not result in the player in check then it is valid
 			if (isInCheck(piece.color) == false) {
-				validMoves.add(collisionFreeMove);
+				validMoves.add(unblockedMove);
 			}
 			
 			// Move pieces back to original locations
 			movePiece(piece, savePieceOriginalLocation);
-			movePiece(pieceAtDestination, collisionFreeMove);
+			movePiece(pieceAtDestination, unblockedMove);
 		}
+		
 		return validMoves;
 	}
 	
@@ -298,7 +291,7 @@ public class Chessboard {
 	 * @param ChessPiece - the piece to move
 	 * @param PieceLocation - the location to move the piece
 	 */
-	public void movePiece (ChessPiece piece, PieceLocation destination) {
+	public void movePiece(ChessPiece piece, PieceLocation destination) {
 		// Remove piece at old location
 		if (piece != null)
 		{

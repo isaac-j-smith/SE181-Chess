@@ -185,7 +185,7 @@ public class Chessboard {
 			movePiece(piece, collisionFreeMove);
 			
 			// If the move will not result in the player in check then it is valid
-			if (checkIfColorInCheck(piece.color) == false) {
+			if (isInCheck(piece.color) == false) {
 				validMoves.add(collisionFreeMove);
 			}
 			
@@ -197,45 +197,52 @@ public class Chessboard {
 	}
 	
 	/*
-	 * Get the locations of moves that a piece can go to without running into another piece
-	 * 
+	 * Get the locations of moves that a piece can go to without running into another piece along the way
+	 * @param ChessPiece - the piece to get the list for
+	 * @return ArrayList<PieceLocation> - the list of locations the piece can go to unblocked
 	 */
 	public ArrayList<PieceLocation> getUnblockedMoveLocations(ChessPiece piece) {
 		ArrayList<PieceMovement> movements = piece.getListOfMoves();
 		ArrayList<PieceLocation> locations = new ArrayList<PieceLocation>();
 		
-		for (int i = 0; i < movements.size(); i++) {
-			PieceMovement move = movements.get(i);
-			
-			while (move != null) {
+		// Check each movements
+		for (PieceMovement movement: movements) {
+			// Check through the movement link list
+			while (movement != null) {
 				// Check if there is already a piece there
-				ChessPiece pieceAtDestination = getPiece(move.getDestination());
+				ChessPiece pieceAtDestination = getPiece(movement.getDestination());
 				// If there isn't a piece and the move is valid even when not capturing then the move is valid
-				if (pieceAtDestination == null && move.getMovementCondition() != MovementCondition.OnlyCapture) {
-					locations.add(move.getDestination());
-					move = move.getNextMoveInSameDirection();
+				if (pieceAtDestination == null && movement.getMovementCondition() != MovementCondition.OnlyCapture) {
+					locations.add(movement.getDestination());
+					movement = movement.getNextMoveInSameDirection();
 				}
 				// Else if there is a piece, check if it is the same player's or opponent's and if the piece can capture it
-				else if (pieceAtDestination != null && move.getMovementCondition() != MovementCondition.OnlyMove) {
+				else if (pieceAtDestination != null && movement.getMovementCondition() != MovementCondition.OnlyMove) {
 					// If it is the same color then the move is not valid
 					if (pieceAtDestination.color == piece.color) {
-						move = null;
+						movement = null;
 					}
-					// Else the move is capturing the opponent's piece and is valid
+					// Else the move is capturing the opponent's piece and is valid but the rest are blocked
 					else {
-						locations.add(move.getDestination());
-						move = null;
+						locations.add(movement.getDestination());
+						movement = null;
 					}
 				}
 				else {
-					move = null;
+					movement = null;
 				}
 			}
 		}
+		
 		return locations;
 	}
 	
-	public boolean checkIfColorInCheck(PieceColor color) {
+	/*
+	 * Sees if a color set of pieces is in check
+	 * @param PieceColor - the color set to check
+	 * @return boolean - if it is in check
+	 */
+	public boolean isInCheck(PieceColor color) {
 		ArrayList<ChessPiece> opponentPieces = null;
 		if (color == PieceColor.Black) {
 			opponentPieces = getPieces(PieceColor.White);
@@ -244,12 +251,12 @@ public class Chessboard {
 			opponentPieces = getPieces(PieceColor.Black);
 		}
 		
-		// For each enemy piece check if it can hit the king in a turn
+		// For each enemy piece on the board, check if it can hit the king in a turn
 		for (int i = 0; i < opponentPieces.size(); i++) {
 			ChessPiece piece = opponentPieces.get(i);
 			ArrayList<PieceLocation> locations = getUnblockedMoveLocations(piece);
 
-			// Check if any location contains the king
+			// Check if any location the enemy piece can move contains the king
 			for (PieceLocation location: locations) {
 				ChessPiece pieceAtLocation = getPiece(location);
 				if (pieceAtLocation instanceof King) {

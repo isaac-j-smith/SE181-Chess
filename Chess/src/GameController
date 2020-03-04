@@ -1,0 +1,34 @@
+public class GameController {
+    private GameView view;
+    private Chessboard chessboard;
+    private ServerManager server;
+    private GameModel gameModel;
+
+    public void updateModel(){
+
+    }
+
+    public void setView(GameView inView){
+        view = inView;
+    }
+
+    public void pieceOnClick(){
+
+    }
+
+    public void buttonOnClick(){
+
+    }
+
+    private void makeMove(){
+
+    }
+
+    private Boolean checkTurn(){
+
+    }
+
+    private void pullServerBoardState(){
+
+    }
+}

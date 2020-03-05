@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<body>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+
+<h1 id="testing"></h1>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-database.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyCxzQfVs5sCHCnyEbZOpoLKfeJ1ma8V5vI",
+    authDomain: "se181-chess-e6810.firebaseapp.com",
+    databaseURL: "https://se181-chess-e6810.firebaseio.com",
+    projectId: "se181-chess-e6810",
+    storageBucket: "se181-chess-e6810.appspot.com",
+    messagingSenderId: "436104417817",
+    appId: "1:436104417817:web:e47c422104f6d987995088",
+    measurementId: "G-55BX2J5WL8"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  function writeData(){
+    firebase.database().ref("User").set({
+        name: document.getElementById("nameField").value,
+        age: document.getElementById("ageField").value
+    });
+  }
+
+</script>
+
+  <h1> User Database </h1>
+  <input type = "text" placeholder= "name" id = "nameField">
+  <input type = "text" placeholder = "age" id = "ageField">
+  <button onclick = "writeData()">Submit</button>
+
+
+
+
+</body>
+</html>

@@ -8,11 +8,11 @@ public class Chessboard {
 	
 	public Chessboard() {
 		// Create empty board
-		for (int row = 0; row < this.MAX_ROW; row++) {
+		for (int row = 0; row < MAX_ROW; row++) {
 			// Add row
 			this.board.add(new ArrayList<ChessPiece>());
 			// Add column
-			for (int column = 0; column < this.MAX_COLUMN; column++) {
+			for (int column = 0; column < MAX_COLUMN; column++) {
 				this.board.get(row).add(null);
 			}
 		}
@@ -20,7 +20,7 @@ public class Chessboard {
 		setupBoard();
 		
 		// USED FOR TESTING, REMOVE LATER
-		DEBUGGame();
+		//DEBUGGame();
 	}
 	
 	/*
@@ -140,7 +140,7 @@ public class Chessboard {
 		movePiece(whiteBishop1, whiteBishop1.location);
 		movePiece(whiteBishop2, whiteBishop2.location);
 		
-		for (int i =0; i < this.MAX_COLUMN; i++) {
+		for (int i =0; i < MAX_COLUMN; i++) {
 			ChessPiece whitePawn = new Pawn(new PieceLocation(1,i), PieceColor.White, PieceMovementDirection.UpColumn);
 			movePiece(whitePawn, whitePawn.location);
 		}
@@ -164,7 +164,7 @@ public class Chessboard {
 		movePiece(blackBishop1, blackBishop1.location);
 		movePiece(blackBishop2, blackBishop2.location);
 		
-		for (int i =0; i < this.MAX_COLUMN; i++) {
+		for (int i =0; i < MAX_COLUMN; i++) {
 			ChessPiece blackPawn = new Pawn(new PieceLocation(6,i), PieceColor.Black, PieceMovementDirection.DownColumn);
 			movePiece(blackPawn, blackPawn.location);
 		}
@@ -347,5 +347,13 @@ public class Chessboard {
 		// Move piece to new location
 		this.board.get(destination.row).remove(destination.column);
 		this.board.get(destination.row).add(destination.column, piece);
+	}
+
+	public ArrayList<ArrayList<ChessPiece>> getBoard() {
+		return board;
+	}
+
+	public void setBoard(ArrayList<ArrayList<ChessPiece>> board){
+		this.board = board;
 	}
 }

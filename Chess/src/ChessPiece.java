@@ -12,7 +12,7 @@ public abstract class ChessPiece {
 		this.direction = direction;
 	}
 	
-	/*
+	/**
 	 * Get list of moves the piece could do on a chess board at its location (as if there was no other piece on the board)
 	 * @return ArrayList<PieceMovement> - All the movements the piece can do
 	 */
@@ -22,7 +22,7 @@ public abstract class ChessPiece {
 		this.location = destination;
 	}
 	
-	/*
+	/**
 	 * Helper function used to generate movements to all locations in a direction
 	 * @param PieceMovementDirection - direction of movements
 	 * @param boolean - if the move is only valid as an attack

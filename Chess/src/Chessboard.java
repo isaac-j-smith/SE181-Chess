@@ -23,7 +23,7 @@ public class Chessboard {
 		//DEBUGGame();
 	}
 	
-	/*
+	/**
 	 * USED FOR DEBUGGING, NOT INTENDED TO BE INCLUDED IN FINAL BUILD.
 	 * USEFUL FOR TESTING WITHOUT UI
 	 */
@@ -63,7 +63,7 @@ public class Chessboard {
 				
 				// Move the piece if it is a valid move
 				if (isValid == true) {
-					movePiece(piece, destination);
+					placePiece(piece, destination);
 					piece.setLocation(destination);
 					
 					// Check for winner
@@ -83,7 +83,7 @@ public class Chessboard {
 		}
 	}
 	
-	/*
+	/**
 	 * USED FOR DEBUGGING, NOT INTENDED TO BE INCLUDED IN FINAL BUILD.
 	 * USEFUL FOR TESTING WITHOUT UI
 	 */
@@ -93,7 +93,7 @@ public class Chessboard {
 		}
 	}
 	
-	/*
+	/**
 	 * USED FOR DEBUGGING, NOT INTENDED TO BE INCLUDED IN FINAL BUILD.
 	 * USEFUL FOR TESTING WITHOUT UI
 	 */
@@ -117,7 +117,7 @@ public class Chessboard {
 		}
 	}
 	
-	/*
+	/**
 	 * Setup the board with the standard 16 chess pieces for each color
 	 */
 	public void setupBoard() {
@@ -131,18 +131,18 @@ public class Chessboard {
 		ChessPiece whiteBishop1 = new Bishop(new PieceLocation(0,5), PieceColor.White, PieceMovementDirection.DownColumn);
 		ChessPiece whiteBishop2 = new Bishop(new PieceLocation(0,2), PieceColor.White, PieceMovementDirection.DownColumn);
 		
-		movePiece(whiteKing, whiteKing.location);
-		movePiece(whiteQueen,whiteQueen.location);
-		movePiece(whiteKnight1,whiteKnight1.location);
-		movePiece(whiteKnight2, whiteKnight2.location);
-		movePiece(whiteRook1,whiteRook1.location);
-		movePiece(whiteRook2,whiteRook2.location);
-		movePiece(whiteBishop1, whiteBishop1.location);
-		movePiece(whiteBishop2, whiteBishop2.location);
+		placePiece(whiteKing, whiteKing.location);
+		placePiece(whiteQueen,whiteQueen.location);
+		placePiece(whiteKnight1,whiteKnight1.location);
+		placePiece(whiteKnight2, whiteKnight2.location);
+		placePiece(whiteRook1,whiteRook1.location);
+		placePiece(whiteRook2,whiteRook2.location);
+		placePiece(whiteBishop1, whiteBishop1.location);
+		placePiece(whiteBishop2, whiteBishop2.location);
 		
 		for (int i =0; i < MAX_COLUMN; i++) {
 			ChessPiece whitePawn = new Pawn(new PieceLocation(1,i), PieceColor.White, PieceMovementDirection.UpColumn);
-			movePiece(whitePawn, whitePawn.location);
+			placePiece(whitePawn, whitePawn.location);
 		}
 		
 		// Black pieces
@@ -155,22 +155,22 @@ public class Chessboard {
 		ChessPiece blackBishop1 = new Bishop(new PieceLocation(7,5), PieceColor.Black, PieceMovementDirection.DownColumn);
 		ChessPiece blackBishop2 = new Bishop(new PieceLocation(7,2), PieceColor.Black, PieceMovementDirection.DownColumn);
 		
-		movePiece(blackKing, blackKing.location);
-		movePiece(blackQueen,blackQueen.location);
-		movePiece(blackKnight1,blackKnight1.location);
-		movePiece(blackKnight2, blackKnight2.location);
-		movePiece(blackRook1,blackRook1.location);
-		movePiece(blackRook2,blackRook2.location);
-		movePiece(blackBishop1, blackBishop1.location);
-		movePiece(blackBishop2, blackBishop2.location);
+		placePiece(blackKing, blackKing.location);
+		placePiece(blackQueen,blackQueen.location);
+		placePiece(blackKnight1,blackKnight1.location);
+		placePiece(blackKnight2, blackKnight2.location);
+		placePiece(blackRook1,blackRook1.location);
+		placePiece(blackRook2,blackRook2.location);
+		placePiece(blackBishop1, blackBishop1.location);
+		placePiece(blackBishop2, blackBishop2.location);
 		
 		for (int i =0; i < MAX_COLUMN; i++) {
 			ChessPiece blackPawn = new Pawn(new PieceLocation(6,i), PieceColor.Black, PieceMovementDirection.DownColumn);
-			movePiece(blackPawn, blackPawn.location);
+			placePiece(blackPawn, blackPawn.location);
 		}
 	}
 	
-	/*
+	/**
 	 * Gets a list of locations that a piece can move to without getting into check
 	 * @param ChessPiece - the piece to get moves for
 	 * @return ArrayList<PieceLocation> - list of locations the piece can go to that is not blocked nor result in check
@@ -186,7 +186,7 @@ public class Chessboard {
 			PieceLocation savePieceOriginalLocation = piece.location;
 			
 			// Temporarily move piece
-			movePiece(piece, unblockedMove);
+			placePiece(piece, unblockedMove);
 			
 			// If the move will not result in the player in check then it is valid
 			if (isInCheck(piece.color) == false) {
@@ -194,14 +194,14 @@ public class Chessboard {
 			}
 			
 			// Move pieces back to original locations
-			movePiece(piece, savePieceOriginalLocation);
-			movePiece(pieceAtDestination, unblockedMove);
+			placePiece(piece, savePieceOriginalLocation);
+			placePiece(pieceAtDestination, unblockedMove);
 		}
 		
 		return validMoves;
 	}
 	
-	/*
+	/**
 	 * Get the locations of moves that a piece can go to without running into another piece along the way
 	 * @param ChessPiece - the piece to get the list for
 	 * @return ArrayList<PieceLocation> - the list of locations the piece can go to unblocked
@@ -242,7 +242,7 @@ public class Chessboard {
 		return locations;
 	}
 	
-	/*
+	/**
 	 * Sees if a color set of pieces is in check
 	 * @param PieceColor - the color set to check
 	 * @return boolean - if it is in check
@@ -274,7 +274,7 @@ public class Chessboard {
 		return false;
 	}
 	
-	/*
+	/**
 	 * Sees if a color set of pieces is in checkmate
 	 * @param PieceColor - the color set to check
 	 * @return boolean - if it is in check
@@ -308,7 +308,7 @@ public class Chessboard {
 		return this.board.get(row).get(column);
 	}
 	
-	/*
+	/**
 	 * Gets all the pieces on the board of a given color
 	 * @param PieceColor - the color pieces to get
 	 * @return ArrayList<ChessPiece> - the list of pieces on the board with the same color as the given color
@@ -329,12 +329,22 @@ public class Chessboard {
 		return pieces;
 	}
 	
-	/*
+	/**
 	 * Moves a piece to a location
 	 * @param ChessPiece - the piece to move
 	 * @param PieceLocation - the location to move the piece
 	 */
 	public void movePiece(ChessPiece piece, PieceLocation destination) {
+		placePiece(piece, destination);
+		piece.setLocation(destination);
+	}
+
+	/**
+	 * Puts a piece at a location without moving the piece functionally
+	 * @param ChessPiece - the piece to move
+	 * @param PieceLocation - the location to move the piece
+	*/
+	public void placePiece(ChessPiece piece, PieceLocation destination) {
 		// Remove piece at old location
 		if (piece != null)
 		{

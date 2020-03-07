@@ -122,8 +122,8 @@ public class Chessboard {
 	 */
 	public void setupBoard() {
 		// White pieces
-		ChessPiece whiteKing = new King(new PieceLocation(0,3), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece whiteQueen = new Queen(new PieceLocation(0,4), PieceColor.White, PieceMovementDirection.DownColumn);
+		ChessPiece whiteKing = new King(new PieceLocation(0,4), PieceColor.White, PieceMovementDirection.DownColumn);
+		ChessPiece whiteQueen = new Queen(new PieceLocation(0,3), PieceColor.White, PieceMovementDirection.DownColumn);
 		ChessPiece whiteKnight1 = new Knight(new PieceLocation(0,1), PieceColor.White, PieceMovementDirection.DownColumn);
 		ChessPiece whiteKnight2 = new Knight(new PieceLocation(0,6), PieceColor.White, PieceMovementDirection.DownColumn);
 		ChessPiece whiteRook1 = new Rook(new PieceLocation(0,0), PieceColor.White, PieceMovementDirection.DownColumn);
@@ -146,8 +146,8 @@ public class Chessboard {
 		}
 		
 		// Black pieces
-		ChessPiece blackKing = new King(new PieceLocation(7,3), PieceColor.Black, PieceMovementDirection.DownColumn);
-		ChessPiece blackQueen = new Queen(new PieceLocation(7,4), PieceColor.Black, PieceMovementDirection.DownColumn);
+		ChessPiece blackKing = new King(new PieceLocation(7,4), PieceColor.Black, PieceMovementDirection.DownColumn);
+		ChessPiece blackQueen = new Queen(new PieceLocation(7,3), PieceColor.Black, PieceMovementDirection.DownColumn);
 		ChessPiece blackKnight1 = new Knight(new PieceLocation(7,1), PieceColor.Black, PieceMovementDirection.DownColumn);
 		ChessPiece blackKnight2 = new Knight(new PieceLocation(7,6), PieceColor.Black, PieceMovementDirection.DownColumn);
 		ChessPiece blackRook1 = new Rook(new PieceLocation(7,0), PieceColor.Black, PieceMovementDirection.DownColumn);

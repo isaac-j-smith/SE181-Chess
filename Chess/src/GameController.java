@@ -54,9 +54,9 @@ public class GameController {
                 }
                 if ((i % 2 != 0 && j % 2 == 0)
                         || i % 2 == 0 && j % 2 != 0) {
-                    b.setBackground(new Color(75, 65, 50));
-                } else {
                     b.setBackground(Color.white);
+                } else {
+                    b.setBackground(new Color(75, 65, 50));
                 }
                 b.setName(i + "" + j);
                 b.addActionListener(e -> buttonClicked(b.getName()));
@@ -129,9 +129,9 @@ public class GameController {
 
                 if ((move.row % 2 != 0 && move.column % 2 == 0)
                         || move.row % 2 == 0 && move.column % 2 != 0) {
-                    Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(new Color(75, 65, 50));
-                } else {
                     Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(Color.white);
+                } else {
+                    Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(new Color(75, 65, 50));
                 }
             }
             selectedPiece = null;

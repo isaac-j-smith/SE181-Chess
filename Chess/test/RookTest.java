@@ -11,7 +11,7 @@ public class RookTest {
         board.setupBoard();
 
 
-        // Black rook 1
+        // White rook 1
         ChessPiece rook = board.getPiece(0,0);
         assertTrue(rook instanceof Rook);
 
@@ -22,7 +22,7 @@ public class RookTest {
         assertEquals(0, rook.getListOfMoves().get(2).getDestination().column);
         assertNull(rook.getListOfMoves().get(3));
 
-        // Black rook 2
+        // White rook 2
         rook = board.getPiece(0,7);
         assertTrue(rook instanceof Rook);
 
@@ -33,7 +33,7 @@ public class RookTest {
         assertEquals(7, rook.getListOfMoves().get(2).getDestination().column);
         assertNull(rook.getListOfMoves().get(3));
 
-        // White rook 1
+        // Black rook 1
         rook = board.getPiece(7,0);
         assertTrue(rook instanceof Rook);
 
@@ -44,7 +44,7 @@ public class RookTest {
         assertEquals(6, rook.getListOfMoves().get(3).getDestination().row);
         assertEquals(0, rook.getListOfMoves().get(3).getDestination().column);
 
-        // White rook 2
+        // Black rook 2
         rook = board.getPiece(7,7);
         assertTrue(rook instanceof Rook);
 

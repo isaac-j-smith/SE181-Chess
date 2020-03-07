@@ -11,7 +11,7 @@ public class KnightTest {
         board.setupBoard();
 
 
-        // Black knight 1
+        // White knight 1
         ChessPiece knight = board.getPiece(0,1);
         assertTrue(knight instanceof Knight);
 
@@ -27,7 +27,7 @@ public class KnightTest {
             i++;
         }
 
-        // Black knight 2
+        // White knight 2
         knight = board.getPiece(0,6);
         assertTrue(knight instanceof Knight);
 
@@ -43,7 +43,7 @@ public class KnightTest {
             i++;
         }
 
-        // White knight 1
+        // Black knight 1
         knight = board.getPiece(7,1);
         assertTrue(knight instanceof Knight);
 
@@ -59,7 +59,7 @@ public class KnightTest {
             i++;
         }
 
-        // White knight 2
+        // Black knight 2
         knight = board.getPiece(7,6);
         assertTrue(knight instanceof Knight);
 

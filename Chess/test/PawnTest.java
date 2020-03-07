@@ -11,7 +11,7 @@ public class PawnTest {
         board.setupBoard();
 
 
-        // Black pawn 3
+        // White pawn 3
         ChessPiece pawn = board.getPiece(1,2);
         assertTrue(pawn instanceof Pawn);
 
@@ -41,7 +41,7 @@ public class PawnTest {
             i++;
         }
 
-        // White pawn 6
+        // Black pawn 6
         pawn = board.getPiece(6,5);
         assertTrue(pawn instanceof Pawn);
 

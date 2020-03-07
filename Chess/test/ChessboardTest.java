@@ -65,17 +65,17 @@ public class ChessboardTest {
         assertFalse(board.isInCheckmate(PieceColor.Black));
         assertFalse(board.isInCheckmate(PieceColor.White));
 
-        ChessPiece knight = board.getPiece(0,1);
-        board.movePiece(knight, new PieceLocation(2,0));
-        knight = board.getPiece(2,0);
-        board.movePiece(knight, new PieceLocation(4,1));
-        knight = board.getPiece(4,1);
-        board.movePiece(knight, new PieceLocation(6,2));
-        knight = board.getPiece(6,2);
-        board.movePiece(knight, new PieceLocation(5,4));
-        knight = board.getPiece(5,4);
+        ChessPiece knight = board.getPiece(0,6);
+        board.movePiece(knight, new PieceLocation(2,7));
+        knight = board.getPiece(2,7);
+        board.movePiece(knight, new PieceLocation(4,6));
+        knight = board.getPiece(4,6);
+        board.movePiece(knight, new PieceLocation(6,5));
+        knight = board.getPiece(6,5);
+        board.movePiece(knight, new PieceLocation(5,3));
+        knight = board.getPiece(5,3);
         assertTrue(knight instanceof Knight);
-        assertTrue(board.getPiece(7,3) instanceof King);
+        assertTrue(board.getPiece(7,4) instanceof King);
         assertFalse(board.isInCheck(PieceColor.White));
         assertTrue(board.isInCheck(PieceColor.Black));
     }
@@ -120,11 +120,11 @@ public class ChessboardTest {
 
         ArrayList<ChessPiece> pieces = board.getPieces(PieceColor.Black);
         assertTrue(pieces.get(0) instanceof Pawn);
-        assertTrue(pieces.get(12) instanceof Queen);
+        assertTrue(pieces.get(11) instanceof Queen);
 
         pieces = board.getPieces(PieceColor.White);
         assertTrue(pieces.get(12) instanceof Pawn);
-        assertTrue(pieces.get(4) instanceof Queen);
+        assertTrue(pieces.get(3) instanceof Queen);
     }
 
     @Test

@@ -202,7 +202,7 @@ public class GameController implements Observer {
                 initialStartScreen();
                 hide(checkmateView);
         });
-       //hide(gameView);
+        hide(gameView);
         display(checkmateView);
     }
 
@@ -352,6 +352,7 @@ public class GameController implements Observer {
         ActionListener taskPerformer = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 label.setVisible(false);
+                checkLayer.remove(label);
             }
         };
         new javax.swing.Timer(delay, taskPerformer).start();
@@ -400,6 +401,7 @@ public class GameController implements Observer {
             }
             else if(board.isInCheck(playerColor)){
                 playerInCheck(playerColor);
+                display(gameView);
             }
 
 

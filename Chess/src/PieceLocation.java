@@ -1,5 +1,3 @@
-import jdk.jshell.spi.SPIResolutionException;
-
 public class PieceLocation {
 	public int row;
 	public int column;

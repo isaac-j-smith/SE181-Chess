@@ -14,6 +14,7 @@ public class GameController {
     private Chessboard board;
     private ArrayList<PieceLocation> availableMoves;
     private ChessPiece selectedPiece;
+    private int playerNumber;
 
     public GameController() {
         this.map = new HashMap<>();
@@ -37,31 +38,60 @@ public class GameController {
         this.view = new GameView("Chess Game");
         this.view.setLayout(new GridLayout(8, 8, 2, 2));
 
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                JButton b = new JButton("");
-                if (board.getPiece(i, j) != null) {
-                    try {
-                        String location = "images/"
-                                + board.getPiece(i, j).color.toString()
-                                + board.getPiece(i, j).getClass().getSimpleName()
-                                + ".png";
-                        b.setIcon(new ImageIcon(ImageIO.read(getClass().getResource(location))));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        if (playerNumber == 1) {
+            for (int i = 7; i >= 0; i--) {
+                for (int j = 7; j >= 0; j--) {
+                    JButton b = new JButton("");
+                    if (board.getPiece(i, j) != null) {
+                        try {
+                            String location = "images/"
+                                    + board.getPiece(i, j).color.toString()
+                                    + board.getPiece(i, j).getClass().getSimpleName()
+                                    + ".png";
+                            b.setIcon(new ImageIcon(ImageIO.read(getClass().getResource(location))));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
+                    if ((i % 2 != 0 && j % 2 == 0)
+                            || i % 2 == 0 && j % 2 != 0) {
+                        b.setBackground(Color.white);
+                    } else {
+                        b.setBackground(new Color(75, 65, 50));
+                    }
+                    b.setName(i + "" + j);
+                    b.addActionListener(e -> buttonClicked(b.getName()));
+                    map.put(b.getName(), b);
+                    this.view.add(b);
                 }
-                if ((i % 2 != 0 && j % 2 == 0)
-                        || i % 2 == 0 && j % 2 != 0) {
-                    b.setBackground(Color.white);
-                } else {
-                    b.setBackground(new Color(75, 65, 50));
+            }
+        }
+        else if (playerNumber == 2){
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    JButton b = new JButton("");
+                    if (board.getPiece(i, j) != null) {
+                        try {
+                            String location = "images/"
+                                    + board.getPiece(i, j).color.toString()
+                                    + board.getPiece(i, j).getClass().getSimpleName()
+                                    + ".png";
+                            b.setIcon(new ImageIcon(ImageIO.read(getClass().getResource(location))));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if ((i % 2 != 0 && j % 2 == 0)
+                            || i % 2 == 0 && j % 2 != 0) {
+                        b.setBackground(Color.white);
+                    } else {
+                        b.setBackground(new Color(75, 65, 50));
+                    }
+                    b.setName(i + "" + j);
+                    b.addActionListener(e -> buttonClicked(b.getName()));
+                    map.put(b.getName(), b);
+                    this.view.add(b);
                 }
-                b.setName(i + "" + j);
-                b.addActionListener(e -> buttonClicked(b.getName()));
-                map.put(b.getName(), b);
-                this.view.add(b);
             }
         }
         this.boardValues = board.getBoard();

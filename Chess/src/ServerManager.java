@@ -21,7 +21,7 @@ public class ServerManager {
     public static FirebaseData lastSavedData;
     public void Firebase() throws IOException {
 
-        FileInputStream refreshToken = new FileInputStream("./src/service-account.json");
+        FileInputStream refreshToken = new FileInputStream("./Chess/src/service-account.json");
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(refreshToken))
@@ -72,8 +72,13 @@ public class ServerManager {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 System.out.println("reading changed");
-                var retrievedData = dataSnapshot.getValue(FirebaseData.class);
+                FirebaseData retrievedData = dataSnapshot.getValue(FirebaseData.class);
                 System.out.println(retrievedData.isWhiteTurn + " " + retrievedData.movementMade.from + " to " + retrievedData.movementMade.destination);
+
+                System.out.println("from row:" + retrievedData.movementMade.from.row);
+                System.out.println("from col:" + retrievedData.movementMade.from.column);
+                System.out.println("to row:" + retrievedData.movementMade.destination.row);
+                System.out.println("to col:" + retrievedData.movementMade.destination.column);
 
             }
 

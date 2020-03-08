@@ -9,7 +9,6 @@ public class Chess<options> {
     public static void main(String[] args) throws IOException {
         GameController controller = new GameController();
         controller.start();
-
     }
 
     public void PlayGame() {

@@ -23,11 +23,12 @@ public class ServerManager extends Observable {
     private MovementMade recentMove;
     private int playerTurn;
     private int playerNumber;
+    private boolean playersConnected;
 
 
     public void Firebase() throws IOException {
 
-        FileInputStream refreshToken = new FileInputStream("./src/service-account.json");
+        FileInputStream refreshToken = new FileInputStream("./Chess/src/service-account.json");
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(refreshToken))
@@ -55,6 +56,31 @@ public class ServerManager extends Observable {
         System.out.println("data has changed");
     }
 
+    public static void connectPlayer(int playerNumber){
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference();
+
+        DatabaseReference usersRef = ref.child("chess");
+
+        Map<String, FirebaseData> users = new HashMap<>();
+
+
+        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), false, false);
+
+        if (playerNumber == 1) {
+            firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), true, false);
+        }
+        else if (playerNumber == 2){
+            firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0,0),new PieceLocation(0,0)), true, true);
+        }
+
+        users.put("firebaseData",firebaseData);
+
+        usersRef.setValueAsync(users);
+
+        System.out.println("player " + playerNumber + " connected");
+    }
+
     public static FirebaseData GetLastSavedData(){
         System.out.println("data read");
         return lastSavedData;
@@ -70,6 +96,10 @@ public class ServerManager extends Observable {
 
     public int getPlayerTurn(){
         return playerTurn;
+    }
+
+    public boolean getPlayersConnected(){
+        return playersConnected;
     }
 
     public void ListenData(){
@@ -107,6 +137,14 @@ public class ServerManager extends Observable {
                 else{
                     playerTurn = 2;
                 }
+
+                if (retrievedData.player1Connected && retrievedData.player2Connected){
+                    playersConnected = true;
+                }
+                else{
+                    playersConnected = false;
+                }
+
                 recentMove = retrievedData.movementMade;
 
                 System.out.println(retrievedData.isWhiteTurn + " " + retrievedData.movementMade.from + " to " + retrievedData.movementMade.destination);

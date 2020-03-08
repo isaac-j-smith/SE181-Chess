@@ -6,45 +6,108 @@ import java.util.*;
 
 public class GameController implements Observer {
 
-    private JFrame view;
+    private JFrame startView;
+    private JFrame connectView;
+    private JFrame gameView;
     private HashMap<String, JButton> map;
     private ArrayList<ArrayList<ChessPiece>> boardValues;
     private Chessboard board;
     private ArrayList<PieceLocation> availableMoves;
     private ChessPiece selectedPiece;
     private ServerManager serverManager;
-    private int playerNumber = 1;
+    private int playerNumber = 0;
+    private PieceColor playerColor;
 
-    public GameController() throws IOException {
+    public GameController() {
         this.map = new HashMap<>();
         this.selectedPiece = null;
     }
 
 
     /**
-     * Starts the game
+     * Sends player to start screen
      */
     public void start() throws IOException {
-        setUp();
-        initializeView();
+        initialStartScreen();
     }
 
+    /**
+     * Initializes serverManager and attaches this as observer
+     */
     public void setUp() throws IOException {
         serverManager = new ServerManager();
-        GameController observer = new GameController();
-        serverManager.addObserver(observer);
+        serverManager.addObserver(this);
         serverManager.Firebase();
         serverManager.ListenData();
     }
+
+    /**
+     * Initializes JFrame for start screen.
+     */
+    public void initialStartScreen(){
+        startView = new GameView("Start Screen");
+        JButton b=new JButton("Connect");
+
+        b.setBounds(300,500,300, 100);
+        b.setFont(new Font("Arial", Font.PLAIN, 40));
+
+        JLabel label = new JLabel("Chess");
+        label.setText("Chess");
+        label.setFont(new Font("Arial", Font.PLAIN, 200));
+        label.setForeground(Color.white);
+        label.setBounds(160,100,700, 300);
+
+        JLabel label1 = new JLabel("Release");
+        label1.setText("Release Version 1.02");
+        label1.setFont(new Font("Arial", Font.PLAIN, 30));
+        label1.setForeground(Color.white);
+        label1.setBounds(570,780,500, 100);
+
+        //add to frame
+        startView.add(b);
+        startView.add(label);
+        startView.add(label1);
+        startView.setLayout(null);
+
+        //action listener
+        b.addActionListener(e -> {
+            try {
+                initializeConnectScreen();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        display(startView);
+    }
+
+    /**
+     * Initializes JFrame for connection screen.
+     */
+    public void initializeConnectScreen() throws IOException {
+        setUp();
+        connectView = new GameView("Connect Screen");
+        JLabel label = new JLabel("Connection");
+        label.setText("Waiting for another player to connect...");
+        label.setFont(new Font("Arial", Font.PLAIN, 30));
+        label.setForeground(Color.white);
+        label.setBounds(160,300,900, 300);
+
+        connectView.add(label);
+        connectView.setLayout(null);
+
+        hide(startView);
+        display(connectView);
+    }
+
     /**
      * Initializes the board with new values. Done at the start
      */
-    private void initializeView() {
+    private void initializeGameView() {
 
         this.board = new Chessboard();
 
-        this.view = new GameView("Chess Game");
-        this.view.setLayout(new GridLayout(8, 8, 2, 2));
+        this.gameView = new GameView("Chess Game");
+        this.gameView.setLayout(new GridLayout(8, 8, 2, 2));
 
         if (playerNumber == 1) {
             for (int i = 7; i >= 0; i--) {
@@ -70,7 +133,7 @@ public class GameController implements Observer {
                     b.setName(i + "" + j);
                     b.addActionListener(e -> buttonClicked(b.getName()));
                     map.put(b.getName(), b);
-                    this.view.add(b);
+                    this.gameView.add(b);
                 }
             }
         }
@@ -98,12 +161,13 @@ public class GameController implements Observer {
                     b.setName(i + "" + j);
                     b.addActionListener(e -> buttonClicked(b.getName()));
                     map.put(b.getName(), b);
-                    this.view.add(b);
+                    this.gameView.add(b);
                 }
             }
         }
         this.boardValues = board.getBoard();
-        display();
+        hide(connectView);
+        display(gameView);
     }
 
     /**
@@ -146,36 +210,43 @@ public class GameController implements Observer {
         int row = Integer.parseInt(String.valueOf(name.charAt(0)));
         int col = Integer.parseInt(String.valueOf(name.charAt(1)));
         ChessPiece piece = this.boardValues.get(row).get(col);
-        if(piece != null && selectedPiece == null){
-            selectedPiece = piece;
+        System.out.println("player turn is: " + serverManager.getPlayerTurn());
+        System.out.println("i am player " + playerNumber);
+        System.out.println("selected color is " + piece.color);
+        System.out.println("i am " + playerColor);
 
-            this.availableMoves = board.getValidMoves(piece);
+        if (serverManager.getPlayerTurn() == playerNumber && piece.color.equals(playerColor)) {
+            if (piece != null && selectedPiece == null) {
+                selectedPiece = piece;
 
-            for (PieceLocation move : this.availableMoves){
-                String temp = move.row+ "" + move.column;
-                getButton(temp).setBackground(Color.green);
-            }
-        }else{
-            for(PieceLocation move : this.availableMoves){
-                if(row == move.row && col == move.column){
-                    this.board.movePiece(selectedPiece, move);
-                    this.availableMoves = new ArrayList<>();
-                    this.boardValues = this.board.getBoard();
+                this.availableMoves = board.getValidMoves(piece);
 
-                    drawPieces();
+                for (PieceLocation move : this.availableMoves) {
+                    String temp = move.row + "" + move.column;
+                    getButton(temp).setBackground(Color.green);
                 }
+            } else {
+                for (PieceLocation move : this.availableMoves) {
+                    if (row == move.row && col == move.column) {
+                        this.board.movePiece(selectedPiece, move);
+                        this.availableMoves = new ArrayList<>();
+                        this.boardValues = this.board.getBoard();
 
-                if ((move.row % 2 != 0 && move.column % 2 == 0)
-                        || move.row % 2 == 0 && move.column % 2 != 0) {
-                    Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(Color.white);
-                } else {
-                    Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(new Color(75, 65, 50));
+                        drawPieces();
+                    }
+
+                    if ((move.row % 2 != 0 && move.column % 2 == 0)
+                            || move.row % 2 == 0 && move.column % 2 != 0) {
+                        Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(Color.white);
+                    } else {
+                        Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(new Color(75, 65, 50));
+                    }
                 }
+                selectedPiece = null;
             }
-            selectedPiece = null;
         }
 
-        display();
+        display(gameView);
     }
 
     /**
@@ -190,20 +261,32 @@ public class GameController implements Observer {
         return null;
     }
 
-    private void display() {
-        this.view.setVisible(true);
+    private void display(JFrame view) {
+        view.setVisible(true);
+    }
+
+    private void hide(JFrame view) {
+        view.setVisible(false);
     }
 
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("Hyaaaaa");
-        System.out.println("Hiiiii");
+
 
         if (playerNumber == 0) {
             playerNumber = serverManager.getPlayerNumber();
-            System.out.println("player number is: " + playerNumber);
-            initializeView();
+            serverManager.connectPlayer(playerNumber);
+            if (playerNumber == 1){
+                playerColor = PieceColor.White;
+            }
+            else if (playerNumber == 2){
+                playerColor = PieceColor.Black;
+            }
+        }
+
+        if (serverManager.getPlayersConnected() && gameView == null){
+            initializeGameView();
         }
 
         if (serverManager.getPlayerTurn() == playerNumber) {

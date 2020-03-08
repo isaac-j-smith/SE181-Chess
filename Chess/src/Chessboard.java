@@ -337,45 +337,8 @@ public class Chessboard {
 	 * @param PieceLocation - the location to move the piece
 	 */
 	public void movePiece(ChessPiece piece, PieceLocation destination) {
-		SaveMove(piece,destination);
 		placePiece(piece, destination);
 		piece.setLocation(destination);
-	}
-
-	/**
-	 * Saves the move to firebase with players turn, from move and destination moves
-	 * @param ChessPiece - the piece to move
-	 * @param PieceLocation - the location to move the piece
-	 */
-	public void SaveMove(ChessPiece piece, PieceLocation destination){
-		FirebaseData lastSaved = ServerManager.GetLastSavedData();
-		Boolean sameMove =  CompareLocation(lastSaved, piece.location, destination); //
-
-		if (sameMove)
-			return;
-
-		Boolean isWhiteTurn = piece.color.equals(PieceColor.White);
-		PieceLocation from = piece.location;
-		ServerManager.SaveData(isWhiteTurn, from, destination);
-	}
-
-	public Boolean CompareLocation(FirebaseData lastSavedMove, PieceLocation from, PieceLocation destination){
-		int board_fromColumn = from.column;
-		int board_fromRow = from.row;
-		int board_destinationColumn = destination.column;
-		int board_destinationRow = destination.row;
-
-		int fireBase_fromColumn = lastSavedMove.movementMade.from.column;
-		int fireBase_fromRow = lastSavedMove.movementMade.from.row;
-		int fireBase_destinationColumn = lastSavedMove.movementMade.destination.column;
-		int fireBase_destinationRow = lastSavedMove.movementMade.destination.row;
-
-		//location did not changed. no need to save
-		//location change need to save
-		return board_fromColumn == fireBase_fromColumn
-				&& board_fromRow == fireBase_fromRow
-				&& board_destinationColumn == fireBase_destinationColumn
-				&& board_destinationRow == fireBase_destinationRow;
 	}
 
 	/**

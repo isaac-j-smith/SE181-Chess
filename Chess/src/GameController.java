@@ -211,19 +211,22 @@ public class GameController implements Observer {
         int col = Integer.parseInt(String.valueOf(name.charAt(1)));
         ChessPiece piece = this.boardValues.get(row).get(col);
 
-        if (piece != null && serverManager.getPlayerTurn() == playerNumber && piece.color.equals(playerColor)) {
-            if (selectedPiece == null) {
-                selectedPiece = piece;
 
-                this.availableMoves = board.getValidMoves(piece);
+            if (piece != null &&  selectedPiece == null) {
+                if (serverManager.getPlayerTurn() == playerNumber && piece.color.equals(playerColor)){
+                    selectedPiece = piece;
 
-                for (PieceLocation move : this.availableMoves) {
-                    String temp = move.row + "" + move.column;
-                    getButton(temp).setBackground(Color.green);
+                    this.availableMoves = board.getValidMoves(piece);
+
+                    for (PieceLocation move : this.availableMoves) {
+                        String temp = move.row + "" + move.column;
+                        getButton(temp).setBackground(Color.green);
+                    }
                 }
             } else {
                 for (PieceLocation move : this.availableMoves) {
                     if (row == move.row && col == move.column) {
+                        SaveMove(selectedPiece, move);
                         this.board.movePiece(selectedPiece, move);
                         this.availableMoves = new ArrayList<>();
                         this.boardValues = this.board.getBoard();
@@ -240,7 +243,7 @@ public class GameController implements Observer {
                 }
                 selectedPiece = null;
             }
-        }
+
 
         display(gameView);
     }
@@ -290,5 +293,47 @@ public class GameController implements Observer {
             PieceLocation destination = new PieceLocation(serverManager.getRecentMove().destination.row, serverManager.getRecentMove().destination.column);
             this.board.movePiece(piece, destination);
         }
+    }
+
+    /**
+     * Saves the move to firebase with players turn, from move and destination moves
+     * @param ChessPiece - the piece to move
+     * @param PieceLocation - the location to move the piece
+     */
+    public void SaveMove(ChessPiece piece, PieceLocation destination){
+        FirebaseData lastSaved = serverManager.GetLastSavedData();
+        Boolean sameMove =  CompareLocation(lastSaved, piece.location, destination); //
+
+        if (sameMove)
+            return;
+
+        Boolean isWhiteTurn = false;
+        if (playerNumber == 1){
+            isWhiteTurn = false;
+        }
+        else if (playerNumber == 2){
+            isWhiteTurn = true;
+        }
+        PieceLocation from = piece.location;
+        serverManager.SaveData(isWhiteTurn, from, destination);
+    }
+
+    public Boolean CompareLocation(FirebaseData lastSavedMove, PieceLocation from, PieceLocation destination){
+        int board_fromColumn = from.column;
+        int board_fromRow = from.row;
+        int board_destinationColumn = destination.column;
+        int board_destinationRow = destination.row;
+
+        int fireBase_fromColumn = lastSavedMove.movementMade.from.column;
+        int fireBase_fromRow = lastSavedMove.movementMade.from.row;
+        int fireBase_destinationColumn = lastSavedMove.movementMade.destination.column;
+        int fireBase_destinationRow = lastSavedMove.movementMade.destination.row;
+
+        //location did not changed. no need to save
+        //location change need to save
+        return board_fromColumn == fireBase_fromColumn
+                && board_fromRow == fireBase_fromRow
+                && board_destinationColumn == fireBase_destinationColumn
+                && board_destinationRow == fireBase_destinationRow;
     }
 }

@@ -39,7 +39,7 @@ public class ServerManager extends Observable {
 
     }
 
-    public static void SaveData(Boolean isWhiteTurn, PieceLocation from, PieceLocation destination){
+    public void SaveData(Boolean isWhiteTurn, PieceLocation from, PieceLocation destination){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
@@ -48,6 +48,13 @@ public class ServerManager extends Observable {
         Map<String, FirebaseData> users = new HashMap<>();
 
         FirebaseData firebaseData = new FirebaseData(isWhiteTurn, new MovementMade(from,destination), true, true);
+
+        if (isWhiteTurn){
+            playerTurn = 1;
+        }
+        else{
+            playerTurn = 2;
+        }
 
         users.put("firebaseData",firebaseData);
 

@@ -24,6 +24,7 @@ public class ServerManager extends Observable {
     private int playerTurn;
     private int playerNumber;
     private boolean playersConnected;
+    private String pawnPromotion;
 
 
     public void Firebase() throws IOException {
@@ -39,7 +40,7 @@ public class ServerManager extends Observable {
 
     }
 
-    public void SaveData(Boolean isWhiteTurn, PieceLocation from, PieceLocation destination){
+    public void SaveData(Boolean isWhiteTurn, PieceLocation from, PieceLocation destination, String promotion){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
@@ -47,7 +48,7 @@ public class ServerManager extends Observable {
 
         Map<String, FirebaseData> users = new HashMap<>();
 
-        FirebaseData firebaseData = new FirebaseData(isWhiteTurn, new MovementMade(from,destination), true, true);
+        FirebaseData firebaseData = new FirebaseData(isWhiteTurn, new MovementMade(from,destination), true, true, promotion);
 
         if (isWhiteTurn){
             playerTurn = 1;
@@ -70,13 +71,13 @@ public class ServerManager extends Observable {
         Map<String, FirebaseData> users = new HashMap<>();
 
 
-        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), false, false);
+        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), false, false, "");
 
         if (playerNumber == 1) {
-            firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), true, false);
+            firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), true, false, "");
         }
         else {
-            firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0,0),new PieceLocation(0,0)), true, true);
+            firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0,0),new PieceLocation(0,0)), true, true, "");
         }
 
         users.put("firebaseData",firebaseData);
@@ -92,7 +93,7 @@ public class ServerManager extends Observable {
 
         Map<String, FirebaseData> users = new HashMap<>();
 
-        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), false, false);
+        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), false, false, "");
 
         users.put("firebaseData",firebaseData);
 
@@ -119,6 +120,10 @@ public class ServerManager extends Observable {
 
     public boolean getPlayersConnected(){
         return playersConnected;
+    }
+
+    public String getPawnPromotion(){
+        return pawnPromotion;
     }
 
     public void ListenData(){
@@ -163,6 +168,7 @@ public class ServerManager extends Observable {
                     playersConnected = false;
                 }
 
+                pawnPromotion = retrievedData.promotionChoice;
                 recentMove = retrievedData.movementMade;
                 setChanged();
                 notifyObservers();

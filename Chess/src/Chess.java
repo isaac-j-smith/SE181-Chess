@@ -11,12 +11,4 @@ public class Chess<options> {
         controller.start();
     }
 
-    public void PlayGame() {
-
-    }
-
-
-
-
-
 }

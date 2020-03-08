@@ -313,7 +313,7 @@ public class GameController implements Observer {
         } else {
             for (PieceLocation move : this.availableMoves) {
                 if (row == move.row && col == move.column) {
-                    SaveMove(selectedPiece, move);
+                    SaveMove(selectedPiece, move, "");
                     this.board.movePiece(selectedPiece, move);
                     this.availableMoves = new ArrayList<>();
                     this.boardValues = this.board.getBoard();
@@ -412,6 +412,91 @@ public class GameController implements Observer {
         new javax.swing.Timer(delay, taskPerformer).start();
     }
 
+    private void generatePromotionButtons(Pawn pawn){
+        JPanel promotionLayer = (JPanel) gameView.getGlassPane();
+        promotionLayer.setVisible(true);
+        promotionLayer.setLayout(new GridBagLayout());
+
+        JButton b1=new JButton("Bishop");
+        JButton b2=new JButton("Knight");
+        JButton b3=new JButton("Rook");
+        JButton b4=new JButton("Queen");
+
+        b1.setBounds(300,500,300, 100);
+        b1.setFont(new Font("Arial", Font.PLAIN, 40));
+        b1.addActionListener(e -> {
+            board.promotePawn(pawn, "Bishop");
+            SaveMove(board.getPiece(pawn.location), pawn.location, "Bishop");
+            b1.setVisible(false);
+            b2.setVisible(false);
+            b3.setVisible(false);
+            b4.setVisible(false);
+            promotionLayer.remove(b1);
+            promotionLayer.remove(b2);
+            promotionLayer.remove(b3);
+            promotionLayer.remove(b4);
+            drawPieces();
+            display(gameView);
+        });
+
+        b2.setBounds(300,500,300, 100);
+        b2.setFont(new Font("Arial", Font.PLAIN, 40));
+        b2.addActionListener(e -> {
+            board.promotePawn(pawn, "Knight");
+            SaveMove(board.getPiece(pawn.location), pawn.location, "Knight");
+            b1.setVisible(false);
+            b2.setVisible(false);
+            b3.setVisible(false);
+            b4.setVisible(false);
+            promotionLayer.remove(b1);
+            promotionLayer.remove(b2);
+            promotionLayer.remove(b3);
+            promotionLayer.remove(b4);
+            drawPieces();
+            display(gameView);
+        });
+
+        b3.setBounds(300,500,300, 100);
+        b3.setFont(new Font("Arial", Font.PLAIN, 40));
+        b3.addActionListener(e -> {
+            board.promotePawn(pawn, "Rook");
+            SaveMove(board.getPiece(pawn.location), pawn.location, "Rook");
+            b1.setVisible(false);
+            b2.setVisible(false);
+            b3.setVisible(false);
+            b4.setVisible(false);
+            promotionLayer.remove(b1);
+            promotionLayer.remove(b2);
+            promotionLayer.remove(b3);
+            promotionLayer.remove(b4);
+            drawPieces();
+            display(gameView);
+         });
+
+
+        b4.setBounds(300,500,300, 100);
+        b4.setFont(new Font("Arial", Font.PLAIN, 40));
+        b4.addActionListener(e -> {
+            board.promotePawn(pawn, "Queen");
+            SaveMove(board.getPiece(pawn.location), pawn.location, "Queen");
+            b1.setVisible(false);
+            b2.setVisible(false);
+            b3.setVisible(false);
+            b4.setVisible(false);
+            promotionLayer.remove(b1);
+            promotionLayer.remove(b2);
+            promotionLayer.remove(b3);
+            promotionLayer.remove(b4);
+            drawPieces();
+            display(gameView);
+        });
+
+        promotionLayer.add(b1);
+        promotionLayer.add(b2);
+        promotionLayer.add(b3);
+        promotionLayer.add(b4);
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         if (playerNumber == 0) {
@@ -430,14 +515,37 @@ public class GameController implements Observer {
         }
 
         if (serverManager.getPlayersConnected() && gameView == null){
-            System.out.println("trying to initialize view");
             initializeGameView();
         }
 
         if (serverManager.getPlayerTurn() == playerNumber) {
-            ChessPiece piece = board.getPiece(serverManager.getRecentMove().from.row, serverManager.getRecentMove().from.column);
-            PieceLocation destination = new PieceLocation(serverManager.getRecentMove().destination.row, serverManager.getRecentMove().destination.column);
-            this.board.movePiece(piece, destination);
+            if (serverManager.getPawnPromotion().isEmpty()) {
+                ChessPiece piece = board.getPiece(serverManager.getRecentMove().from.row, serverManager.getRecentMove().from.column);
+                PieceLocation destination = new PieceLocation(serverManager.getRecentMove().destination.row, serverManager.getRecentMove().destination.column);
+                this.board.movePiece(piece, destination);
+            }
+            else {
+                ChessPiece piece = board.getPiece(serverManager.getRecentMove().from.row, serverManager.getRecentMove().from.column);
+                if (serverManager.getRecentMove().from.row == 7){
+                    piece = board.getPiece(serverManager.getRecentMove().from.row - 1, serverManager.getRecentMove().from.column);
+                    PieceLocation destination = new PieceLocation(serverManager.getRecentMove().destination.row, serverManager.getRecentMove().destination.column);
+                    this.board.movePiece(piece, destination);
+                }
+                else if (serverManager.getRecentMove().from.row == 0){
+                    piece = board.getPiece(serverManager.getRecentMove().from.row + 1, serverManager.getRecentMove().from.column);
+                    PieceLocation destination = new PieceLocation(serverManager.getRecentMove().destination.row, serverManager.getRecentMove().destination.column);
+                    this.board.movePiece(piece, destination);
+                }
+                if (serverManager.getPawnPromotion().compareTo("Bishop") == 0) {
+                    board.promotePawn((Pawn) piece, "Bishop");
+                } else if (serverManager.getPawnPromotion().compareTo("Knight") == 0) {
+                    board.promotePawn((Pawn) piece, "Knight");
+                } else if (serverManager.getPawnPromotion().compareTo("Rook") == 0) {
+                    board.promotePawn((Pawn) piece, "Rook");
+                } else if (serverManager.getPawnPromotion().compareTo("Queen") == 0) {
+                    board.promotePawn((Pawn) piece, "Queen");
+                }
+            }
             drawPieces();
 
             if(board.isInCheckmate(playerColor)){
@@ -465,7 +573,7 @@ public class GameController implements Observer {
      * @param ChessPiece - the piece to move
      * @param PieceLocation - the location to move the piece
      */
-    public void SaveMove(ChessPiece piece, PieceLocation destination){
+    public void SaveMove(ChessPiece piece, PieceLocation destination, String promotion){
         FirebaseData lastSaved = serverManager.GetLastSavedData();
         Boolean sameMove =  CompareLocation(lastSaved, piece.location, destination); //
 
@@ -480,7 +588,13 @@ public class GameController implements Observer {
             isWhiteTurn = true;
         }
         PieceLocation from = piece.location;
-        serverManager.SaveData(isWhiteTurn, from, destination);
+
+        if (piece instanceof Pawn && (destination.row == 0 || destination.row == 7)){
+            generatePromotionButtons((Pawn) piece);
+        }
+        else {
+            serverManager.SaveData(isWhiteTurn, from, destination, promotion);
+        }
     }
 
     public Boolean CompareLocation(FirebaseData lastSavedMove, PieceLocation from, PieceLocation destination){

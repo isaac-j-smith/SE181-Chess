@@ -361,6 +361,25 @@ public class Chessboard {
 		this.board.get(destination.row).add(destination.column, piece);
 	}
 
+	public void promotePawn(Pawn pawn, String choice){
+		if (choice.compareTo("Bishop") == 0){
+			ChessPiece bishop = new Bishop(pawn.location, pawn.color, pawn.direction);
+			placePiece(bishop, bishop.location);
+		}
+		else if (choice.compareTo("Knight") == 0){
+			ChessPiece knight = new Knight(pawn.location, pawn.color, pawn.direction);
+			placePiece(knight, knight.location);
+		}
+		else if (choice.compareTo("Rook") == 0){
+			ChessPiece rook = new Rook(pawn.location, pawn.color, pawn.direction);
+			placePiece(rook, rook.location);
+		}
+		else if (choice.compareTo("Queen") == 0){
+			ChessPiece queen = new Queen(pawn.location, pawn.color, pawn.direction);
+			placePiece(queen, queen.location);
+		}
+	}
+
 	public ArrayList<ArrayList<ChessPiece>> getBoard() {
 		return board;
 	}

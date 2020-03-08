@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ServerManager {
+    public static FirebaseData lastSavedData;
     public void Firebase() throws IOException {
 
         FileInputStream refreshToken = new FileInputStream("./src/service-account.json");
@@ -29,28 +30,9 @@ public class ServerManager {
 
         FirebaseApp.initializeApp(options);
 
-
-        /*
-        DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("restricted_access/secret_document");
-
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object document = dataSnapshot.getValue();
-                System.out.println(document);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-            }
-        });
-        */
-
     }
 
-    public void SaveData(){
+    public static void SaveData(Boolean isWhiteTurn, PieceLocation from, PieceLocation destination){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
@@ -58,12 +40,7 @@ public class ServerManager {
 
         Map<String, FirebaseData> users = new HashMap<>();
 
-        PieceLocation from = new PieceLocation(2,2);
-        PieceLocation destination = new PieceLocation(3,2);
-
-
-        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(from,destination));
-
+        FirebaseData firebaseData = new FirebaseData(isWhiteTurn, new MovementMade(from,destination));
 
         users.put("firebaseData",firebaseData);
 
@@ -72,35 +49,31 @@ public class ServerManager {
         System.out.println("data has changed");
     }
 
+    public static FirebaseData GetLastSavedData(){
+        System.out.println("data read");
+        return lastSavedData;
+    }
 
-    public void ReadData(){
+    public void ListenData(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference().child("chess");
 
         System.out.println("before reading");
         // Attach a listener to read the data at our posts reference
         ref.addChildEventListener(new ChildEventListener() {
-/*
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println("during reading222");
-                var retrievedData = dataSnapshot.getValue(FirebaseData.class);
-                System.out.println(retrievedData);
-            }
-*/
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                System.out.println("during reading222");
-                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                    var retrievedData = dataSnapshot.getValue(FirebaseData.class);
-                    System.out.println(retrievedData);
-
-                }
+                System.out.println("reading added");
+                lastSavedData = dataSnapshot.getValue(FirebaseData.class);
+                System.out.println(lastSavedData.isWhiteTurn + " " + lastSavedData.movementMade.from + " to " + lastSavedData.movementMade.destination);
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                System.out.println("reading changed");
+                var retrievedData = dataSnapshot.getValue(FirebaseData.class);
+                System.out.println(retrievedData.isWhiteTurn + " " + retrievedData.movementMade.from + " to " + retrievedData.movementMade.destination);
 
             }
 

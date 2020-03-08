@@ -12,9 +12,16 @@ public class Chess<options> {
 
         ServerManager server = new ServerManager();
         server.Firebase();
-        server.ReadData();
-        server.SaveData();
+        server.ListenData();
+        server.GetLastSavedData();
+
+
     }
+
+    public void PlayGame() {
+
+    }
+
 
 
 

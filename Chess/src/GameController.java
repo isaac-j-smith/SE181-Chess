@@ -210,13 +210,9 @@ public class GameController implements Observer {
         int row = Integer.parseInt(String.valueOf(name.charAt(0)));
         int col = Integer.parseInt(String.valueOf(name.charAt(1)));
         ChessPiece piece = this.boardValues.get(row).get(col);
-        System.out.println("player turn is: " + serverManager.getPlayerTurn());
-        System.out.println("i am player " + playerNumber);
-        System.out.println("selected color is " + piece.color);
-        System.out.println("i am " + playerColor);
 
-        if (serverManager.getPlayerTurn() == playerNumber && piece.color.equals(playerColor)) {
-            if (piece != null && selectedPiece == null) {
+        if (piece != null && serverManager.getPlayerTurn() == playerNumber && piece.color.equals(playerColor)) {
+            if (selectedPiece == null) {
                 selectedPiece = piece;
 
                 this.availableMoves = board.getValidMoves(piece);

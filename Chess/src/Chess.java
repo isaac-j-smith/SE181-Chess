@@ -10,12 +10,6 @@ public class Chess<options> {
         GameController controller = new GameController();
         controller.start();
 
-        ServerManager server = new ServerManager();
-        server.Firebase();
-        server.ListenData();
-        server.GetLastSavedData();
-
-
     }
 
     public void PlayGame() {

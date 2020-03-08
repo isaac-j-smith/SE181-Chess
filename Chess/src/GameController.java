@@ -2,11 +2,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
-public class GameController {
+public class GameController implements Observer {
 
     private JFrame view;
     private HashMap<String, JButton> map;
@@ -14,11 +12,17 @@ public class GameController {
     private Chessboard board;
     private ArrayList<PieceLocation> availableMoves;
     private ChessPiece selectedPiece;
-    private int playerNumber;
+    private ServerManager serverManager;
+    private int playerNumber = 1;
 
-    public GameController() {
+    public GameController() throws IOException {
         this.map = new HashMap<>();
         this.selectedPiece = null;
+        serverManager =  new ServerManager();
+        serverManager.addObserver(this);
+        serverManager.Firebase();
+        serverManager.ListenData();
+        serverManager.GetLastSavedData();
     }
 
     /**
@@ -26,6 +30,7 @@ public class GameController {
      */
     public void start(){
         initializeView();
+
     }
 
     /**
@@ -184,5 +189,20 @@ public class GameController {
 
     private void display() {
         this.view.setVisible(true);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (playerNumber == 0) {
+            playerNumber = serverManager.getPlayerNumber();
+            System.out.println("player number is: " + playerNumber);
+            initializeView();
+        }
+
+        if (serverManager.getPlayerTurn() == playerNumber) {
+            ChessPiece piece = board.getPiece(serverManager.getRecentMove().from.row, serverManager.getRecentMove().from.column);
+            PieceLocation destination = new PieceLocation(serverManager.getRecentMove().destination.row, serverManager.getRecentMove().destination.column);
+            this.board.movePiece(piece, destination);
+        }
     }
 }

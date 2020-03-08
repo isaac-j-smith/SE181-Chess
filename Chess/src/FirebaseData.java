@@ -1,6 +1,8 @@
 public class FirebaseData {
     public Boolean isWhiteTurn;
     public MovementMade movementMade;
+    public Boolean player1Connected;
+    public Boolean player2Connected;
 
     public FirebaseData() {}
     public FirebaseData(Boolean isWhiteTurn, MovementMade movementMade){

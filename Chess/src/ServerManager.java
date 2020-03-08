@@ -16,9 +16,15 @@ import com.google.firebase.FirebaseOptions;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
 
-public class ServerManager {
+public class ServerManager extends Observable {
     public static FirebaseData lastSavedData;
+    private MovementMade recentMove;
+    private int playerTurn;
+    private int playerNumber;
+
+
     public void Firebase() throws IOException {
 
         FileInputStream refreshToken = new FileInputStream("./Chess/src/service-account.json");
@@ -54,18 +60,39 @@ public class ServerManager {
         return lastSavedData;
     }
 
+    public int getPlayerNumber(){
+        return playerNumber;
+    }
+
+    public MovementMade getRecentMove(){
+        return recentMove;
+    }
+
+    public int getPlayerTurn(){
+        return playerTurn;
+    }
+
     public void ListenData(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference().child("chess");
 
-        System.out.println("before reading");
         // Attach a listener to read the data at our posts reference
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                System.out.println("reading added");
                 lastSavedData = dataSnapshot.getValue(FirebaseData.class);
-                System.out.println(lastSavedData.isWhiteTurn + " " + lastSavedData.movementMade.from + " to " + lastSavedData.movementMade.destination);
+
+                System.out.println(lastSavedData.player1Connected);
+                if (!(lastSavedData.player1Connected)){
+                    playerNumber = 1;
+                }
+                else if (!(lastSavedData.player2Connected)){
+                    playerNumber = 2;
+                }
+                else{
+                    playerNumber = 0;
+                }
+                this.notifyAll();
 
             }
 
@@ -73,12 +100,22 @@ public class ServerManager {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 System.out.println("reading changed");
                 FirebaseData retrievedData = dataSnapshot.getValue(FirebaseData.class);
+
+                if (retrievedData.isWhiteTurn){
+                    playerTurn = 1;
+                }
+                else{
+                    playerTurn = 2;
+                }
+                recentMove = retrievedData.movementMade;
+
                 System.out.println(retrievedData.isWhiteTurn + " " + retrievedData.movementMade.from + " to " + retrievedData.movementMade.destination);
 
                 System.out.println("from row:" + retrievedData.movementMade.from.row);
                 System.out.println("from col:" + retrievedData.movementMade.from.column);
                 System.out.println("to row:" + retrievedData.movementMade.destination.row);
                 System.out.println("to col:" + retrievedData.movementMade.destination.column);
+                this.notifyAll();
 
             }
 
@@ -98,6 +135,7 @@ public class ServerManager {
             }
         });
     }
+
 
 
 }

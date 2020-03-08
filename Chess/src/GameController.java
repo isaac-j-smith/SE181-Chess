@@ -1,6 +1,8 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.*;
 
@@ -9,20 +11,21 @@ public class GameController implements Observer {
     private JFrame startView;
     private JFrame connectView;
     private JFrame gameView;
+    private JFrame checkmateView;
     private HashMap<String, JButton> map;
     private ArrayList<ArrayList<ChessPiece>> boardValues;
     private Chessboard board;
     private ArrayList<PieceLocation> availableMoves;
     private ChessPiece selectedPiece;
     private ServerManager serverManager;
-    private int playerNumber = 0;
+    private int playerNumber;
     private PieceColor playerColor;
 
-    public GameController() {
+    public GameController() throws IOException {
         this.map = new HashMap<>();
         this.selectedPiece = null;
+        setUp();
     }
-
 
     /**
      * Sends player to start screen
@@ -38,7 +41,6 @@ public class GameController implements Observer {
         serverManager = new ServerManager();
         serverManager.addObserver(this);
         serverManager.Firebase();
-        serverManager.ListenData();
     }
 
     /**
@@ -73,6 +75,7 @@ public class GameController implements Observer {
         b.addActionListener(e -> {
             try {
                 initializeConnectScreen();
+                serverManager.ListenData();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -84,7 +87,6 @@ public class GameController implements Observer {
      * Initializes JFrame for connection screen.
      */
     public void initializeConnectScreen() throws IOException {
-        setUp();
         connectView = new GameView("Connect Screen");
         JLabel label = new JLabel("Connection");
         label.setText("Waiting for another player to connect...");
@@ -107,7 +109,8 @@ public class GameController implements Observer {
         this.board = new Chessboard();
 
         this.gameView = new GameView("Chess Game");
-        this.gameView.setLayout(new GridLayout(8, 8, 2, 2));
+        JPanel boardLayer = new JPanel();
+        boardLayer.setLayout(new GridLayout(8, 8, 2, 2));
 
         if (playerNumber == 1) {
             for (int i = 7; i >= 0; i--) {
@@ -133,7 +136,7 @@ public class GameController implements Observer {
                     b.setName(i + "" + j);
                     b.addActionListener(e -> buttonClicked(b.getName()));
                     map.put(b.getName(), b);
-                    this.gameView.add(b);
+                    boardLayer.add(b);
                 }
             }
         }
@@ -161,13 +164,46 @@ public class GameController implements Observer {
                     b.setName(i + "" + j);
                     b.addActionListener(e -> buttonClicked(b.getName()));
                     map.put(b.getName(), b);
-                    this.gameView.add(b);
+                    boardLayer.add(b);
                 }
             }
         }
+        gameView.getContentPane().add(boardLayer);
         this.boardValues = board.getBoard();
         hide(connectView);
         display(gameView);
+    }
+
+    public void initializeCheckmateScreen(int winningPlayer) throws IOException {
+        checkmateView = new GameView("Checkmate Screen");
+
+        JLabel label = new JLabel("Checkmate");
+        if (playerNumber == winningPlayer){
+            label.setText("Checkmate! You win!");
+        }else{
+            label.setText("Checkmate! You lose!");
+        }
+
+        label.setFont(new Font("Arial", Font.PLAIN, 50));
+        label.setForeground(Color.white);
+        label.setBounds(200,100,700, 300);
+
+        JButton b=new JButton("Return to start screen");
+        b.setBounds(100,500,700, 100);
+        b.setFont(new Font("Arial", Font.PLAIN, 40));
+
+        //add to frame
+        checkmateView.add(b);
+        checkmateView.add(label);
+        checkmateView.setLayout(null);
+
+        //action listener
+        b.addActionListener(e -> {
+                initialStartScreen();
+                hide(checkmateView);
+        });
+       //hide(gameView);
+        display(checkmateView);
     }
 
     /**
@@ -232,6 +268,32 @@ public class GameController implements Observer {
                         this.boardValues = this.board.getBoard();
 
                         drawPieces();
+
+                        if (playerNumber == 1){
+                            if (board.isInCheckmate(PieceColor.Black)){
+                                serverManager.ResetData();
+                                try {
+                                    initializeCheckmateScreen(playerNumber);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            else if (board.isInCheck(PieceColor.Black)){
+                                playerInCheck(PieceColor.Black);
+                            }
+                        }else{
+                            if (board.isInCheckmate(PieceColor.White)){
+                                serverManager.ResetData();
+                                try {
+                                    initializeCheckmateScreen(playerNumber);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            else if (board.isInCheck(PieceColor.White)){
+                                playerInCheck(PieceColor.White);
+                            }
+                        }
                     }
 
                     if ((move.row % 2 != 0 && move.column % 2 == 0)
@@ -268,10 +330,35 @@ public class GameController implements Observer {
         view.setVisible(false);
     }
 
+    private void playerInCheck(PieceColor color){
+        int delay = 2000;
+
+        JPanel checkLayer = (JPanel) gameView.getGlassPane();
+        checkLayer.setVisible(true);
+        checkLayer.setLayout(new GridBagLayout());
+
+        JLabel label = new JLabel("Check");
+        if (color.equals(PieceColor.Black)){
+            label.setText("Black is in Check");
+        }
+        else {
+            label.setText("White is in Check");
+        }
+        label.setFont(new Font("Arial", Font.PLAIN, 100));
+        label.setForeground(Color.red);
+        label.setBounds(100,500,700, 300);
+        checkLayer.add(label);
+
+        ActionListener taskPerformer = new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                label.setVisible(false);
+            }
+        };
+        new javax.swing.Timer(delay, taskPerformer).start();
+    }
 
     @Override
     public void update(Observable o, Object arg) {
-
 
         if (playerNumber == 0) {
             playerNumber = serverManager.getPlayerNumber();
@@ -281,6 +368,10 @@ public class GameController implements Observer {
             }
             else if (playerNumber == 2){
                 playerColor = PieceColor.Black;
+            }
+            else{
+                hide(connectView);
+                initialStartScreen();
             }
         }
 
@@ -292,6 +383,26 @@ public class GameController implements Observer {
             ChessPiece piece = board.getPiece(serverManager.getRecentMove().from.row, serverManager.getRecentMove().from.column);
             PieceLocation destination = new PieceLocation(serverManager.getRecentMove().destination.row, serverManager.getRecentMove().destination.column);
             this.board.movePiece(piece, destination);
+            drawPieces();
+
+            if(board.isInCheckmate(playerColor)){
+                serverManager.ResetData();
+                try {
+                    if (playerNumber == 1){
+                        initializeCheckmateScreen(2);
+                    }
+                    else{
+                        initializeCheckmateScreen(1);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(board.isInCheck(playerColor)){
+                playerInCheck(playerColor);
+            }
+
+
         }
     }
 

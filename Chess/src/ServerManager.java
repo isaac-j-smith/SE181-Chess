@@ -59,8 +59,6 @@ public class ServerManager extends Observable {
         users.put("firebaseData",firebaseData);
 
         usersRef.setValueAsync(users);
-
-        System.out.println("data has changed");
     }
 
     public static void connectPlayer(int playerNumber){
@@ -77,19 +75,31 @@ public class ServerManager extends Observable {
         if (playerNumber == 1) {
             firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), true, false);
         }
-        else if (playerNumber == 2){
+        else {
             firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0,0),new PieceLocation(0,0)), true, true);
         }
 
         users.put("firebaseData",firebaseData);
 
         usersRef.setValueAsync(users);
+    }
 
-        System.out.println("player " + playerNumber + " connected");
+    public void ResetData(){
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference();
+
+        DatabaseReference usersRef = ref.child("chess");
+
+        Map<String, FirebaseData> users = new HashMap<>();
+
+        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), false, false);
+
+        users.put("firebaseData",firebaseData);
+
+        usersRef.setValueAsync(users);
     }
 
     public static FirebaseData GetLastSavedData(){
-        System.out.println("data read");
         return lastSavedData;
     }
 
@@ -119,7 +129,6 @@ public class ServerManager extends Observable {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 lastSavedData = dataSnapshot.getValue(FirebaseData.class);
 
-                System.out.println(lastSavedData.player1Connected);
                 if (!(lastSavedData.player1Connected)){
                     playerNumber = 1;
                 }
@@ -135,7 +144,6 @@ public class ServerManager extends Observable {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                System.out.println("reading changed");
                 FirebaseData retrievedData = dataSnapshot.getValue(FirebaseData.class);
 
                 if (retrievedData.isWhiteTurn){
@@ -153,13 +161,6 @@ public class ServerManager extends Observable {
                 }
 
                 recentMove = retrievedData.movementMade;
-
-                System.out.println(retrievedData.isWhiteTurn + " " + retrievedData.movementMade.from + " to " + retrievedData.movementMade.destination);
-
-                System.out.println("from row:" + retrievedData.movementMade.from.row);
-                System.out.println("from col:" + retrievedData.movementMade.from.column);
-                System.out.println("to row:" + retrievedData.movementMade.destination.row);
-                System.out.println("to col:" + retrievedData.movementMade.destination.column);
                 setChanged();
                 notifyObservers();
 

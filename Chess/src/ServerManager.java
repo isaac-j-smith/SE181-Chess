@@ -92,8 +92,8 @@ public class ServerManager extends Observable {
                 else{
                     playerNumber = 0;
                 }
-                this.notifyAll();
-
+                setChanged();
+                notifyObservers();
             }
 
             @Override
@@ -115,7 +115,8 @@ public class ServerManager extends Observable {
                 System.out.println("from col:" + retrievedData.movementMade.from.column);
                 System.out.println("to row:" + retrievedData.movementMade.destination.row);
                 System.out.println("to col:" + retrievedData.movementMade.destination.column);
-                this.notifyAll();
+                setChanged();
+                notifyObservers();
 
             }
 

@@ -18,21 +18,24 @@ public class GameController implements Observer {
     public GameController() throws IOException {
         this.map = new HashMap<>();
         this.selectedPiece = null;
-        serverManager =  new ServerManager();
-        serverManager.addObserver(this);
-        serverManager.Firebase();
-        serverManager.ListenData();
-     //   serverManager.GetLastSavedData();
     }
+
 
     /**
      * Starts the game
      */
-    public void start(){
+    public void start() throws IOException {
+        setUp();
         initializeView();
-
     }
 
+    public void setUp() throws IOException {
+        serverManager = new ServerManager();
+        GameController observer = new GameController();
+        serverManager.addObserver(observer);
+        serverManager.Firebase();
+        serverManager.ListenData();
+    }
     /**
      * Initializes the board with new values. Done at the start
      */
@@ -191,8 +194,12 @@ public class GameController implements Observer {
         this.view.setVisible(true);
     }
 
+
     @Override
     public void update(Observable o, Object arg) {
+        System.out.println("Hyaaaaa");
+        System.out.println("Hiiiii");
+
         if (playerNumber == 0) {
             playerNumber = serverManager.getPlayerNumber();
             System.out.println("player number is: " + playerNumber);

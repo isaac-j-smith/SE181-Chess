@@ -27,7 +27,7 @@ public class ServerManager extends Observable {
 
     public void Firebase() throws IOException {
 
-        FileInputStream refreshToken = new FileInputStream("./Chess/src/service-account.json");
+        FileInputStream refreshToken = new FileInputStream("./src/service-account.json");
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(refreshToken))
@@ -46,7 +46,7 @@ public class ServerManager extends Observable {
 
         Map<String, FirebaseData> users = new HashMap<>();
 
-        FirebaseData firebaseData = new FirebaseData(isWhiteTurn, new MovementMade(from,destination));
+        FirebaseData firebaseData = new FirebaseData(isWhiteTurn, new MovementMade(from,destination), true, true);
 
         users.put("firebaseData",firebaseData);
 

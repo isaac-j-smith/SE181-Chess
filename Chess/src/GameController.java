@@ -22,7 +22,7 @@ public class GameController implements Observer {
         serverManager.addObserver(this);
         serverManager.Firebase();
         serverManager.ListenData();
-        serverManager.GetLastSavedData();
+     //   serverManager.GetLastSavedData();
     }
 
     /**

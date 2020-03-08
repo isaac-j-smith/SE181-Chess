@@ -97,6 +97,8 @@ public class ServerManager extends Observable {
         users.put("firebaseData",firebaseData);
 
         usersRef.setValueAsync(users);
+        FirebaseApp.getInstance().delete();
+        deleteObservers();
     }
 
     public static FirebaseData GetLastSavedData(){
@@ -137,6 +139,7 @@ public class ServerManager extends Observable {
                 }
                 else{
                     playerNumber = 0;
+
                 }
                 setChanged();
                 notifyObservers();

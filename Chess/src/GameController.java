@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,7 +25,6 @@ public class GameController implements Observer {
     public GameController() throws IOException {
         this.map = new HashMap<>();
         this.selectedPiece = null;
-        setUp();
     }
 
     /**
@@ -38,9 +38,11 @@ public class GameController implements Observer {
      * Initializes serverManager and attaches this as observer
      */
     public void setUp() throws IOException {
+        playerNumber = 0;
         serverManager = new ServerManager();
         serverManager.addObserver(this);
         serverManager.Firebase();
+        serverManager.ListenData();
     }
 
     /**
@@ -48,7 +50,7 @@ public class GameController implements Observer {
      */
     public void initialStartScreen(){
         startView = new GameView("Start Screen");
-        JButton b=new JButton("Connect");
+        JButton b=new JButton("Ready");
 
         b.setBounds(300,500,300, 100);
         b.setFont(new Font("Arial", Font.PLAIN, 40));
@@ -60,7 +62,7 @@ public class GameController implements Observer {
         label.setBounds(160,100,700, 300);
 
         JLabel label1 = new JLabel("Release");
-        label1.setText("Release Version 1.02");
+        label1.setText("Release Version 1.06");
         label1.setFont(new Font("Arial", Font.PLAIN, 30));
         label1.setForeground(Color.white);
         label1.setBounds(570,780,500, 100);
@@ -75,7 +77,8 @@ public class GameController implements Observer {
         b.addActionListener(e -> {
             try {
                 initializeConnectScreen();
-                serverManager.ListenData();
+                setUp();
+
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -105,66 +108,114 @@ public class GameController implements Observer {
      * Initializes the board with new values. Done at the start
      */
     private void initializeGameView() {
-
         this.board = new Chessboard();
 
         this.gameView = new GameView("Chess Game");
         JPanel boardLayer = new JPanel();
-        boardLayer.setLayout(new GridLayout(8, 8, 2, 2));
+        boardLayer.setLayout(new GridLayout(10, 10, 2, 2));
 
         if (playerNumber == 1) {
-            for (int i = 7; i >= 0; i--) {
-                for (int j = 7; j >= 0; j--) {
-                    JButton b = new JButton("");
-                    if (board.getPiece(i, j) != null) {
-                        try {
-                            String location = "images/"
-                                    + board.getPiece(i, j).color.toString()
-                                    + board.getPiece(i, j).getClass().getSimpleName()
-                                    + ".png";
-                            b.setIcon(new ImageIcon(ImageIO.read(getClass().getResource(location))));
-                        } catch (IOException e) {
-                            e.printStackTrace();
+            for (int i = 9; i >= 0; i--) {
+                for (int j = 9; j >= 0; j--) {
+                    if (i == 9 || j == 0) {
+                        JLabel label = new JLabel();
+                        boardLayer.add(label);
+                    } else if (i == 0) {
+                        if (j == 9) {
+                            JLabel label = new JLabel();
+                            label.setHorizontalAlignment(JLabel.CENTER);
+                            label.setVerticalAlignment(JLabel.TOP);
+                            boardLayer.add(label);
                         }
-                    }
-                    if ((i % 2 != 0 && j % 2 == 0)
-                            || i % 2 == 0 && j % 2 != 0) {
-                        b.setBackground(Color.white);
+                        if (j < 9) {
+                            char c = (char) (73 - j);
+                            JLabel label = new JLabel();
+                            label.setText(Character.toString(c));
+                            label.setHorizontalAlignment(JLabel.CENTER);
+                            label.setVerticalAlignment(JLabel.TOP);
+                            boardLayer.add(label);
+                        }
+                    } else if (j == 9) {
+                        JLabel label = new JLabel();
+                        label.setText(Integer.toString(i));
+                        label.setHorizontalAlignment(JLabel.RIGHT);
+                        boardLayer.add(label);
                     } else {
-                        b.setBackground(new Color(75, 65, 50));
+                        JButton b = new JButton("");
+                        if (board.getPiece(i - 1, j - 1) != null) {
+                            try {
+                                String location = "images/"
+                                        + board.getPiece(i - 1, j - 1).color.toString()
+                                        + board.getPiece(i - 1, j - 1).getClass().getSimpleName()
+                                        + ".png";
+                                b.setIcon(new ImageIcon(ImageIO.read(getClass().getResource(location))));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if ((i % 2 != 0 && j % 2 == 0)
+                                || i % 2 == 0 && j % 2 != 0) {
+                            b.setBackground(Color.white);
+                        } else {
+                            b.setBackground(new Color(75, 65, 50));
+                        }
+                        b.setName(i - 1 + "" + (j - 1));
+                        b.addActionListener(e -> buttonClicked(b.getName()));
+                        map.put(b.getName(), b);
+                        boardLayer.add(b);
                     }
-                    b.setName(i + "" + j);
-                    b.addActionListener(e -> buttonClicked(b.getName()));
-                    map.put(b.getName(), b);
-                    boardLayer.add(b);
                 }
             }
-        }
-        else if (playerNumber == 2){
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    JButton b = new JButton("");
-                    if (board.getPiece(i, j) != null) {
-                        try {
-                            String location = "images/"
-                                    + board.getPiece(i, j).color.toString()
-                                    + board.getPiece(i, j).getClass().getSimpleName()
-                                    + ".png";
-                            b.setIcon(new ImageIcon(ImageIO.read(getClass().getResource(location))));
-                        } catch (IOException e) {
-                            e.printStackTrace();
+        } else if (playerNumber == 2) {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (i == 0 || j == 9) {
+                        JLabel label = new JLabel();
+                        boardLayer.add(label);
+                    } else if (i == 9) {
+                        if (j == 0) {
+                            JLabel label = new JLabel();
+                            label.setHorizontalAlignment(JLabel.CENTER);
+                            label.setVerticalAlignment(JLabel.TOP);
+                            boardLayer.add(label);
                         }
-                    }
-                    if ((i % 2 != 0 && j % 2 == 0)
-                            || i % 2 == 0 && j % 2 != 0) {
-                        b.setBackground(Color.white);
+                        if (j > 0) {
+                            char c = (char) (j + 64);
+                            JLabel label = new JLabel();
+                            label.setText(Character.toString(c));
+                            label.setHorizontalAlignment(JLabel.CENTER);
+                            label.setVerticalAlignment(JLabel.TOP);
+                            boardLayer.add(label);
+                        }
+                    } else if (j == 0) {
+                        JLabel label = new JLabel();
+                        label.setText(Integer.toString(9 - i));
+                        label.setHorizontalAlignment(JLabel.RIGHT);
+                        boardLayer.add(label);
                     } else {
-                        b.setBackground(new Color(75, 65, 50));
+                        JButton b = new JButton("");
+                        if (board.getPiece(i - 1, j - 1) != null) {
+                            try {
+                                String location = "images/"
+                                        + board.getPiece(i - 1, j - 1).color.toString()
+                                        + board.getPiece(i - 1, j - 1).getClass().getSimpleName()
+                                        + ".png";
+                                b.setIcon(new ImageIcon(ImageIO.read(getClass().getResource(location))));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if ((i % 2 != 0 && j % 2 == 0)
+                                || i % 2 == 0 && j % 2 != 0) {
+                            b.setBackground(Color.white);
+                        } else {
+                            b.setBackground(new Color(75, 65, 50));
+                        }
+                        b.setName((i - 1) + "" + (j - 1));
+                        b.addActionListener(e -> buttonClicked(b.getName()));
+                        map.put(b.getName(), b);
+                        boardLayer.add(b);
                     }
-                    b.setName(i + "" + j);
-                    b.addActionListener(e -> buttonClicked(b.getName()));
-                    map.put(b.getName(), b);
-                    boardLayer.add(b);
                 }
             }
         }
@@ -203,6 +254,7 @@ public class GameController implements Observer {
                 hide(checkmateView);
         });
         hide(gameView);
+        gameView = null;
         display(checkmateView);
     }
 
@@ -247,67 +299,69 @@ public class GameController implements Observer {
         int col = Integer.parseInt(String.valueOf(name.charAt(1)));
         ChessPiece piece = this.boardValues.get(row).get(col);
 
+        if (piece != null &&  selectedPiece == null) {
+            if (serverManager.getPlayerTurn() == playerNumber && piece.color.equals(playerColor)){
+                selectedPiece = piece;
 
-            if (piece != null &&  selectedPiece == null) {
-                if (serverManager.getPlayerTurn() == playerNumber && piece.color.equals(playerColor)){
-                    selectedPiece = piece;
+                this.availableMoves = board.getValidMoves(piece);
 
-                    this.availableMoves = board.getValidMoves(piece);
-
-                    for (PieceLocation move : this.availableMoves) {
-                        String temp = move.row + "" + move.column;
-                        getButton(temp).setBackground(Color.green);
-                    }
-                }
-            } else {
                 for (PieceLocation move : this.availableMoves) {
-                    if (row == move.row && col == move.column) {
-                        SaveMove(selectedPiece, move);
-                        this.board.movePiece(selectedPiece, move);
-                        this.availableMoves = new ArrayList<>();
-                        this.boardValues = this.board.getBoard();
+                    String temp = move.row + "" + move.column;
+                    getButton(temp).setBackground(Color.green);
+                }
+            }
+        } else {
+            for (PieceLocation move : this.availableMoves) {
+                if (row == move.row && col == move.column) {
+                    SaveMove(selectedPiece, move);
+                    this.board.movePiece(selectedPiece, move);
+                    this.availableMoves = new ArrayList<>();
+                    this.boardValues = this.board.getBoard();
 
-                        drawPieces();
+                    drawPieces();
 
-                        if (playerNumber == 1){
-                            if (board.isInCheckmate(PieceColor.Black)){
-                                serverManager.ResetData();
-                                try {
-                                    initializeCheckmateScreen(playerNumber);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            else if (board.isInCheck(PieceColor.Black)){
-                                playerInCheck(PieceColor.Black);
-                            }
-                        }else{
-                            if (board.isInCheckmate(PieceColor.White)){
-                                serverManager.ResetData();
-                                try {
-                                    initializeCheckmateScreen(playerNumber);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            else if (board.isInCheck(PieceColor.White)){
-                                playerInCheck(PieceColor.White);
+                    if (playerNumber == 1){
+                        if (board.isInCheckmate(PieceColor.Black)){
+                            serverManager.ResetData();
+                            try {
+                                initializeCheckmateScreen(playerNumber);
+                                gameView = null;
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
-                    }
-
-                    if ((move.row % 2 != 0 && move.column % 2 == 0)
-                            || move.row % 2 == 0 && move.column % 2 != 0) {
-                        Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(Color.white);
-                    } else {
-                        Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(new Color(75, 65, 50));
+                        else if (board.isInCheck(PieceColor.Black)){
+                            playerInCheck(PieceColor.Black);
+                        }
+                    }else{
+                        if (board.isInCheckmate(PieceColor.White)){
+                            serverManager.ResetData();
+                            try {
+                                initializeCheckmateScreen(playerNumber);
+                                gameView = null;
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else if (board.isInCheck(PieceColor.White)){
+                            playerInCheck(PieceColor.White);
+                        }
                     }
                 }
-                selectedPiece = null;
+
+                if ((move.row % 2 != 0 && move.column % 2 == 0)
+                        || move.row % 2 == 0 && move.column % 2 != 0) {
+                    Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(Color.white);
+                } else {
+                    Objects.requireNonNull(getButton(move.row + "" + move.column)).setBackground(new Color(75, 65, 50));
+                }
             }
+            selectedPiece = null;
+        }
 
-
-        display(gameView);
+        if (gameView != null) {
+            display(gameView);
+        }
     }
 
     /**
@@ -360,7 +414,6 @@ public class GameController implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-
         if (playerNumber == 0) {
             playerNumber = serverManager.getPlayerNumber();
             serverManager.connectPlayer(playerNumber);
@@ -377,6 +430,7 @@ public class GameController implements Observer {
         }
 
         if (serverManager.getPlayersConnected() && gameView == null){
+            System.out.println("trying to initialize view");
             initializeGameView();
         }
 
@@ -403,8 +457,6 @@ public class GameController implements Observer {
                 playerInCheck(playerColor);
                 display(gameView);
             }
-
-
         }
     }
 

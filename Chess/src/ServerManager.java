@@ -20,7 +20,7 @@ public class ServerManager extends Observable {
 
     public void Firebase() throws IOException {
 
-        FileInputStream refreshToken = new FileInputStream("./Chess/src/service-account.json");
+        FileInputStream refreshToken = new FileInputStream("./src/service-account.json");
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(refreshToken))
@@ -35,7 +35,7 @@ public class ServerManager extends Observable {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference usersRef = ref.child("KebChess");
+        DatabaseReference usersRef = ref.child("chess");
 
         Map<String, FirebaseData> users = new HashMap<>();
 
@@ -57,18 +57,18 @@ public class ServerManager extends Observable {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference usersRef = ref.child("KebChess");
+        DatabaseReference usersRef = ref.child("chess");
 
         Map<String, FirebaseData> users = new HashMap<>();
 
 
-        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), false, false, "");
+        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), false, false, "NULL");
 
         if (playerNumber == 1) {
-            firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), true, false, "");
+            firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), true, false, "NULL");
         }
         else {
-            firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0,0),new PieceLocation(0,0)), true, true, "");
+            firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0,0),new PieceLocation(0,0)), true, true, "NULL");
         }
 
         users.put("firebaseData",firebaseData);
@@ -80,11 +80,11 @@ public class ServerManager extends Observable {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference usersRef = ref.child("KebChess");
+        DatabaseReference usersRef = ref.child("chess");
 
         Map<String, FirebaseData> users = new HashMap<>();
 
-        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), false, false, "");
+        FirebaseData firebaseData = new FirebaseData(true, new MovementMade(new PieceLocation(0, 0), new PieceLocation(0, 0)), false, false, "NULL");
 
         users.put("firebaseData",firebaseData);
 
@@ -136,7 +136,7 @@ public class ServerManager extends Observable {
 
     public void ListenData(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference().child("KebChess");
+        DatabaseReference ref = database.getReference().child("chess");
 
         // Attach a listener to read the data at our posts reference
         ref.addChildEventListener(new ChildEventListener() {

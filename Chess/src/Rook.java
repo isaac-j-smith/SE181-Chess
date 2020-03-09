@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 
 public class Rook extends ChessPiece {
-
+	private boolean hasMoved = false;
+	
 	public Rook(PieceLocation startLocation, PieceColor color, PieceMovementDirection direction) {
 		super(startLocation, color, direction);
 	}
@@ -16,5 +17,15 @@ public class Rook extends ChessPiece {
 		moves.add(getMovementInDirection(PieceMovementDirection.DownColumn, MovementCondition.None));
 		
 		return moves;
+	}
+	
+	@Override
+	public void setLocation(PieceLocation destination) {
+		this.location = destination;
+		this.hasMoved = true;
+	}
+	
+	public boolean hasMoved() {
+		return this.hasMoved;
 	}
 }

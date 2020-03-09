@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class King extends ChessPiece {
+	private boolean hasMoved = false;
 	
 	public King(PieceLocation startLocation, PieceColor color, PieceMovementDirection direction) {
 		super(startLocation, color, direction);
@@ -27,6 +28,18 @@ public class King extends ChessPiece {
 			}
 		}
 		
+		// Castling
+		if (hasMoved == false) {
+			moves.add(getMovementInDirection(PieceMovementDirection.LeftRow, MovementCondition.Castling));
+			moves.add(getMovementInDirection(PieceMovementDirection.RightRow, MovementCondition.Castling));
+		}		
+		
 		return moves;
+	}
+	
+	@Override
+	public void setLocation(PieceLocation destination) {
+		this.location = destination;
+		this.hasMoved = true;
 	}
 }

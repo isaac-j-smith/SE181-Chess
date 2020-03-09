@@ -138,7 +138,7 @@ public class Chessboard {
 					}
 				}
 				// Else handle the pawn En Passant move
-				else if (piece instanceof Pawn && movement.getMovementCondition() == MovementCondition.enPassant && pieceAtDestination == null) {
+				else if (movement.getMovementCondition() == MovementCondition.enPassant && pieceAtDestination == null) {
 					// Check if the last movement was of a pawn of the opposite color
 					if (this.lastMovedPiece instanceof Pawn) {
 						if (this.lastMovedPiece.color != piece.color) {
@@ -169,10 +169,61 @@ public class Chessboard {
 					
 					movement = null;
 				}
+				// Else handle Castling
+				else if (movement.getMovementCondition() == MovementCondition.Castling) {
+					// Check if the spaces between King and Rook are free
+					if (getPiece(movement.getDestination()) == null) {
+						PieceMovement secondMovement = movement.getNextMoveInSameDirection();
+						PieceMovement thirdMovement = secondMovement.getNextMoveInSameDirection();
+						PieceMovement fourthMovement = thirdMovement.getNextMoveInSameDirection();
+						
+						boolean longerCastling = false;
+						boolean isSpaceBetweenKingRookOpen = true;
+						ChessPiece pieceAtEnd;
+						
+						// Check if each space in between King and Rook are free
+						if (getPiece(movement.getDestination()) != null) {
+							isSpaceBetweenKingRookOpen = false;
+						}
+						if (getPiece(secondMovement.getDestination()) != null) {
+							isSpaceBetweenKingRookOpen = false;
+						}
+						
+						// Check for longer distance Castling
+						if (fourthMovement != null) {
+							longerCastling = true;
+							
+							if (getPiece(thirdMovement.getDestination()) != null) {
+								isSpaceBetweenKingRookOpen = false;
+							}
+						}
+						
+						// Get the piece at the end
+						if (longerCastling == false) {
+							pieceAtEnd = getPiece(thirdMovement.getDestination());
+						}
 				else {
+							pieceAtEnd = getPiece(fourthMovement.getDestination());
+						}
+						
+						// Check if the piece at the end is a Rook
+						if (pieceAtEnd instanceof Rook) {
+							Rook rook = (Rook) pieceAtEnd;
+							ChessPiece whiteRook2 = new Rook(new PieceLocation(0,7), PieceColor.White, PieceMovementDirection.UpColumn);
+							placePiece(whiteRook2,whiteRook2.location);
+							// Check if the Rook is the same color as the King and the Rook has no moved
+							if (rook.color == piece.color && rook.hasMoved() == false && isSpaceBetweenKingRookOpen == true) {
+								locations.add(secondMovement.getDestination());
+							}
+						}
+					}
+					
 					movement = null;
 				}
+				else {
+					movement = null;
 			}
+		}
 		}
 		
 		return locations;
@@ -282,6 +333,34 @@ public class Chessboard {
 			else if (this.lastMovedPiece.direction == PieceMovementDirection.DownColumn) {
 				if (destination.column == this.lastMovedPiece.location.column && destination.row == this.lastMovedPiece.location.row + 1) {
 					placePiece(null, this.lastMovedPiece.location);
+				}
+			}
+		}
+		else if (piece instanceof King) {
+			PieceLocation kingStartLocation = piece.location;
+			int spacesMoved = Math.abs(destination.column - kingStartLocation.column);
+			
+			// Check if the King is Castling
+			if (spacesMoved == 2) {
+				spacesMoved = destination.column - kingStartLocation.column;
+				// Check which side the King went
+				if (spacesMoved > 0) {
+					System.out.println(">>>");
+					Rook rook = (Rook) this.board.get(piece.location.row).get(this.MAX_COLUMN - 1);
+					PieceLocation castledRookLocation = new PieceLocation();
+					castledRookLocation.row = piece.location.row;			
+					castledRookLocation.column = destination.column - 1;
+					
+					movePiece(rook, castledRookLocation);
+				}
+				else {
+					System.out.println("<<<<");
+					Rook rook = (Rook) this.board.get(piece.location.row).get(0);
+					PieceLocation castledRookLocation = new PieceLocation();
+					castledRookLocation.row = piece.location.row;			
+					castledRookLocation.column = destination.column + 1;
+					
+					movePiece(rook, castledRookLocation);
 				}
 			}
 		}

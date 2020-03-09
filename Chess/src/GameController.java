@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.*;
 
@@ -223,6 +225,8 @@ public class GameController implements Observer {
         this.boardValues = board.getBoard();
         hide(connectView);
         display(gameView);
+        resetOnExit(gameView);
+
     }
 
     public void initializeCheckmateView(int winningPlayer) throws IOException {
@@ -382,6 +386,16 @@ public class GameController implements Observer {
 
     private void hide(JFrame view) {
         view.setVisible(false);
+    }
+
+    private void resetOnExit(JFrame view){
+        gameView.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.out.println("WindowClosingDemo.windowClosing");
+                serverManager.ResetData();
+            }
+        });
     }
 
     private void playerInCheck(PieceColor color){

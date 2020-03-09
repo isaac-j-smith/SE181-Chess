@@ -63,7 +63,7 @@ public class GameController implements Observer {
         label.setBounds(160,100,700, 300);
 
         JLabel label1 = new JLabel("Release");
-        label1.setText("Release Version 1.0.6");
+        label1.setText("Release Version 1.0.8");
         label1.setFont(new Font("Arial", Font.PLAIN, 30));
         label1.setForeground(Color.white);
         label1.setBounds(570,780,500, 100);

@@ -398,7 +398,7 @@ public class GameController implements Observer {
         });
     }
 
-    private void playerInCheck(PieceColor color){
+    public void playerInCheck(PieceColor color){
         int delay = 2000;
 
         JPanel checkLayer = (JPanel) gameView.getGlassPane();
@@ -426,7 +426,7 @@ public class GameController implements Observer {
         new javax.swing.Timer(delay, taskPerformer).start();
     }
 
-    private void generatePromotionButtons(Pawn pawn){
+    public void generatePromotionButtons(Pawn pawn){
         JPanel promotionLayer = (JPanel) gameView.getGlassPane();
         promotionLayer.setVisible(true);
         promotionLayer.setLayout(new GridBagLayout());
@@ -682,6 +682,10 @@ public class GameController implements Observer {
 
     public PieceColor getPlayerColor(){
         return playerColor;
+    }
+
+    public void setPlayerColor(PieceColor color){
+        playerColor = color;
     }
 
 }

@@ -18,6 +18,8 @@ public class PawnTest {
         ArrayList<PieceMovement> moves = new ArrayList<>();
         moves.add(new PieceMovement(new PieceLocation(2,2), MovementCondition.None, null));
         moves.add(new PieceMovement(new PieceLocation(2,1), MovementCondition.None, null));
+        moves.add(new PieceMovement(new PieceLocation(2,1), MovementCondition.None, null));
+        moves.add(new PieceMovement(new PieceLocation(2,3), MovementCondition.None, null));
         moves.add(new PieceMovement(new PieceLocation(2,3), MovementCondition.None, null));
 
         int i = 0;
@@ -33,7 +35,10 @@ public class PawnTest {
         moves = new ArrayList<>();
         moves.add(new PieceMovement(new PieceLocation(4,2), MovementCondition.None, null));
         moves.add(new PieceMovement(new PieceLocation(4,1), MovementCondition.None, null));
+        moves.add(new PieceMovement(new PieceLocation(4,1), MovementCondition.None, null));
         moves.add(new PieceMovement(new PieceLocation(4,3), MovementCondition.None, null));
+        moves.add(new PieceMovement(new PieceLocation(4,3), MovementCondition.None, null));
+        moves.add(new PieceMovement(new PieceLocation(2,1), MovementCondition.None, null));
         i = 0;
         for (PieceMovement s : pawn.getListOfMoves()){
             assertEquals(moves.get(i).getDestination().row, s.getDestination().row);
@@ -48,6 +53,8 @@ public class PawnTest {
         moves = new ArrayList<>();
         moves.add(new PieceMovement(new PieceLocation(5,5), MovementCondition.None, null));
         moves.add(new PieceMovement(new PieceLocation(5,4), MovementCondition.None, null));
+        moves.add(new PieceMovement(new PieceLocation(5,4), MovementCondition.None, null));
+        moves.add(new PieceMovement(new PieceLocation(5,6), MovementCondition.None, null));
         moves.add(new PieceMovement(new PieceLocation(5,6), MovementCondition.None, null));
 
         i = 0;
@@ -63,6 +70,8 @@ public class PawnTest {
         moves = new ArrayList<>();
         moves.add(new PieceMovement(new PieceLocation(3,5), MovementCondition.None, null));
         moves.add(new PieceMovement(new PieceLocation(3,4), MovementCondition.None, null));
+        moves.add(new PieceMovement(new PieceLocation(3,4), MovementCondition.None, null));
+        moves.add(new PieceMovement(new PieceLocation(3,6), MovementCondition.None, null));
         moves.add(new PieceMovement(new PieceLocation(3,6), MovementCondition.None, null));
         i = 0;
         for (PieceMovement s : pawn.getListOfMoves()){

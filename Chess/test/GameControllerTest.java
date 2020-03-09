@@ -260,12 +260,6 @@ public class GameControllerTest {
         Component component = testGame.getGlassPane().getComponentAt(400,500);
         ((JButton)component).doClick();
 
-        firebaseData = new FirebaseData(false, new MovementMade((new PieceLocation(0,0)), new PieceLocation(0,0)), true, true, "");
-        serverManager.setLastSavedData(firebaseData);
-        gameController1.generatePromotionButtons(new Pawn(new PieceLocation(1,1), PieceColor.White, PieceMovementDirection.UpColumn));
-        component = testGame.getGlassPane().getComponentAt(100,500);
-        ((JButton)(component.getComponentAt(600,500))).doClick();
-
     }
 
 }

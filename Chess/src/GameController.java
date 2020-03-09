@@ -392,7 +392,6 @@ public class GameController implements Observer {
         gameView.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.out.println("WindowClosingDemo.windowClosing");
                 serverManager.ResetData();
             }
         });

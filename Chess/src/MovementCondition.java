@@ -1,3 +1,4 @@
 public enum MovementCondition {
-	OnlyCapture, OnlyMove, None
+	OnlyCapture, OnlyMove, None,
+	enPassant
 }

@@ -1,0 +1,226 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ChessPiece</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">&lt;empty package name&gt;</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ChessPiece (&lt;empty package name&gt;)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChessPiece</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (52/ 52)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ChessPiece$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (53/ 53)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;import java.util.ArrayList;
+<i>2</i>&nbsp;import java.util.Collections;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;public abstract class ChessPiece {
+<i>5</i>&nbsp;	protected PieceLocation location;
+<i>6</i>&nbsp;	protected PieceColor color;
+<i>7</i>&nbsp;	protected PieceMovementDirection direction;
+<i>8</i>&nbsp;	
+<b class="fc"><i>9</i>&nbsp;	public ChessPiece(PieceLocation startLocation, PieceColor color, PieceMovementDirection direction) {</b>
+<b class="fc"><i>10</i>&nbsp;		this.location = startLocation;</b>
+<b class="fc"><i>11</i>&nbsp;		this.color = color;</b>
+<b class="fc"><i>12</i>&nbsp;		this.direction = direction;</b>
+<b class="fc"><i>13</i>&nbsp;	}</b>
+<i>14</i>&nbsp;	
+<i>15</i>&nbsp;	/**
+<i>16</i>&nbsp;	 * Get list of moves the piece could do on a chess board at its location (as if there was no other piece on the board)
+<i>17</i>&nbsp;	 * @return ArrayList&lt;PieceMovement&gt; - All the movements the piece can do
+<i>18</i>&nbsp;	 */
+<i>19</i>&nbsp;	public abstract ArrayList&lt;PieceMovement&gt; getListOfMoves();
+<i>20</i>&nbsp;	
+<i>21</i>&nbsp;	public void setLocation(PieceLocation destination) {
+<b class="fc"><i>22</i>&nbsp;		this.location = destination;</b>
+<b class="fc"><i>23</i>&nbsp;	}</b>
+<i>24</i>&nbsp;	
+<i>25</i>&nbsp;	/**
+<i>26</i>&nbsp;	 * Helper function used to generate movements to all locations in a direction
+<i>27</i>&nbsp;	 * @param PieceMovementDirection - direction of movements
+<i>28</i>&nbsp;	 * @param boolean - if the move is only valid as an attack
+<i>29</i>&nbsp;	 * @return PieceMovement - Link list of PieceMovement in the given direction 
+<i>30</i>&nbsp;	*/
+<i>31</i>&nbsp;	protected PieceMovement getMovementInDirection(PieceMovementDirection direction, MovementCondition movementCondition) {
+<b class="fc"><i>32</i>&nbsp;		ArrayList&lt;PieceLocation&gt; locations = new ArrayList&lt;PieceLocation&gt;();</b>
+<i>33</i>&nbsp;		int row;
+<i>34</i>&nbsp;		int column;
+<i>35</i>&nbsp;		
+<i>36</i>&nbsp;		// Generate list of locations in a direction until it reaches the end of the board
+<b class="fc"><i>37</i>&nbsp;		switch (direction) {</b>
+<i>38</i>&nbsp;			case UpColumn:
+<b class="fc"><i>39</i>&nbsp;				for (row = this.location.row + 1; row &lt; Chessboard.MAX_ROW; row++) {</b>
+<b class="fc"><i>40</i>&nbsp;					PieceLocation location = new PieceLocation(row, this.location.column);</b>
+<b class="fc"><i>41</i>&nbsp;					locations.add(location);</b>
+<i>42</i>&nbsp;				}
+<i>43</i>&nbsp;				break;
+<i>44</i>&nbsp;			case DownColumn:
+<b class="fc"><i>45</i>&nbsp;				for (row = this.location.row - 1; row &gt;= 0; row--) {</b>
+<b class="fc"><i>46</i>&nbsp;					PieceLocation location = new PieceLocation(row, this.location.column);</b>
+<b class="fc"><i>47</i>&nbsp;					locations.add(location);</b>
+<i>48</i>&nbsp;				}
+<i>49</i>&nbsp;				break;
+<i>50</i>&nbsp;			case LeftRow:
+<b class="fc"><i>51</i>&nbsp;				for (column = this.location.column - 1; column &gt;= 0; column--) {</b>
+<b class="fc"><i>52</i>&nbsp;					PieceLocation location = new PieceLocation(this.location.row, column);</b>
+<b class="fc"><i>53</i>&nbsp;					locations.add(location);</b>
+<i>54</i>&nbsp;				}
+<i>55</i>&nbsp;				break;
+<i>56</i>&nbsp;			case RightRow:
+<b class="fc"><i>57</i>&nbsp;				for (column = this.location.column + 1; column &lt; Chessboard.MAX_COLUMN; column++) {</b>
+<b class="fc"><i>58</i>&nbsp;					PieceLocation location = new PieceLocation(this.location.row, column);</b>
+<b class="fc"><i>59</i>&nbsp;					locations.add(location);</b>
+<i>60</i>&nbsp;				}
+<i>61</i>&nbsp;				break;
+<i>62</i>&nbsp;			case UpLeftDiagonal:
+<b class="fc"><i>63</i>&nbsp;				row = this.location.row + 1;</b>
+<b class="fc"><i>64</i>&nbsp;				for (column = this.location.column - 1; column &gt;= 0; column--) {</b>
+<b class="fc"><i>65</i>&nbsp;					if (row &lt; Chessboard.MAX_ROW) {</b>
+<b class="fc"><i>66</i>&nbsp;						PieceLocation location = new PieceLocation(row, column);</b>
+<b class="fc"><i>67</i>&nbsp;						locations.add(location);</b>
+<i>68</i>&nbsp;					}
+<b class="fc"><i>69</i>&nbsp;					row++;</b>
+<i>70</i>&nbsp;				}
+<i>71</i>&nbsp;				break;
+<i>72</i>&nbsp;			case UpRightDiagonal:
+<b class="fc"><i>73</i>&nbsp;				row = this.location.row + 1;</b>
+<b class="fc"><i>74</i>&nbsp;				for (column = this.location.column + 1; column &lt; Chessboard.MAX_COLUMN; column++) {</b>
+<b class="fc"><i>75</i>&nbsp;					if (row &lt; Chessboard.MAX_ROW) {</b>
+<b class="fc"><i>76</i>&nbsp;						PieceLocation location = new PieceLocation(row, column);</b>
+<b class="fc"><i>77</i>&nbsp;						locations.add(location);</b>
+<i>78</i>&nbsp;					}
+<b class="fc"><i>79</i>&nbsp;					row++;</b>
+<i>80</i>&nbsp;				}
+<i>81</i>&nbsp;				break;
+<i>82</i>&nbsp;			case DownLeftDiagonal:
+<b class="fc"><i>83</i>&nbsp;				row = this.location.row - 1;</b>
+<b class="fc"><i>84</i>&nbsp;				for (column = this.location.column - 1; column &gt;= 0; column--) {</b>
+<b class="fc"><i>85</i>&nbsp;					if (row &gt;= 0) {</b>
+<b class="fc"><i>86</i>&nbsp;						PieceLocation location = new PieceLocation(row, column);</b>
+<b class="fc"><i>87</i>&nbsp;						locations.add(location);</b>
+<i>88</i>&nbsp;					}
+<b class="fc"><i>89</i>&nbsp;					row--;</b>
+<i>90</i>&nbsp;				}
+<i>91</i>&nbsp;				break;
+<i>92</i>&nbsp;			case DownRightDiagonal:
+<b class="fc"><i>93</i>&nbsp;				row = this.location.row - 1;</b>
+<b class="fc"><i>94</i>&nbsp;				for (column = this.location.column + 1; column &lt; Chessboard.MAX_COLUMN; column++) {</b>
+<b class="fc"><i>95</i>&nbsp;					if (row &gt;= 0) {</b>
+<b class="fc"><i>96</i>&nbsp;						PieceLocation location = new PieceLocation(row, column);</b>
+<b class="fc"><i>97</i>&nbsp;						locations.add(location);</b>
+<i>98</i>&nbsp;					}
+<b class="fc"><i>99</i>&nbsp;					row--;</b>
+<i>100</i>&nbsp;				}
+<i>101</i>&nbsp;				break;
+<i>102</i>&nbsp;		}
+<i>103</i>&nbsp;		
+<i>104</i>&nbsp;		// Convert each locations into movements and link them together
+<b class="fc"><i>105</i>&nbsp;		PieceMovement movements = null;</b>
+<i>106</i>&nbsp;		// If there are locations then link it in the order that the parent link is closer the piece than the child link
+<b class="fc"><i>107</i>&nbsp;		if (locations.size() &gt; 0) {</b>
+<b class="fc"><i>108</i>&nbsp;			Collections.reverse(locations);</b>
+<b class="fc"><i>109</i>&nbsp;			movements = new PieceMovement(locations.get(0), movementCondition, null);</b>
+<b class="fc"><i>110</i>&nbsp;			for (int index = 1; index &lt; locations.size(); index++) {</b>
+<b class="fc"><i>111</i>&nbsp;				movements = new PieceMovement(locations.get(index), movementCondition, movements);</b>
+<i>112</i>&nbsp;			}
+<i>113</i>&nbsp;		}
+<i>114</i>&nbsp;		
+<b class="fc"><i>115</i>&nbsp;		return movements;</b>
+<i>116</i>&nbsp;	}
+<i>117</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-03-09 02:40</div>
+</div>
+</body>
+</html>

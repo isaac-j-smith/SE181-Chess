@@ -1,0 +1,110 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PieceMovement</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">&lt;empty package name&gt;</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PieceMovement (&lt;empty package name&gt;)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PieceMovement</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/ 10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;public class PieceMovement {
+<i>2</i>&nbsp;	private PieceLocation destination;
+<i>3</i>&nbsp;	private MovementCondition movementCondition;
+<i>4</i>&nbsp;	private PieceMovement nextMoveInSameDirection;
+<i>5</i>&nbsp;	
+<b class="fc"><i>6</i>&nbsp;	public PieceMovement(PieceLocation destination, MovementCondition movementConditions, PieceMovement nextMoveInSameDirection) {</b>
+<b class="fc"><i>7</i>&nbsp;		this.destination = destination;</b>
+<b class="fc"><i>8</i>&nbsp;		this.movementCondition = movementConditions;</b>
+<b class="fc"><i>9</i>&nbsp;		this.nextMoveInSameDirection = nextMoveInSameDirection;</b>
+<b class="fc"><i>10</i>&nbsp;	}</b>
+<i>11</i>&nbsp;	
+<i>12</i>&nbsp;	public PieceLocation getDestination() {
+<b class="fc"><i>13</i>&nbsp;		return this.destination;</b>
+<i>14</i>&nbsp;	}
+<i>15</i>&nbsp;	
+<i>16</i>&nbsp;	public MovementCondition getMovementCondition() {
+<b class="fc"><i>17</i>&nbsp;		return this.movementCondition;</b>
+<i>18</i>&nbsp;	}
+<i>19</i>&nbsp;	
+<i>20</i>&nbsp;	public PieceMovement getNextMoveInSameDirection() {
+<b class="fc"><i>21</i>&nbsp;		return this.nextMoveInSameDirection;</b>
+<i>22</i>&nbsp;	}
+<i>23</i>&nbsp;	
+<i>24</i>&nbsp;	public void removeNextMoveInSameDirection() {
+<b class="fc"><i>25</i>&nbsp;		this.nextMoveInSameDirection = null;</b>
+<b class="fc"><i>26</i>&nbsp;	}</b>
+<i>27</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-03-09 02:40</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,425 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Chessboard</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">&lt;empty package name&gt;</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Chessboard (&lt;empty package name&gt;)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Chessboard</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95.2%
+  </span>
+  <span class="absValue">
+    (158/ 166)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;import java.util.ArrayList;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;public class Chessboard {
+<b class="fc"><i>4</i>&nbsp;	public static int MAX_ROW = 8;</b>
+<b class="fc"><i>5</i>&nbsp;	public static int MAX_COLUMN = 8;</b>
+<b class="fc"><i>6</i>&nbsp;	private ArrayList&lt;ArrayList&lt;ChessPiece&gt;&gt; board = new ArrayList&lt;ArrayList&lt;ChessPiece&gt;&gt;();</b>
+<b class="fc"><i>7</i>&nbsp;	private ChessPiece lastMovedPiece = null;</b>
+<b class="fc"><i>8</i>&nbsp;	private PieceLocation lastMovedPiecePreviousLocation = null;</b>
+<i>9</i>&nbsp;	
+<b class="fc"><i>10</i>&nbsp;	public Chessboard() {</b>
+<i>11</i>&nbsp;		// Create empty board
+<b class="fc"><i>12</i>&nbsp;		for (int row = 0; row &lt; MAX_ROW; row++) {</b>
+<i>13</i>&nbsp;			// Add row
+<b class="fc"><i>14</i>&nbsp;			this.board.add(new ArrayList&lt;ChessPiece&gt;());</b>
+<i>15</i>&nbsp;			// Add column
+<b class="fc"><i>16</i>&nbsp;			for (int column = 0; column &lt; MAX_COLUMN; column++) {</b>
+<b class="fc"><i>17</i>&nbsp;				this.board.get(row).add(null);</b>
+<i>18</i>&nbsp;			}
+<i>19</i>&nbsp;		}
+<i>20</i>&nbsp;		
+<b class="fc"><i>21</i>&nbsp;		setupBoard();</b>
+<b class="fc"><i>22</i>&nbsp;	}</b>
+<i>23</i>&nbsp;	
+<i>24</i>&nbsp;	/**
+<i>25</i>&nbsp;	 * Setup the board with the standard 16 chess pieces for each color
+<i>26</i>&nbsp;	 */
+<i>27</i>&nbsp;	public void setupBoard() {
+<i>28</i>&nbsp;		// White pieces
+<b class="fc"><i>29</i>&nbsp;		ChessPiece whiteKing = new King(new PieceLocation(0,4), PieceColor.White, PieceMovementDirection.UpColumn);</b>
+<b class="fc"><i>30</i>&nbsp;		ChessPiece whiteQueen = new Queen(new PieceLocation(0,3), PieceColor.White, PieceMovementDirection.UpColumn);</b>
+<b class="fc"><i>31</i>&nbsp;		ChessPiece whiteKnight1 = new Knight(new PieceLocation(0,1), PieceColor.White, PieceMovementDirection.UpColumn);</b>
+<b class="fc"><i>32</i>&nbsp;		ChessPiece whiteKnight2 = new Knight(new PieceLocation(0,6), PieceColor.White, PieceMovementDirection.UpColumn);</b>
+<b class="fc"><i>33</i>&nbsp;		ChessPiece whiteRook1 = new Rook(new PieceLocation(0,0), PieceColor.White, PieceMovementDirection.UpColumn);</b>
+<b class="fc"><i>34</i>&nbsp;		ChessPiece whiteRook2 = new Rook(new PieceLocation(0,7), PieceColor.White, PieceMovementDirection.UpColumn);</b>
+<b class="fc"><i>35</i>&nbsp;		ChessPiece whiteBishop1 = new Bishop(new PieceLocation(0,5), PieceColor.White, PieceMovementDirection.UpColumn);</b>
+<b class="fc"><i>36</i>&nbsp;		ChessPiece whiteBishop2 = new Bishop(new PieceLocation(0,2), PieceColor.White, PieceMovementDirection.UpColumn);</b>
+<i>37</i>&nbsp;		
+<b class="fc"><i>38</i>&nbsp;		placePiece(whiteKing, whiteKing.location);</b>
+<b class="fc"><i>39</i>&nbsp;		placePiece(whiteQueen,whiteQueen.location);</b>
+<b class="fc"><i>40</i>&nbsp;		placePiece(whiteKnight1,whiteKnight1.location);</b>
+<b class="fc"><i>41</i>&nbsp;		placePiece(whiteKnight2, whiteKnight2.location);</b>
+<b class="fc"><i>42</i>&nbsp;		placePiece(whiteRook1,whiteRook1.location);</b>
+<b class="fc"><i>43</i>&nbsp;		placePiece(whiteRook2,whiteRook2.location);</b>
+<b class="fc"><i>44</i>&nbsp;		placePiece(whiteBishop1, whiteBishop1.location);</b>
+<b class="fc"><i>45</i>&nbsp;		placePiece(whiteBishop2, whiteBishop2.location);</b>
+<i>46</i>&nbsp;		
+<b class="fc"><i>47</i>&nbsp;		for (int i =0; i &lt; MAX_COLUMN; i++) {</b>
+<b class="fc"><i>48</i>&nbsp;			ChessPiece whitePawn = new Pawn(new PieceLocation(1,i), PieceColor.White, PieceMovementDirection.UpColumn);</b>
+<b class="fc"><i>49</i>&nbsp;			placePiece(whitePawn, whitePawn.location);</b>
+<i>50</i>&nbsp;		}
+<i>51</i>&nbsp;		
+<i>52</i>&nbsp;		// Black pieces
+<b class="fc"><i>53</i>&nbsp;		ChessPiece blackKing = new King(new PieceLocation(7,4), PieceColor.Black, PieceMovementDirection.DownColumn);</b>
+<b class="fc"><i>54</i>&nbsp;		ChessPiece blackQueen = new Queen(new PieceLocation(7,3), PieceColor.Black, PieceMovementDirection.DownColumn);</b>
+<b class="fc"><i>55</i>&nbsp;		ChessPiece blackKnight1 = new Knight(new PieceLocation(7,1), PieceColor.Black, PieceMovementDirection.DownColumn);</b>
+<b class="fc"><i>56</i>&nbsp;		ChessPiece blackKnight2 = new Knight(new PieceLocation(7,6), PieceColor.Black, PieceMovementDirection.DownColumn);</b>
+<b class="fc"><i>57</i>&nbsp;		ChessPiece blackRook1 = new Rook(new PieceLocation(7,0), PieceColor.Black, PieceMovementDirection.DownColumn);</b>
+<b class="fc"><i>58</i>&nbsp;		ChessPiece blackRook2 = new Rook(new PieceLocation(7,7), PieceColor.Black, PieceMovementDirection.DownColumn);</b>
+<b class="fc"><i>59</i>&nbsp;		ChessPiece blackBishop1 = new Bishop(new PieceLocation(7,5), PieceColor.Black, PieceMovementDirection.DownColumn);</b>
+<b class="fc"><i>60</i>&nbsp;		ChessPiece blackBishop2 = new Bishop(new PieceLocation(7,2), PieceColor.Black, PieceMovementDirection.DownColumn);</b>
+<i>61</i>&nbsp;		
+<b class="fc"><i>62</i>&nbsp;		placePiece(blackKing, blackKing.location);</b>
+<b class="fc"><i>63</i>&nbsp;		placePiece(blackQueen,blackQueen.location);</b>
+<b class="fc"><i>64</i>&nbsp;		placePiece(blackKnight1,blackKnight1.location);</b>
+<b class="fc"><i>65</i>&nbsp;		placePiece(blackKnight2, blackKnight2.location);</b>
+<b class="fc"><i>66</i>&nbsp;		placePiece(blackRook1,blackRook1.location);</b>
+<b class="fc"><i>67</i>&nbsp;		placePiece(blackRook2,blackRook2.location);</b>
+<b class="fc"><i>68</i>&nbsp;		placePiece(blackBishop1, blackBishop1.location);</b>
+<b class="fc"><i>69</i>&nbsp;		placePiece(blackBishop2, blackBishop2.location);</b>
+<i>70</i>&nbsp;		
+<b class="fc"><i>71</i>&nbsp;		for (int i =0; i &lt; MAX_COLUMN; i++) {</b>
+<b class="fc"><i>72</i>&nbsp;			ChessPiece blackPawn = new Pawn(new PieceLocation(6,i), PieceColor.Black, PieceMovementDirection.DownColumn);</b>
+<b class="fc"><i>73</i>&nbsp;			placePiece(blackPawn, blackPawn.location);</b>
+<i>74</i>&nbsp;		}
+<b class="fc"><i>75</i>&nbsp;	}</b>
+<i>76</i>&nbsp;	
+<i>77</i>&nbsp;	/**
+<i>78</i>&nbsp;	 * Gets a list of locations that a piece can move to without getting into check
+<i>79</i>&nbsp;	 * @param ChessPiece - the piece to get moves for
+<i>80</i>&nbsp;	 * @return ArrayList&lt;PieceLocation&gt; - list of locations the piece can go to that is not blocked nor result in check
+<i>81</i>&nbsp;	 */
+<i>82</i>&nbsp;	public ArrayList&lt;PieceLocation&gt; getValidMoves(ChessPiece piece) {
+<b class="fc"><i>83</i>&nbsp;		ArrayList&lt;PieceLocation&gt; validMoves = new ArrayList&lt;PieceLocation&gt;();</b>
+<b class="fc"><i>84</i>&nbsp;		ArrayList&lt;PieceLocation&gt; unblockedMoves = getUnblockedMoveLocations(piece);</b>
+<i>85</i>&nbsp;		
+<i>86</i>&nbsp;		// For each collision free move, check if it won&#39;t result in the player in check
+<b class="fc"><i>87</i>&nbsp;		for (PieceLocation unblockedMove: unblockedMoves) {</b>
+<i>88</i>&nbsp;			// Save info of current state to restore back after checking
+<b class="fc"><i>89</i>&nbsp;			ChessPiece pieceAtDestination = getPiece(unblockedMove);</b>
+<b class="fc"><i>90</i>&nbsp;			PieceLocation savePieceOriginalLocation = piece.location;</b>
+<i>91</i>&nbsp;			
+<i>92</i>&nbsp;			// Temporarily move piece
+<b class="fc"><i>93</i>&nbsp;			placePiece(piece, unblockedMove);</b>
+<i>94</i>&nbsp;			
+<i>95</i>&nbsp;			// If the move will not result in the player in check then it is valid
+<b class="fc"><i>96</i>&nbsp;			if (isInCheck(piece.color) == false) {</b>
+<b class="fc"><i>97</i>&nbsp;				validMoves.add(unblockedMove);</b>
+<i>98</i>&nbsp;			}
+<i>99</i>&nbsp;			
+<i>100</i>&nbsp;			// Move pieces back to original locations
+<b class="fc"><i>101</i>&nbsp;			placePiece(piece, savePieceOriginalLocation);</b>
+<b class="fc"><i>102</i>&nbsp;			placePiece(pieceAtDestination, unblockedMove);</b>
+<b class="fc"><i>103</i>&nbsp;		}</b>
+<i>104</i>&nbsp;		
+<b class="fc"><i>105</i>&nbsp;		return validMoves;</b>
+<i>106</i>&nbsp;	}
+<i>107</i>&nbsp;	
+<i>108</i>&nbsp;	/**
+<i>109</i>&nbsp;	 * Get the locations of moves that a piece can go to without running into another piece along the way
+<i>110</i>&nbsp;	 * @param ChessPiece - the piece to get the list for
+<i>111</i>&nbsp;	 * @return ArrayList&lt;PieceLocation&gt; - the list of locations the piece can go to unblocked
+<i>112</i>&nbsp;	 */
+<i>113</i>&nbsp;	public ArrayList&lt;PieceLocation&gt; getUnblockedMoveLocations(ChessPiece piece) {
+<b class="fc"><i>114</i>&nbsp;		ArrayList&lt;PieceMovement&gt; movements = piece.getListOfMoves();</b>
+<b class="fc"><i>115</i>&nbsp;		ArrayList&lt;PieceLocation&gt; locations = new ArrayList&lt;PieceLocation&gt;();</b>
+<i>116</i>&nbsp;		
+<i>117</i>&nbsp;		// Check each movements
+<b class="fc"><i>118</i>&nbsp;		for (PieceMovement movement: movements) {</b>
+<i>119</i>&nbsp;			// Check through the movement link list
+<b class="fc"><i>120</i>&nbsp;			while (movement != null) {</b>
+<i>121</i>&nbsp;				// Check if there is already a piece there
+<b class="fc"><i>122</i>&nbsp;				ChessPiece pieceAtDestination = getPiece(movement.getDestination());</b>
+<i>123</i>&nbsp;				// If there isn&#39;t a piece and the move is valid even when not capturing then the move is valid
+<b class="fc"><i>124</i>&nbsp;				if (pieceAtDestination == null &amp;&amp; (movement.getMovementCondition() == MovementCondition.OnlyMove || movement.getMovementCondition() == MovementCondition.None)) {</b>
+<b class="fc"><i>125</i>&nbsp;					locations.add(movement.getDestination());</b>
+<b class="fc"><i>126</i>&nbsp;					movement = movement.getNextMoveInSameDirection();</b>
+<i>127</i>&nbsp;				}
+<i>128</i>&nbsp;				// Else if there is a piece, check if it is the same player&#39;s or opponent&#39;s and if the piece can capture it
+<b class="fc"><i>129</i>&nbsp;				else if (pieceAtDestination != null &amp;&amp; (movement.getMovementCondition() == MovementCondition.OnlyCapture || movement.getMovementCondition() == MovementCondition.None)) {</b>
+<i>130</i>&nbsp;					// If it is the same color then the move is not valid
+<b class="fc"><i>131</i>&nbsp;					if (pieceAtDestination.color == piece.color) {</b>
+<b class="fc"><i>132</i>&nbsp;						movement = null;</b>
+<i>133</i>&nbsp;					}
+<i>134</i>&nbsp;					// Else the move is capturing the opponent&#39;s piece and is valid but the rest are blocked
+<i>135</i>&nbsp;					else {
+<b class="fc"><i>136</i>&nbsp;						locations.add(movement.getDestination());</b>
+<b class="fc"><i>137</i>&nbsp;						movement = null;</b>
+<i>138</i>&nbsp;					}
+<i>139</i>&nbsp;				}
+<i>140</i>&nbsp;				// Else handle the pawn En Passant move
+<b class="fc"><i>141</i>&nbsp;				else if (piece instanceof Pawn &amp;&amp; movement.getMovementCondition() == MovementCondition.enPassant &amp;&amp; pieceAtDestination == null) {</b>
+<i>142</i>&nbsp;					// Check if the last movement was of a pawn of the opposite color
+<b class="fc"><i>143</i>&nbsp;					if (this.lastMovedPiece instanceof Pawn) {</b>
+<b class="fc"><i>144</i>&nbsp;						if (this.lastMovedPiece.color != piece.color) {</b>
+<b class="fc"><i>145</i>&nbsp;							int lastMovedPawnMovementDistance = Math.abs(this.lastMovedPiecePreviousLocation.row - this.lastMovedPiece.location.row);</b>
+<i>146</i>&nbsp;							// if the pawn moved twice (which means it was its first move)
+<b class="fc"><i>147</i>&nbsp;							if (lastMovedPawnMovementDistance == 2) {</b>
+<i>148</i>&nbsp;								int pawnGhostRow;
+<i>149</i>&nbsp;								int pawnGhostColumn;
+<i>150</i>&nbsp;								
+<i>151</i>&nbsp;								// Find the ghost location for the last moved pawn
+<b class="fc"><i>152</i>&nbsp;								if (this.lastMovedPiece.direction == PieceMovementDirection.UpColumn) {</b>
+<b class="nc"><i>153</i>&nbsp;									pawnGhostRow = this.lastMovedPiece.location.row - 1;</b>
+<b class="nc"><i>154</i>&nbsp;									pawnGhostColumn = this.lastMovedPiecePreviousLocation.column;</b>
+<i>155</i>&nbsp;								}
+<i>156</i>&nbsp;								else {
+<b class="fc"><i>157</i>&nbsp;									pawnGhostRow = this.lastMovedPiece.location.row + 1;</b>
+<b class="fc"><i>158</i>&nbsp;									pawnGhostColumn = this.lastMovedPiecePreviousLocation.column;</b>
+<i>159</i>&nbsp;								}
+<i>160</i>&nbsp;								
+<i>161</i>&nbsp;								// See if the pawn can capture the ghost opponent pawn
+<b class="fc"><i>162</i>&nbsp;								if (movement.getDestination().row == pawnGhostRow &amp;&amp; movement.getDestination().column == pawnGhostColumn) {</b>
+<b class="nc"><i>163</i>&nbsp;									locations.add(movement.getDestination());</b>
+<b class="nc"><i>164</i>&nbsp;									placePiece(null, this.lastMovedPiece.location);</b>
+<i>165</i>&nbsp;								}
+<i>166</i>&nbsp;							}
+<i>167</i>&nbsp;						}
+<i>168</i>&nbsp;					}
+<i>169</i>&nbsp;					
+<b class="fc"><i>170</i>&nbsp;					movement = null;</b>
+<i>171</i>&nbsp;				}
+<i>172</i>&nbsp;				else {
+<b class="fc"><i>173</i>&nbsp;					movement = null;</b>
+<i>174</i>&nbsp;				}
+<b class="fc"><i>175</i>&nbsp;			}</b>
+<b class="fc"><i>176</i>&nbsp;		}</b>
+<i>177</i>&nbsp;		
+<b class="fc"><i>178</i>&nbsp;		return locations;</b>
+<i>179</i>&nbsp;	}
+<i>180</i>&nbsp;	
+<i>181</i>&nbsp;	/**
+<i>182</i>&nbsp;	 * Sees if a color set of pieces is in check
+<i>183</i>&nbsp;	 * @param PieceColor - the color set to check
+<i>184</i>&nbsp;	 * @return boolean - if it is in check
+<i>185</i>&nbsp;	 */
+<i>186</i>&nbsp;	public boolean isInCheck(PieceColor color) {
+<i>187</i>&nbsp;		// Get each of the opponent&#39;s pieces
+<b class="fc"><i>188</i>&nbsp;		ArrayList&lt;ChessPiece&gt; opponentPieces = null;</b>
+<b class="fc"><i>189</i>&nbsp;		if (color == PieceColor.Black) {</b>
+<b class="fc"><i>190</i>&nbsp;			opponentPieces = getPieces(PieceColor.White);</b>
+<i>191</i>&nbsp;		}
+<i>192</i>&nbsp;		else {
+<b class="fc"><i>193</i>&nbsp;			opponentPieces = getPieces(PieceColor.Black);</b>
+<i>194</i>&nbsp;		}
+<i>195</i>&nbsp;		
+<i>196</i>&nbsp;		// For each enemy piece on the board, check if it can hit the king in a turn
+<b class="fc"><i>197</i>&nbsp;		for (int i = 0; i &lt; opponentPieces.size(); i++) {</b>
+<b class="fc"><i>198</i>&nbsp;			ChessPiece piece = opponentPieces.get(i);</b>
+<b class="fc"><i>199</i>&nbsp;			ArrayList&lt;PieceLocation&gt; locations = getUnblockedMoveLocations(piece);</b>
+<i>200</i>&nbsp;
+<i>201</i>&nbsp;			// Check if any location the enemy piece can move contains the king
+<b class="fc"><i>202</i>&nbsp;			for (PieceLocation location: locations) {</b>
+<b class="fc"><i>203</i>&nbsp;				ChessPiece pieceAtLocation = getPiece(location);</b>
+<b class="fc"><i>204</i>&nbsp;				if (pieceAtLocation instanceof King) {</b>
+<b class="fc"><i>205</i>&nbsp;					return true;</b>
+<i>206</i>&nbsp;				}
+<b class="fc"><i>207</i>&nbsp;			}</b>
+<i>208</i>&nbsp;		}
+<i>209</i>&nbsp;		
+<b class="fc"><i>210</i>&nbsp;		return false;</b>
+<i>211</i>&nbsp;	}
+<i>212</i>&nbsp;	
+<i>213</i>&nbsp;	/**
+<i>214</i>&nbsp;	 * Sees if a color set of pieces is in checkmate
+<i>215</i>&nbsp;	 * @param PieceColor - the color set to check
+<i>216</i>&nbsp;	 * @return boolean - if it is in check
+<i>217</i>&nbsp;	 */
+<i>218</i>&nbsp;	public boolean isInCheckmate(PieceColor color) {
+<i>219</i>&nbsp;		// Get all of the current color&#39;s pieces
+<b class="fc"><i>220</i>&nbsp;		ArrayList&lt;ChessPiece&gt; pieces = null;</b>
+<b class="fc"><i>221</i>&nbsp;		if (color == PieceColor.Black) {</b>
+<b class="fc"><i>222</i>&nbsp;			pieces = getPieces(PieceColor.Black);</b>
+<i>223</i>&nbsp;		}
+<i>224</i>&nbsp;		else {
+<b class="fc"><i>225</i>&nbsp;			pieces = getPieces(PieceColor.White);</b>
+<i>226</i>&nbsp;		}
+<i>227</i>&nbsp;
+<i>228</i>&nbsp;		// For any piece check if there is at least one move that is valid
+<b class="fc"><i>229</i>&nbsp;		for (ChessPiece piece: pieces) {</b>
+<b class="fc"><i>230</i>&nbsp;			ArrayList&lt;PieceLocation&gt; moveableLocations = getValidMoves(piece);</b>
+<b class="fc"><i>231</i>&nbsp;			if (moveableLocations.size() &gt; 0) {</b>
+<b class="fc"><i>232</i>&nbsp;				return false;</b>
+<i>233</i>&nbsp;			}
+<b class="fc"><i>234</i>&nbsp;		}</b>
+<i>235</i>&nbsp;		
+<b class="fc"><i>236</i>&nbsp;		return true;</b>
+<i>237</i>&nbsp;	}
+<i>238</i>&nbsp;	
+<i>239</i>&nbsp;	public ChessPiece getPiece(PieceLocation location) {
+<b class="fc"><i>240</i>&nbsp;		return this.board.get(location.row).get(location.column);</b>
+<i>241</i>&nbsp;	}
+<i>242</i>&nbsp;	
+<i>243</i>&nbsp;	public ChessPiece getPiece(int row, int column) {
+<b class="fc"><i>244</i>&nbsp;		return this.board.get(row).get(column);</b>
+<i>245</i>&nbsp;	}
+<i>246</i>&nbsp;	
+<i>247</i>&nbsp;	/**
+<i>248</i>&nbsp;	 * Gets all the pieces on the board of a given color
+<i>249</i>&nbsp;	 * @param PieceColor - the color pieces to get
+<i>250</i>&nbsp;	 * @return ArrayList&lt;ChessPiece&gt; - the list of pieces on the board with the same color as the given color
+<i>251</i>&nbsp;	 */
+<i>252</i>&nbsp;	public ArrayList&lt;ChessPiece&gt; getPieces(PieceColor color) {
+<b class="fc"><i>253</i>&nbsp;		ArrayList&lt;ChessPiece&gt; pieces = new ArrayList&lt;ChessPiece&gt;();</b>
+<i>254</i>&nbsp;		// Go through the board to get all the pieces of the color
+<b class="fc"><i>255</i>&nbsp;		for (ArrayList&lt;ChessPiece&gt; row: this.board) {</b>
+<b class="fc"><i>256</i>&nbsp;			for (ChessPiece column: row) {</b>
+<b class="fc"><i>257</i>&nbsp;				if (column != null) {</b>
+<b class="fc"><i>258</i>&nbsp;					if (column.color == color) {</b>
+<b class="fc"><i>259</i>&nbsp;						pieces.add(column);</b>
+<i>260</i>&nbsp;					}
+<i>261</i>&nbsp;				}
+<b class="fc"><i>262</i>&nbsp;			}</b>
+<b class="fc"><i>263</i>&nbsp;		}</b>
+<i>264</i>&nbsp;		
+<b class="fc"><i>265</i>&nbsp;		return pieces;</b>
+<i>266</i>&nbsp;	}
+<i>267</i>&nbsp;	
+<i>268</i>&nbsp;	/**
+<i>269</i>&nbsp;	 * Moves a piece to a location
+<i>270</i>&nbsp;	 * @param ChessPiece - the piece to move
+<i>271</i>&nbsp;	 * @param PieceLocation - the location to move the piece
+<i>272</i>&nbsp;	 */
+<i>273</i>&nbsp;	public void movePiece(ChessPiece piece, PieceLocation destination) {
+<i>274</i>&nbsp;		// Handle opponent&#39;s En Passant move
+<b class="fc"><i>275</i>&nbsp;		if (getPiece(destination) == null &amp;&amp; piece instanceof Pawn &amp;&amp; this.lastMovedPiece != null) {</b>
+<i>276</i>&nbsp;			// If the pawn moved to the ghost of the last move pawn
+<b class="fc"><i>277</i>&nbsp;			if (this.lastMovedPiece.direction == PieceMovementDirection.UpColumn) {</b>
+<b class="fc"><i>278</i>&nbsp;				if (destination.column == this.lastMovedPiece.location.column &amp;&amp; destination.row == this.lastMovedPiece.location.row - 1) {</b>
+<b class="nc"><i>279</i>&nbsp;					placePiece(null, this.lastMovedPiece.location);</b>
+<i>280</i>&nbsp;				}
+<i>281</i>&nbsp;			}
+<b class="nc"><i>282</i>&nbsp;			else if (this.lastMovedPiece.direction == PieceMovementDirection.DownColumn) {</b>
+<b class="nc"><i>283</i>&nbsp;				if (destination.column == this.lastMovedPiece.location.column &amp;&amp; destination.row == this.lastMovedPiece.location.row + 1) {</b>
+<b class="nc"><i>284</i>&nbsp;					placePiece(null, this.lastMovedPiece.location);</b>
+<i>285</i>&nbsp;				}
+<i>286</i>&nbsp;			}
+<i>287</i>&nbsp;		}
+<i>288</i>&nbsp;		
+<i>289</i>&nbsp;		// Move piece
+<b class="fc"><i>290</i>&nbsp;		this.lastMovedPiece = piece;</b>
+<b class="fc"><i>291</i>&nbsp;		this.lastMovedPiecePreviousLocation = piece.location;</b>
+<b class="fc"><i>292</i>&nbsp;		placePiece(piece, destination);</b>
+<b class="fc"><i>293</i>&nbsp;		piece.setLocation(destination);</b>
+<b class="fc"><i>294</i>&nbsp;	}</b>
+<i>295</i>&nbsp;
+<i>296</i>&nbsp;	/**
+<i>297</i>&nbsp;	 * Puts a piece at a location without moving the piece functionally
+<i>298</i>&nbsp;	 * @param ChessPiece - the piece to move
+<i>299</i>&nbsp;	 * @param PieceLocation - the location to move the piece
+<i>300</i>&nbsp;	*/
+<i>301</i>&nbsp;	public void placePiece(ChessPiece piece, PieceLocation destination) {
+<i>302</i>&nbsp;		// Remove piece at old location
+<b class="fc"><i>303</i>&nbsp;		if (piece != null)</b>
+<i>304</i>&nbsp;		{
+<b class="fc"><i>305</i>&nbsp;			this.board.get(piece.location.row).remove(piece.location.column);</b>
+<b class="fc"><i>306</i>&nbsp;			this.board.get(piece.location.row).add(piece.location.column, null);</b>
+<i>307</i>&nbsp;			
+<b class="fc"><i>308</i>&nbsp;			piece.location = destination;</b>
+<i>309</i>&nbsp;		}
+<i>310</i>&nbsp;		
+<i>311</i>&nbsp;		// Move piece to new location
+<b class="fc"><i>312</i>&nbsp;		this.board.get(destination.row).remove(destination.column);</b>
+<b class="fc"><i>313</i>&nbsp;		this.board.get(destination.row).add(destination.column, piece);</b>
+<b class="fc"><i>314</i>&nbsp;	}</b>
+<i>315</i>&nbsp;
+<i>316</i>&nbsp;	public void promotePawn(Pawn pawn, String choice){
+<b class="fc"><i>317</i>&nbsp;		if (choice.compareTo(&quot;Bishop&quot;) == 0){</b>
+<b class="fc"><i>318</i>&nbsp;			ChessPiece bishop = new Bishop(pawn.location, pawn.color, pawn.direction);</b>
+<b class="fc"><i>319</i>&nbsp;			placePiece(bishop, bishop.location);</b>
+<b class="fc"><i>320</i>&nbsp;		}</b>
+<b class="fc"><i>321</i>&nbsp;		else if (choice.compareTo(&quot;Knight&quot;) == 0){</b>
+<b class="fc"><i>322</i>&nbsp;			ChessPiece knight = new Knight(pawn.location, pawn.color, pawn.direction);</b>
+<b class="fc"><i>323</i>&nbsp;			placePiece(knight, knight.location);</b>
+<b class="fc"><i>324</i>&nbsp;		}</b>
+<b class="fc"><i>325</i>&nbsp;		else if (choice.compareTo(&quot;Rook&quot;) == 0){</b>
+<b class="fc"><i>326</i>&nbsp;			ChessPiece rook = new Rook(pawn.location, pawn.color, pawn.direction);</b>
+<b class="fc"><i>327</i>&nbsp;			placePiece(rook, rook.location);</b>
+<b class="fc"><i>328</i>&nbsp;		}</b>
+<b class="fc"><i>329</i>&nbsp;		else if (choice.compareTo(&quot;Queen&quot;) == 0){</b>
+<b class="fc"><i>330</i>&nbsp;			ChessPiece queen = new Queen(pawn.location, pawn.color, pawn.direction);</b>
+<b class="fc"><i>331</i>&nbsp;			placePiece(queen, queen.location);</b>
+<i>332</i>&nbsp;		}
+<b class="fc"><i>333</i>&nbsp;	}</b>
+<i>334</i>&nbsp;
+<i>335</i>&nbsp;	public ArrayList&lt;ArrayList&lt;ChessPiece&gt;&gt; getBoard() {
+<b class="fc"><i>336</i>&nbsp;		return board;</b>
+<i>337</i>&nbsp;	}
+<i>338</i>&nbsp;
+<i>339</i>&nbsp;	public void setBoard(ArrayList&lt;ArrayList&lt;ChessPiece&gt;&gt; board){
+<b class="fc"><i>340</i>&nbsp;		this.board = board;</b>
+<b class="fc"><i>341</i>&nbsp;	}</b>
+<i>342</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-03-09 02:40</div>
+</div>
+</body>
+</html>

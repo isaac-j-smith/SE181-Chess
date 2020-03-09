@@ -1,0 +1,819 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GameController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">&lt;empty package name&gt;</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GameController (&lt;empty package name&gt;)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameController</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.3%
+  </span>
+  <span class="absValue">
+    (29/ 34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72.2%
+  </span>
+  <span class="absValue">
+    (309/ 428)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GameController$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/ 3)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">GameController$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/ 4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    81.6%
+  </span>
+  <span class="absValue">
+    (31/ 38)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    71.5%
+  </span>
+  <span class="absValue">
+    (311/ 435)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;import javax.imageio.ImageIO;
+<i>2</i>&nbsp;import javax.swing.*;
+<i>3</i>&nbsp;import java.awt.*;
+<i>4</i>&nbsp;import java.awt.event.ActionEvent;
+<i>5</i>&nbsp;import java.awt.event.ActionListener;
+<i>6</i>&nbsp;import java.awt.event.WindowAdapter;
+<i>7</i>&nbsp;import java.awt.event.WindowEvent;
+<i>8</i>&nbsp;import java.io.IOException;
+<i>9</i>&nbsp;import java.util.*;
+<i>10</i>&nbsp;
+<b class="fc"><i>11</i>&nbsp;public class GameController implements Observer {</b>
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    private JFrame startView;
+<i>14</i>&nbsp;    private JFrame connectView;
+<i>15</i>&nbsp;    private JFrame gameView;
+<i>16</i>&nbsp;    private JFrame checkmateView;
+<i>17</i>&nbsp;    private HashMap&lt;String, JButton&gt; map;
+<i>18</i>&nbsp;    private ArrayList&lt;ArrayList&lt;ChessPiece&gt;&gt; boardValues;
+<i>19</i>&nbsp;    private Chessboard board;
+<i>20</i>&nbsp;    private ArrayList&lt;PieceLocation&gt; availableMoves;
+<i>21</i>&nbsp;    private ChessPiece selectedPiece;
+<i>22</i>&nbsp;    private ServerManager serverManager;
+<i>23</i>&nbsp;    private int playerNumber;
+<i>24</i>&nbsp;    private PieceColor playerColor;
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;    public GameController() {</b>
+<b class="fc"><i>27</i>&nbsp;        this.map = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>28</i>&nbsp;        this.selectedPiece = null;</b>
+<b class="fc"><i>29</i>&nbsp;    }</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    /**
+<i>32</i>&nbsp;     * Sends player to start screen
+<i>33</i>&nbsp;     */
+<i>34</i>&nbsp;    public void start() {
+<b class="fc"><i>35</i>&nbsp;        initializeStartView();</b>
+<b class="fc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    /**
+<i>39</i>&nbsp;     * Initializes serverManager and attaches this as observer
+<i>40</i>&nbsp;     */
+<i>41</i>&nbsp;    public void setUp() throws IOException {
+<b class="fc"><i>42</i>&nbsp;        playerNumber = 0;</b>
+<b class="fc"><i>43</i>&nbsp;        serverManager = new ServerManager();</b>
+<b class="fc"><i>44</i>&nbsp;        serverManager.addObserver(this);</b>
+<b class="fc"><i>45</i>&nbsp;        serverManager.Firebase();</b>
+<b class="fc"><i>46</i>&nbsp;        serverManager.ListenData();</b>
+<b class="fc"><i>47</i>&nbsp;    }</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    /**
+<i>50</i>&nbsp;     * Initializes JFrame for start screen.
+<i>51</i>&nbsp;     */
+<i>52</i>&nbsp;    public void initializeStartView(){
+<b class="fc"><i>53</i>&nbsp;        startView = new GameView(&quot;Start Screen&quot;);</b>
+<b class="fc"><i>54</i>&nbsp;        JButton b=new JButton(&quot;Ready&quot;);</b>
+<i>55</i>&nbsp;
+<b class="fc"><i>56</i>&nbsp;        b.setBounds(300,500,300, 100);</b>
+<b class="fc"><i>57</i>&nbsp;        b.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 40));</b>
+<i>58</i>&nbsp;
+<b class="fc"><i>59</i>&nbsp;        JLabel label = new JLabel(&quot;Chess&quot;);</b>
+<b class="fc"><i>60</i>&nbsp;        label.setText(&quot;Chess&quot;);</b>
+<b class="fc"><i>61</i>&nbsp;        label.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 200));</b>
+<b class="fc"><i>62</i>&nbsp;        label.setForeground(Color.white);</b>
+<b class="fc"><i>63</i>&nbsp;        label.setBounds(160,100,700, 300);</b>
+<i>64</i>&nbsp;
+<b class="fc"><i>65</i>&nbsp;        JLabel label1 = new JLabel(&quot;Release&quot;);</b>
+<b class="fc"><i>66</i>&nbsp;        label1.setText(&quot;Release Version 1.0.6&quot;);</b>
+<b class="fc"><i>67</i>&nbsp;        label1.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 30));</b>
+<b class="fc"><i>68</i>&nbsp;        label1.setForeground(Color.white);</b>
+<b class="fc"><i>69</i>&nbsp;        label1.setBounds(570,780,500, 100);</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;        //add to frame
+<b class="fc"><i>72</i>&nbsp;        startView.add(b);</b>
+<b class="fc"><i>73</i>&nbsp;        startView.add(label);</b>
+<b class="fc"><i>74</i>&nbsp;        startView.add(label1);</b>
+<b class="fc"><i>75</i>&nbsp;        startView.setLayout(null);</b>
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;        //action listener
+<b class="fc"><i>78</i>&nbsp;        b.addActionListener(e -&gt; {</b>
+<i>79</i>&nbsp;            try {
+<b class="fc"><i>80</i>&nbsp;                playerNumber = 0;</b>
+<b class="fc"><i>81</i>&nbsp;                initializeConnectView();</b>
+<b class="fc"><i>82</i>&nbsp;                setUp();</b>
+<i>83</i>&nbsp;
+<b class="nc"><i>84</i>&nbsp;            } catch (IOException ex) {</b>
+<b class="nc"><i>85</i>&nbsp;                ex.printStackTrace();</b>
+<b class="fc"><i>86</i>&nbsp;            }</b>
+<b class="fc"><i>87</i>&nbsp;        });</b>
+<b class="fc"><i>88</i>&nbsp;        display(startView);</b>
+<b class="fc"><i>89</i>&nbsp;    }</b>
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    /**
+<i>92</i>&nbsp;     * Initializes JFrame for connection screen.
+<i>93</i>&nbsp;     */
+<i>94</i>&nbsp;    public void initializeConnectView() throws IOException {
+<b class="fc"><i>95</i>&nbsp;        connectView = new GameView(&quot;Connect Screen&quot;);</b>
+<b class="fc"><i>96</i>&nbsp;        JLabel label = new JLabel(&quot;Connection&quot;);</b>
+<b class="fc"><i>97</i>&nbsp;        label.setText(&quot;Waiting for another player to connect...&quot;);</b>
+<b class="fc"><i>98</i>&nbsp;        label.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 30));</b>
+<b class="fc"><i>99</i>&nbsp;        label.setForeground(Color.white);</b>
+<b class="fc"><i>100</i>&nbsp;        label.setBounds(160,300,900, 300);</b>
+<i>101</i>&nbsp;
+<b class="fc"><i>102</i>&nbsp;        connectView.add(label);</b>
+<b class="fc"><i>103</i>&nbsp;        connectView.setLayout(null);</b>
+<i>104</i>&nbsp;
+<b class="fc"><i>105</i>&nbsp;        hide(startView);</b>
+<b class="fc"><i>106</i>&nbsp;        display(connectView);</b>
+<b class="fc"><i>107</i>&nbsp;    }</b>
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;    /**
+<i>110</i>&nbsp;     * Initializes the board with new values. Done at the start
+<i>111</i>&nbsp;     */
+<i>112</i>&nbsp;    public void initializeGameView() {
+<b class="fc"><i>113</i>&nbsp;        this.board = new Chessboard();</b>
+<i>114</i>&nbsp;
+<b class="fc"><i>115</i>&nbsp;        this.gameView = new GameView(&quot;Chess Game&quot;);</b>
+<b class="fc"><i>116</i>&nbsp;        JPanel boardLayer = new JPanel();</b>
+<b class="fc"><i>117</i>&nbsp;        boardLayer.setLayout(new GridLayout(10, 10, 2, 2));</b>
+<i>118</i>&nbsp;
+<b class="fc"><i>119</i>&nbsp;        if (playerNumber == 1) {</b>
+<b class="fc"><i>120</i>&nbsp;            for (int i = 9; i &gt;= 0; i--) {</b>
+<b class="fc"><i>121</i>&nbsp;                for (int j = 9; j &gt;= 0; j--) {</b>
+<b class="fc"><i>122</i>&nbsp;                    if (i == 9 || j == 0) {</b>
+<b class="fc"><i>123</i>&nbsp;                        JLabel label = new JLabel();</b>
+<b class="fc"><i>124</i>&nbsp;                        boardLayer.add(label);</b>
+<b class="fc"><i>125</i>&nbsp;                    } else if (i == 0) {</b>
+<b class="fc"><i>126</i>&nbsp;                        if (j == 9) {</b>
+<b class="fc"><i>127</i>&nbsp;                            JLabel label = new JLabel();</b>
+<b class="fc"><i>128</i>&nbsp;                            label.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>129</i>&nbsp;                            label.setVerticalAlignment(JLabel.TOP);</b>
+<b class="fc"><i>130</i>&nbsp;                            boardLayer.add(label);</b>
+<i>131</i>&nbsp;                        }
+<b class="fc"><i>132</i>&nbsp;                        if (j &lt; 9) {</b>
+<b class="fc"><i>133</i>&nbsp;                            char c = (char) (73 - j);</b>
+<b class="fc"><i>134</i>&nbsp;                            JLabel label = new JLabel();</b>
+<b class="fc"><i>135</i>&nbsp;                            label.setText(Character.toString(c));</b>
+<b class="fc"><i>136</i>&nbsp;                            label.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>137</i>&nbsp;                            label.setVerticalAlignment(JLabel.TOP);</b>
+<b class="fc"><i>138</i>&nbsp;                            boardLayer.add(label);</b>
+<b class="fc"><i>139</i>&nbsp;                        }</b>
+<b class="fc"><i>140</i>&nbsp;                    } else if (j == 9) {</b>
+<b class="fc"><i>141</i>&nbsp;                        JLabel label = new JLabel();</b>
+<b class="fc"><i>142</i>&nbsp;                        label.setText(Integer.toString(i));</b>
+<b class="fc"><i>143</i>&nbsp;                        label.setHorizontalAlignment(JLabel.RIGHT);</b>
+<b class="fc"><i>144</i>&nbsp;                        boardLayer.add(label);</b>
+<b class="fc"><i>145</i>&nbsp;                    } else {</b>
+<b class="fc"><i>146</i>&nbsp;                        JButton b = new JButton(&quot;&quot;);</b>
+<b class="fc"><i>147</i>&nbsp;                        if (board.getPiece(i - 1, j - 1) != null) {</b>
+<i>148</i>&nbsp;                            try {
+<b class="fc"><i>149</i>&nbsp;                                String location = &quot;/images/&quot;</b>
+<b class="fc"><i>150</i>&nbsp;                                        + board.getPiece(i - 1, j - 1).color.toString()</b>
+<b class="fc"><i>151</i>&nbsp;                                        + board.getPiece(i - 1, j - 1).getClass().getSimpleName()</b>
+<i>152</i>&nbsp;                                        + &quot;.png&quot;;
+<b class="fc"><i>153</i>&nbsp;                                b.setIcon(new ImageIcon(ImageIO.read(getClass().getResource(location))));</b>
+<b class="nc"><i>154</i>&nbsp;                            } catch (IOException e) {</b>
+<b class="nc"><i>155</i>&nbsp;                                e.printStackTrace();</b>
+<b class="fc"><i>156</i>&nbsp;                            }</b>
+<i>157</i>&nbsp;                        }
+<b class="fc"><i>158</i>&nbsp;                        if ((i % 2 != 0 &amp;&amp; j % 2 == 0)</b>
+<i>159</i>&nbsp;                                || i % 2 == 0 &amp;&amp; j % 2 != 0) {
+<b class="fc"><i>160</i>&nbsp;                            b.setBackground(Color.white);</b>
+<i>161</i>&nbsp;                        } else {
+<b class="fc"><i>162</i>&nbsp;                            b.setBackground(new Color(75, 65, 50));</b>
+<i>163</i>&nbsp;                        }
+<b class="fc"><i>164</i>&nbsp;                        b.setName(i - 1 + &quot;&quot; + (j - 1));</b>
+<b class="fc"><i>165</i>&nbsp;                        b.addActionListener(e -&gt; buttonClicked(b.getName()));</b>
+<b class="fc"><i>166</i>&nbsp;                        map.put(b.getName(), b);</b>
+<b class="fc"><i>167</i>&nbsp;                        boardLayer.add(b);</b>
+<i>168</i>&nbsp;                    }
+<i>169</i>&nbsp;                }
+<i>170</i>&nbsp;            }
+<b class="fc"><i>171</i>&nbsp;        } else if (playerNumber == 2) {</b>
+<b class="fc"><i>172</i>&nbsp;            for (int i = 0; i &lt; 10; i++) {</b>
+<b class="fc"><i>173</i>&nbsp;                for (int j = 0; j &lt; 10; j++) {</b>
+<b class="fc"><i>174</i>&nbsp;                    if (i == 0 || j == 9) {</b>
+<b class="fc"><i>175</i>&nbsp;                        JLabel label = new JLabel();</b>
+<b class="fc"><i>176</i>&nbsp;                        boardLayer.add(label);</b>
+<b class="fc"><i>177</i>&nbsp;                    } else if (i == 9) {</b>
+<b class="fc"><i>178</i>&nbsp;                        if (j == 0) {</b>
+<b class="fc"><i>179</i>&nbsp;                            JLabel label = new JLabel();</b>
+<b class="fc"><i>180</i>&nbsp;                            label.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>181</i>&nbsp;                            label.setVerticalAlignment(JLabel.TOP);</b>
+<b class="fc"><i>182</i>&nbsp;                            boardLayer.add(label);</b>
+<i>183</i>&nbsp;                        }
+<b class="fc"><i>184</i>&nbsp;                        if (j &gt; 0) {</b>
+<b class="fc"><i>185</i>&nbsp;                            char c = (char) (j + 64);</b>
+<b class="fc"><i>186</i>&nbsp;                            JLabel label = new JLabel();</b>
+<b class="fc"><i>187</i>&nbsp;                            label.setText(Character.toString(c));</b>
+<b class="fc"><i>188</i>&nbsp;                            label.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="fc"><i>189</i>&nbsp;                            label.setVerticalAlignment(JLabel.TOP);</b>
+<b class="fc"><i>190</i>&nbsp;                            boardLayer.add(label);</b>
+<b class="fc"><i>191</i>&nbsp;                        }</b>
+<b class="fc"><i>192</i>&nbsp;                    } else if (j == 0) {</b>
+<b class="fc"><i>193</i>&nbsp;                        JLabel label = new JLabel();</b>
+<b class="fc"><i>194</i>&nbsp;                        label.setText(Integer.toString(9 - i));</b>
+<b class="fc"><i>195</i>&nbsp;                        label.setHorizontalAlignment(JLabel.RIGHT);</b>
+<b class="fc"><i>196</i>&nbsp;                        boardLayer.add(label);</b>
+<b class="fc"><i>197</i>&nbsp;                    } else {</b>
+<b class="fc"><i>198</i>&nbsp;                        JButton b = new JButton(&quot;&quot;);</b>
+<b class="fc"><i>199</i>&nbsp;                        if (board.getPiece(i - 1, j - 1) != null) {</b>
+<i>200</i>&nbsp;                            try {
+<b class="fc"><i>201</i>&nbsp;                                String location = &quot;/images/&quot;</b>
+<b class="fc"><i>202</i>&nbsp;                                        + board.getPiece(i - 1, j - 1).color.toString()</b>
+<b class="fc"><i>203</i>&nbsp;                                        + board.getPiece(i - 1, j - 1).getClass().getSimpleName()</b>
+<i>204</i>&nbsp;                                        + &quot;.png&quot;;
+<b class="fc"><i>205</i>&nbsp;                                b.setIcon(new ImageIcon(ImageIO.read(getClass().getResource(location))));</b>
+<b class="nc"><i>206</i>&nbsp;                            } catch (IOException e) {</b>
+<b class="nc"><i>207</i>&nbsp;                                e.printStackTrace();</b>
+<b class="fc"><i>208</i>&nbsp;                            }</b>
+<i>209</i>&nbsp;                        }
+<b class="fc"><i>210</i>&nbsp;                        if ((i % 2 != 0 &amp;&amp; j % 2 == 0)</b>
+<i>211</i>&nbsp;                                || i % 2 == 0 &amp;&amp; j % 2 != 0) {
+<b class="fc"><i>212</i>&nbsp;                            b.setBackground(Color.white);</b>
+<i>213</i>&nbsp;                        } else {
+<b class="fc"><i>214</i>&nbsp;                            b.setBackground(new Color(75, 65, 50));</b>
+<i>215</i>&nbsp;                        }
+<b class="fc"><i>216</i>&nbsp;                        b.setName((i - 1) + &quot;&quot; + (j - 1));</b>
+<b class="fc"><i>217</i>&nbsp;                        b.addActionListener(e -&gt; buttonClicked(b.getName()));</b>
+<b class="fc"><i>218</i>&nbsp;                        map.put(b.getName(), b);</b>
+<b class="fc"><i>219</i>&nbsp;                        boardLayer.add(b);</b>
+<i>220</i>&nbsp;                    }
+<i>221</i>&nbsp;                }
+<i>222</i>&nbsp;            }
+<i>223</i>&nbsp;        }
+<b class="fc"><i>224</i>&nbsp;        gameView.getContentPane().add(boardLayer);</b>
+<b class="fc"><i>225</i>&nbsp;        this.boardValues = board.getBoard();</b>
+<b class="fc"><i>226</i>&nbsp;        hide(connectView);</b>
+<b class="fc"><i>227</i>&nbsp;        display(gameView);</b>
+<b class="fc"><i>228</i>&nbsp;        resetOnExit(gameView);</b>
+<i>229</i>&nbsp;
+<b class="fc"><i>230</i>&nbsp;    }</b>
+<i>231</i>&nbsp;
+<i>232</i>&nbsp;    public void initializeCheckmateView(int winningPlayer) throws IOException {
+<b class="fc"><i>233</i>&nbsp;        checkmateView = new GameView(&quot;Checkmate Screen&quot;);</b>
+<i>234</i>&nbsp;
+<b class="fc"><i>235</i>&nbsp;        JLabel label = new JLabel(&quot;Checkmate&quot;);</b>
+<b class="fc"><i>236</i>&nbsp;        if (playerNumber == winningPlayer){</b>
+<b class="fc"><i>237</i>&nbsp;            label.setText(&quot;Checkmate! You win!&quot;);</b>
+<i>238</i>&nbsp;        }else{
+<b class="fc"><i>239</i>&nbsp;            label.setText(&quot;Checkmate! You lose!&quot;);</b>
+<i>240</i>&nbsp;        }
+<i>241</i>&nbsp;
+<b class="fc"><i>242</i>&nbsp;        label.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 50));</b>
+<b class="fc"><i>243</i>&nbsp;        label.setForeground(Color.white);</b>
+<b class="fc"><i>244</i>&nbsp;        label.setBounds(200,100,700, 300);</b>
+<i>245</i>&nbsp;
+<b class="fc"><i>246</i>&nbsp;        JButton b=new JButton(&quot;Return to start screen&quot;);</b>
+<b class="fc"><i>247</i>&nbsp;        b.setBounds(100,500,700, 100);</b>
+<b class="fc"><i>248</i>&nbsp;        b.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 40));</b>
+<i>249</i>&nbsp;
+<i>250</i>&nbsp;        //add to frame
+<b class="fc"><i>251</i>&nbsp;        checkmateView.add(b);</b>
+<b class="fc"><i>252</i>&nbsp;        checkmateView.add(label);</b>
+<b class="fc"><i>253</i>&nbsp;        checkmateView.setLayout(null);</b>
+<i>254</i>&nbsp;
+<i>255</i>&nbsp;        //action listener
+<b class="fc"><i>256</i>&nbsp;        b.addActionListener(e -&gt; {</b>
+<b class="fc"><i>257</i>&nbsp;                initializeStartView();</b>
+<b class="fc"><i>258</i>&nbsp;                hide(checkmateView);</b>
+<b class="fc"><i>259</i>&nbsp;        });</b>
+<b class="fc"><i>260</i>&nbsp;        hide(gameView);</b>
+<b class="fc"><i>261</i>&nbsp;        gameView = null;</b>
+<b class="fc"><i>262</i>&nbsp;        display(checkmateView);</b>
+<b class="fc"><i>263</i>&nbsp;    }</b>
+<i>264</i>&nbsp;
+<i>265</i>&nbsp;    /**
+<i>266</i>&nbsp;     * Draws all the pieces on the board. Used after moving pieces
+<i>267</i>&nbsp;     */
+<i>268</i>&nbsp;    private void drawPieces(){
+<b class="fc"><i>269</i>&nbsp;        for (int i = 0; i &lt; 8; i++) {</b>
+<b class="fc"><i>270</i>&nbsp;            for (int j = 0; j &lt; 8; j++) {</b>
+<b class="fc"><i>271</i>&nbsp;                JButton b = this.getButton(i+&quot;&quot;+j);</b>
+<b class="fc"><i>272</i>&nbsp;                if (board.getPiece(i, j) != null) {</b>
+<i>273</i>&nbsp;                    try {
+<b class="fc"><i>274</i>&nbsp;                        String location = &quot;/images/&quot;</b>
+<b class="fc"><i>275</i>&nbsp;                                + board.getPiece(i, j).color.toString()</b>
+<b class="fc"><i>276</i>&nbsp;                                + board.getPiece(i, j).getClass().getSimpleName()</b>
+<i>277</i>&nbsp;                                + &quot;.png&quot;;
+<b class="fc"><i>278</i>&nbsp;                        assert b != null;</b>
+<b class="fc"><i>279</i>&nbsp;                        b.setIcon(new ImageIcon(ImageIO.read(getClass().getResource(location))));</b>
+<b class="nc"><i>280</i>&nbsp;                    } catch (IOException e) {</b>
+<b class="nc"><i>281</i>&nbsp;                        e.printStackTrace();</b>
+<b class="fc"><i>282</i>&nbsp;                    }</b>
+<i>283</i>&nbsp;                }
+<i>284</i>&nbsp;                else{
+<b class="fc"><i>285</i>&nbsp;                    assert b != null;</b>
+<b class="fc"><i>286</i>&nbsp;                    b.setIcon(null);</b>
+<i>287</i>&nbsp;
+<i>288</i>&nbsp;                }
+<i>289</i>&nbsp;            }
+<i>290</i>&nbsp;        }
+<b class="fc"><i>291</i>&nbsp;    }</b>
+<i>292</i>&nbsp;
+<i>293</i>&nbsp;    /**
+<i>294</i>&nbsp;     * Action for clicking buttons
+<i>295</i>&nbsp;     *
+<i>296</i>&nbsp;     * contains logic making moves and handling the clicks
+<i>297</i>&nbsp;     *
+<i>298</i>&nbsp;     * @param name
+<i>299</i>&nbsp;     */
+<i>300</i>&nbsp;    private void buttonClicked(String name){
+<i>301</i>&nbsp;
+<b class="fc"><i>302</i>&nbsp;        int row = Integer.parseInt(String.valueOf(name.charAt(0)));</b>
+<b class="fc"><i>303</i>&nbsp;        int col = Integer.parseInt(String.valueOf(name.charAt(1)));</b>
+<b class="fc"><i>304</i>&nbsp;        ChessPiece piece = this.boardValues.get(row).get(col);</b>
+<i>305</i>&nbsp;
+<b class="fc"><i>306</i>&nbsp;        if (piece != null &amp;&amp;  selectedPiece == null) {</b>
+<b class="fc"><i>307</i>&nbsp;            if (serverManager.getPlayerTurn() == playerNumber &amp;&amp; piece.color.equals(playerColor)){</b>
+<b class="fc"><i>308</i>&nbsp;                selectedPiece = piece;</b>
+<i>309</i>&nbsp;
+<b class="fc"><i>310</i>&nbsp;                this.availableMoves = board.getValidMoves(piece);</b>
+<i>311</i>&nbsp;
+<b class="fc"><i>312</i>&nbsp;                for (PieceLocation move : this.availableMoves) {</b>
+<b class="fc"><i>313</i>&nbsp;                    String temp = move.row + &quot;&quot; + move.column;</b>
+<b class="fc"><i>314</i>&nbsp;                    getButton(temp).setBackground(Color.green);</b>
+<b class="fc"><i>315</i>&nbsp;                }</b>
+<i>316</i>&nbsp;            }
+<i>317</i>&nbsp;        } else {
+<b class="fc"><i>318</i>&nbsp;            for (PieceLocation move : this.availableMoves) {</b>
+<b class="fc"><i>319</i>&nbsp;                if (row == move.row &amp;&amp; col == move.column) {</b>
+<b class="fc"><i>320</i>&nbsp;                    SaveMove(selectedPiece, move, &quot;&quot;);</b>
+<b class="fc"><i>321</i>&nbsp;                    this.board.movePiece(selectedPiece, move);</b>
+<b class="fc"><i>322</i>&nbsp;                    this.availableMoves = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>323</i>&nbsp;                    this.boardValues = this.board.getBoard();</b>
+<i>324</i>&nbsp;
+<b class="fc"><i>325</i>&nbsp;                    drawPieces();</b>
+<i>326</i>&nbsp;
+<b class="fc"><i>327</i>&nbsp;                    if (playerNumber == 1){</b>
+<b class="fc"><i>328</i>&nbsp;                        if (board.isInCheckmate(PieceColor.Black)){</b>
+<b class="nc"><i>329</i>&nbsp;                            serverManager.ResetData();</b>
+<i>330</i>&nbsp;                            try {
+<b class="nc"><i>331</i>&nbsp;                                initializeCheckmateView(playerNumber);</b>
+<b class="nc"><i>332</i>&nbsp;                                gameView = null;</b>
+<b class="nc"><i>333</i>&nbsp;                            } catch (IOException e) {</b>
+<b class="nc"><i>334</i>&nbsp;                                e.printStackTrace();</b>
+<b class="nc"><i>335</i>&nbsp;                            }</b>
+<i>336</i>&nbsp;                        }
+<b class="fc"><i>337</i>&nbsp;                        else if (board.isInCheck(PieceColor.Black)){</b>
+<b class="nc"><i>338</i>&nbsp;                            playerInCheck(PieceColor.Black);</b>
+<i>339</i>&nbsp;                        }
+<i>340</i>&nbsp;                    }else{
+<b class="nc"><i>341</i>&nbsp;                        if (board.isInCheckmate(PieceColor.White)){</b>
+<b class="nc"><i>342</i>&nbsp;                            serverManager.ResetData();</b>
+<i>343</i>&nbsp;                            try {
+<b class="nc"><i>344</i>&nbsp;                                initializeCheckmateView(playerNumber);</b>
+<b class="nc"><i>345</i>&nbsp;                                gameView = null;</b>
+<b class="nc"><i>346</i>&nbsp;                            } catch (IOException e) {</b>
+<b class="nc"><i>347</i>&nbsp;                                e.printStackTrace();</b>
+<b class="nc"><i>348</i>&nbsp;                            }</b>
+<i>349</i>&nbsp;                        }
+<b class="nc"><i>350</i>&nbsp;                        else if (board.isInCheck(PieceColor.White)){</b>
+<b class="nc"><i>351</i>&nbsp;                            playerInCheck(PieceColor.White);</b>
+<i>352</i>&nbsp;                        }
+<i>353</i>&nbsp;                    }
+<i>354</i>&nbsp;                }
+<i>355</i>&nbsp;
+<b class="fc"><i>356</i>&nbsp;                if ((move.row % 2 != 0 &amp;&amp; move.column % 2 == 0)</b>
+<i>357</i>&nbsp;                        || move.row % 2 == 0 &amp;&amp; move.column % 2 != 0) {
+<b class="fc"><i>358</i>&nbsp;                    Objects.requireNonNull(getButton(move.row + &quot;&quot; + move.column)).setBackground(Color.white);</b>
+<i>359</i>&nbsp;                } else {
+<b class="fc"><i>360</i>&nbsp;                    Objects.requireNonNull(getButton(move.row + &quot;&quot; + move.column)).setBackground(new Color(75, 65, 50));</b>
+<i>361</i>&nbsp;                }
+<b class="fc"><i>362</i>&nbsp;            }</b>
+<b class="fc"><i>363</i>&nbsp;            selectedPiece = null;</b>
+<i>364</i>&nbsp;        }
+<i>365</i>&nbsp;
+<b class="fc"><i>366</i>&nbsp;        if (gameView != null) {</b>
+<b class="fc"><i>367</i>&nbsp;            display(gameView);</b>
+<i>368</i>&nbsp;        }
+<b class="fc"><i>369</i>&nbsp;    }</b>
+<i>370</i>&nbsp;
+<i>371</i>&nbsp;    /**
+<i>372</i>&nbsp;     * Gets the button at the location described in a string
+<i>373</i>&nbsp;     * @param name
+<i>374</i>&nbsp;     * @return
+<i>375</i>&nbsp;     */
+<i>376</i>&nbsp;    private JButton getButton(String name) {
+<b class="fc"><i>377</i>&nbsp;        if (this.map.containsKey(name)) {</b>
+<b class="fc"><i>378</i>&nbsp;            return this.map.get(name);</b>
+<i>379</i>&nbsp;        }
+<b class="nc"><i>380</i>&nbsp;        return null;</b>
+<i>381</i>&nbsp;    }
+<i>382</i>&nbsp;
+<i>383</i>&nbsp;    private void display(JFrame view) {
+<b class="fc"><i>384</i>&nbsp;        view.setVisible(true);</b>
+<b class="fc"><i>385</i>&nbsp;    }</b>
+<i>386</i>&nbsp;
+<i>387</i>&nbsp;    private void hide(JFrame view) {
+<b class="fc"><i>388</i>&nbsp;        view.setVisible(false);</b>
+<b class="fc"><i>389</i>&nbsp;    }</b>
+<i>390</i>&nbsp;
+<i>391</i>&nbsp;    private void resetOnExit(JFrame view){
+<b class="fc"><i>392</i>&nbsp;        gameView.addWindowListener(new WindowAdapter() {</b>
+<i>393</i>&nbsp;            @Override
+<i>394</i>&nbsp;            public void windowClosing(WindowEvent e) {
+<b class="nc"><i>395</i>&nbsp;                serverManager.ResetData();</b>
+<b class="nc"><i>396</i>&nbsp;            }</b>
+<i>397</i>&nbsp;        });
+<b class="fc"><i>398</i>&nbsp;    }</b>
+<i>399</i>&nbsp;
+<i>400</i>&nbsp;    public void playerInCheck(PieceColor color){
+<b class="fc"><i>401</i>&nbsp;        int delay = 2000;</b>
+<i>402</i>&nbsp;
+<b class="fc"><i>403</i>&nbsp;        JPanel checkLayer = (JPanel) gameView.getGlassPane();</b>
+<b class="fc"><i>404</i>&nbsp;        checkLayer.setVisible(true);</b>
+<b class="fc"><i>405</i>&nbsp;        checkLayer.setLayout(new GridBagLayout());</b>
+<i>406</i>&nbsp;
+<b class="fc"><i>407</i>&nbsp;        JLabel label = new JLabel(&quot;Check&quot;);</b>
+<b class="fc"><i>408</i>&nbsp;        if (color.equals(PieceColor.Black)){</b>
+<b class="fc"><i>409</i>&nbsp;            label.setText(&quot;Black is in Check&quot;);</b>
+<i>410</i>&nbsp;        }
+<i>411</i>&nbsp;        else {
+<b class="nc"><i>412</i>&nbsp;            label.setText(&quot;White is in Check&quot;);</b>
+<i>413</i>&nbsp;        }
+<b class="fc"><i>414</i>&nbsp;        label.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 100));</b>
+<b class="fc"><i>415</i>&nbsp;        label.setForeground(Color.red);</b>
+<b class="fc"><i>416</i>&nbsp;        label.setBounds(100,500,700, 300);</b>
+<b class="fc"><i>417</i>&nbsp;        checkLayer.add(label);</b>
+<i>418</i>&nbsp;
+<b class="fc"><i>419</i>&nbsp;        ActionListener taskPerformer = new ActionListener() {</b>
+<i>420</i>&nbsp;            public void actionPerformed(ActionEvent evt) {
+<b class="nc"><i>421</i>&nbsp;                label.setVisible(false);</b>
+<b class="nc"><i>422</i>&nbsp;                checkLayer.remove(label);</b>
+<b class="nc"><i>423</i>&nbsp;            }</b>
+<i>424</i>&nbsp;        };
+<b class="fc"><i>425</i>&nbsp;        new javax.swing.Timer(delay, taskPerformer).start();</b>
+<b class="fc"><i>426</i>&nbsp;    }</b>
+<i>427</i>&nbsp;
+<i>428</i>&nbsp;    public void generatePromotionButtons(Pawn pawn){
+<b class="fc"><i>429</i>&nbsp;        JPanel promotionLayer = (JPanel) gameView.getGlassPane();</b>
+<b class="fc"><i>430</i>&nbsp;        promotionLayer.setVisible(true);</b>
+<b class="fc"><i>431</i>&nbsp;        promotionLayer.setLayout(new GridBagLayout());</b>
+<i>432</i>&nbsp;
+<b class="fc"><i>433</i>&nbsp;        JButton b1=new JButton(&quot;Bishop&quot;);</b>
+<b class="fc"><i>434</i>&nbsp;        JButton b2=new JButton(&quot;Knight&quot;);</b>
+<b class="fc"><i>435</i>&nbsp;        JButton b3=new JButton(&quot;Rook&quot;);</b>
+<b class="fc"><i>436</i>&nbsp;        JButton b4=new JButton(&quot;Queen&quot;);</b>
+<i>437</i>&nbsp;
+<b class="fc"><i>438</i>&nbsp;        b1.setBounds(300,500,300, 100);</b>
+<b class="fc"><i>439</i>&nbsp;        b1.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 40));</b>
+<b class="fc"><i>440</i>&nbsp;        b1.addActionListener(e -&gt; {</b>
+<b class="fc"><i>441</i>&nbsp;            board.promotePawn(pawn, &quot;Bishop&quot;);</b>
+<b class="fc"><i>442</i>&nbsp;            SaveMove(board.getPiece(pawn.location), pawn.location, &quot;Bishop&quot;);</b>
+<b class="fc"><i>443</i>&nbsp;            b1.setVisible(false);</b>
+<b class="fc"><i>444</i>&nbsp;            b2.setVisible(false);</b>
+<b class="fc"><i>445</i>&nbsp;            b3.setVisible(false);</b>
+<b class="fc"><i>446</i>&nbsp;            b4.setVisible(false);</b>
+<b class="fc"><i>447</i>&nbsp;            promotionLayer.remove(b1);</b>
+<b class="fc"><i>448</i>&nbsp;            promotionLayer.remove(b2);</b>
+<b class="fc"><i>449</i>&nbsp;            promotionLayer.remove(b3);</b>
+<b class="fc"><i>450</i>&nbsp;            promotionLayer.remove(b4);</b>
+<b class="fc"><i>451</i>&nbsp;            drawPieces();</b>
+<b class="fc"><i>452</i>&nbsp;            display(gameView);</b>
+<b class="fc"><i>453</i>&nbsp;        });</b>
+<i>454</i>&nbsp;
+<b class="fc"><i>455</i>&nbsp;        b2.setBounds(300,500,300, 100);</b>
+<b class="fc"><i>456</i>&nbsp;        b2.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 40));</b>
+<b class="fc"><i>457</i>&nbsp;        b2.addActionListener(e -&gt; {</b>
+<b class="nc"><i>458</i>&nbsp;            board.promotePawn(pawn, &quot;Knight&quot;);</b>
+<b class="nc"><i>459</i>&nbsp;            SaveMove(board.getPiece(pawn.location), pawn.location, &quot;Knight&quot;);</b>
+<b class="nc"><i>460</i>&nbsp;            b1.setVisible(false);</b>
+<b class="nc"><i>461</i>&nbsp;            b2.setVisible(false);</b>
+<b class="nc"><i>462</i>&nbsp;            b3.setVisible(false);</b>
+<b class="nc"><i>463</i>&nbsp;            b4.setVisible(false);</b>
+<b class="nc"><i>464</i>&nbsp;            promotionLayer.remove(b1);</b>
+<b class="nc"><i>465</i>&nbsp;            promotionLayer.remove(b2);</b>
+<b class="nc"><i>466</i>&nbsp;            promotionLayer.remove(b3);</b>
+<b class="nc"><i>467</i>&nbsp;            promotionLayer.remove(b4);</b>
+<b class="nc"><i>468</i>&nbsp;            drawPieces();</b>
+<b class="nc"><i>469</i>&nbsp;            display(gameView);</b>
+<b class="nc"><i>470</i>&nbsp;        });</b>
+<i>471</i>&nbsp;
+<b class="fc"><i>472</i>&nbsp;        b3.setBounds(300,500,300, 100);</b>
+<b class="fc"><i>473</i>&nbsp;        b3.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 40));</b>
+<b class="fc"><i>474</i>&nbsp;        b3.addActionListener(e -&gt; {</b>
+<b class="nc"><i>475</i>&nbsp;            board.promotePawn(pawn, &quot;Rook&quot;);</b>
+<b class="nc"><i>476</i>&nbsp;            SaveMove(board.getPiece(pawn.location), pawn.location, &quot;Rook&quot;);</b>
+<b class="nc"><i>477</i>&nbsp;            b1.setVisible(false);</b>
+<b class="nc"><i>478</i>&nbsp;            b2.setVisible(false);</b>
+<b class="nc"><i>479</i>&nbsp;            b3.setVisible(false);</b>
+<b class="nc"><i>480</i>&nbsp;            b4.setVisible(false);</b>
+<b class="nc"><i>481</i>&nbsp;            promotionLayer.remove(b1);</b>
+<b class="nc"><i>482</i>&nbsp;            promotionLayer.remove(b2);</b>
+<b class="nc"><i>483</i>&nbsp;            promotionLayer.remove(b3);</b>
+<b class="nc"><i>484</i>&nbsp;            promotionLayer.remove(b4);</b>
+<b class="nc"><i>485</i>&nbsp;            drawPieces();</b>
+<b class="nc"><i>486</i>&nbsp;            display(gameView);</b>
+<b class="nc"><i>487</i>&nbsp;         });</b>
+<i>488</i>&nbsp;
+<i>489</i>&nbsp;
+<b class="fc"><i>490</i>&nbsp;        b4.setBounds(300,500,300, 100);</b>
+<b class="fc"><i>491</i>&nbsp;        b4.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 40));</b>
+<b class="fc"><i>492</i>&nbsp;        b4.addActionListener(e -&gt; {</b>
+<b class="nc"><i>493</i>&nbsp;            board.promotePawn(pawn, &quot;Queen&quot;);</b>
+<b class="nc"><i>494</i>&nbsp;            SaveMove(board.getPiece(pawn.location), pawn.location, &quot;Queen&quot;);</b>
+<b class="nc"><i>495</i>&nbsp;            b1.setVisible(false);</b>
+<b class="nc"><i>496</i>&nbsp;            b2.setVisible(false);</b>
+<b class="nc"><i>497</i>&nbsp;            b3.setVisible(false);</b>
+<b class="nc"><i>498</i>&nbsp;            b4.setVisible(false);</b>
+<b class="nc"><i>499</i>&nbsp;            promotionLayer.remove(b1);</b>
+<b class="nc"><i>500</i>&nbsp;            promotionLayer.remove(b2);</b>
+<b class="nc"><i>501</i>&nbsp;            promotionLayer.remove(b3);</b>
+<b class="nc"><i>502</i>&nbsp;            promotionLayer.remove(b4);</b>
+<b class="nc"><i>503</i>&nbsp;            drawPieces();</b>
+<b class="nc"><i>504</i>&nbsp;            display(gameView);</b>
+<b class="nc"><i>505</i>&nbsp;        });</b>
+<i>506</i>&nbsp;
+<b class="fc"><i>507</i>&nbsp;        promotionLayer.add(b1);</b>
+<b class="fc"><i>508</i>&nbsp;        promotionLayer.add(b2);</b>
+<b class="fc"><i>509</i>&nbsp;        promotionLayer.add(b3);</b>
+<b class="fc"><i>510</i>&nbsp;        promotionLayer.add(b4);</b>
+<b class="fc"><i>511</i>&nbsp;    }</b>
+<i>512</i>&nbsp;
+<i>513</i>&nbsp;    @Override
+<i>514</i>&nbsp;    public void update(Observable o, Object arg) {
+<b class="fc"><i>515</i>&nbsp;        if (playerNumber == 0) {</b>
+<b class="fc"><i>516</i>&nbsp;            playerNumber = serverManager.getPlayerNumber();</b>
+<b class="fc"><i>517</i>&nbsp;            serverManager.connectPlayer(playerNumber);</b>
+<b class="fc"><i>518</i>&nbsp;            if (playerNumber == 1){</b>
+<b class="fc"><i>519</i>&nbsp;                playerColor = PieceColor.White;</b>
+<i>520</i>&nbsp;            }
+<b class="fc"><i>521</i>&nbsp;            else if (playerNumber == 2){</b>
+<b class="fc"><i>522</i>&nbsp;                playerColor = PieceColor.Black;</b>
+<i>523</i>&nbsp;            }
+<i>524</i>&nbsp;            else{
+<b class="nc"><i>525</i>&nbsp;                hide(connectView);</b>
+<b class="nc"><i>526</i>&nbsp;                playerNumber = 3;</b>
+<b class="nc"><i>527</i>&nbsp;                serverManager.DenyAccess();</b>
+<b class="nc"><i>528</i>&nbsp;                initializeStartView();</b>
+<i>529</i>&nbsp;            }
+<i>530</i>&nbsp;        }
+<i>531</i>&nbsp;
+<b class="fc"><i>532</i>&nbsp;        if (serverManager.getPlayersConnected() &amp;&amp; gameView == null){</b>
+<b class="nc"><i>533</i>&nbsp;            System.out.println(&quot;HERE&quot;);</b>
+<b class="nc"><i>534</i>&nbsp;            initializeGameView();</b>
+<i>535</i>&nbsp;        }
+<i>536</i>&nbsp;
+<b class="fc"><i>537</i>&nbsp;        if (serverManager.getPlayerTurn() == playerNumber) {</b>
+<b class="fc"><i>538</i>&nbsp;            if (serverManager.getPawnPromotion().isEmpty()) {</b>
+<b class="fc"><i>539</i>&nbsp;                ChessPiece piece = board.getPiece(serverManager.getRecentMove().from.row, serverManager.getRecentMove().from.column);</b>
+<b class="fc"><i>540</i>&nbsp;                PieceLocation destination = new PieceLocation(serverManager.getRecentMove().destination.row, serverManager.getRecentMove().destination.column);</b>
+<b class="fc"><i>541</i>&nbsp;                this.board.movePiece(piece, destination);</b>
+<b class="fc"><i>542</i>&nbsp;            }</b>
+<i>543</i>&nbsp;            else {
+<i>544</i>&nbsp;                //ChessPiece piece = board.getPiece(serverManager.getRecentMove().from.row, serverManager.getRecentMove().from.column);
+<b class="nc"><i>545</i>&nbsp;                if (serverManager.getRecentMove().from.row == 7){</b>
+<b class="nc"><i>546</i>&nbsp;                    ArrayList&lt;ChessPiece&gt; chessPieces = board.getPieces(PieceColor.White);</b>
+<b class="nc"><i>547</i>&nbsp;                    for (ChessPiece piece : chessPieces){</b>
+<b class="nc"><i>548</i>&nbsp;                        for (PieceLocation destination : board.getValidMoves(piece)){</b>
+<b class="nc"><i>549</i>&nbsp;                            if (destination.row == serverManager.getRecentMove().from.row &amp;&amp; destination.column == getServerManager().getRecentMove().from.column){</b>
+<b class="nc"><i>550</i>&nbsp;                                this.board.movePiece(piece, destination);</b>
+<b class="nc"><i>551</i>&nbsp;                                if (serverManager.getPawnPromotion().compareTo(&quot;Bishop&quot;) == 0) {</b>
+<b class="nc"><i>552</i>&nbsp;                                    board.promotePawn((Pawn) piece, &quot;Bishop&quot;);</b>
+<b class="nc"><i>553</i>&nbsp;                                } else if (serverManager.getPawnPromotion().compareTo(&quot;Knight&quot;) == 0) {</b>
+<b class="nc"><i>554</i>&nbsp;                                    board.promotePawn((Pawn) piece, &quot;Knight&quot;);</b>
+<b class="nc"><i>555</i>&nbsp;                                } else if (serverManager.getPawnPromotion().compareTo(&quot;Rook&quot;) == 0) {</b>
+<b class="nc"><i>556</i>&nbsp;                                    board.promotePawn((Pawn) piece, &quot;Rook&quot;);</b>
+<b class="nc"><i>557</i>&nbsp;                                } else if (serverManager.getPawnPromotion().compareTo(&quot;Queen&quot;) == 0) {</b>
+<b class="nc"><i>558</i>&nbsp;                                    board.promotePawn((Pawn) piece, &quot;Queen&quot;);</b>
+<i>559</i>&nbsp;                                }
+<i>560</i>&nbsp;                            }
+<b class="nc"><i>561</i>&nbsp;                        }</b>
+<b class="nc"><i>562</i>&nbsp;                    }</b>
+<i>563</i>&nbsp;
+<b class="nc"><i>564</i>&nbsp;                }</b>
+<b class="nc"><i>565</i>&nbsp;                else if (serverManager.getRecentMove().from.row == 0){</b>
+<b class="nc"><i>566</i>&nbsp;                    ArrayList&lt;ChessPiece&gt; chessPieces = board.getPieces(PieceColor.Black);</b>
+<b class="nc"><i>567</i>&nbsp;                    for (ChessPiece piece : chessPieces){</b>
+<b class="nc"><i>568</i>&nbsp;                        for (PieceLocation destination : board.getValidMoves(piece)){</b>
+<b class="nc"><i>569</i>&nbsp;                            if (destination.row == serverManager.getRecentMove().from.row &amp;&amp; destination.column == getServerManager().getRecentMove().from.column){</b>
+<b class="nc"><i>570</i>&nbsp;                                this.board.movePiece(piece, destination);</b>
+<b class="nc"><i>571</i>&nbsp;                                if (serverManager.getPawnPromotion().compareTo(&quot;Bishop&quot;) == 0) {</b>
+<b class="nc"><i>572</i>&nbsp;                                    board.promotePawn((Pawn) piece, &quot;Bishop&quot;);</b>
+<b class="nc"><i>573</i>&nbsp;                                } else if (serverManager.getPawnPromotion().compareTo(&quot;Knight&quot;) == 0) {</b>
+<b class="nc"><i>574</i>&nbsp;                                    board.promotePawn((Pawn) piece, &quot;Knight&quot;);</b>
+<b class="nc"><i>575</i>&nbsp;                                } else if (serverManager.getPawnPromotion().compareTo(&quot;Rook&quot;) == 0) {</b>
+<b class="nc"><i>576</i>&nbsp;                                    board.promotePawn((Pawn) piece, &quot;Rook&quot;);</b>
+<b class="nc"><i>577</i>&nbsp;                                } else if (serverManager.getPawnPromotion().compareTo(&quot;Queen&quot;) == 0) {</b>
+<b class="nc"><i>578</i>&nbsp;                                    board.promotePawn((Pawn) piece, &quot;Queen&quot;);</b>
+<i>579</i>&nbsp;                                }
+<i>580</i>&nbsp;                            }
+<b class="nc"><i>581</i>&nbsp;                        }</b>
+<b class="nc"><i>582</i>&nbsp;                    }</b>
+<i>583</i>&nbsp;                }
+<i>584</i>&nbsp;            }
+<b class="fc"><i>585</i>&nbsp;            drawPieces();</b>
+<i>586</i>&nbsp;
+<b class="fc"><i>587</i>&nbsp;            if(board.isInCheckmate(playerColor)){</b>
+<b class="nc"><i>588</i>&nbsp;                serverManager.ResetData();</b>
+<i>589</i>&nbsp;                try {
+<b class="nc"><i>590</i>&nbsp;                    if (playerNumber == 1){</b>
+<b class="nc"><i>591</i>&nbsp;                        initializeCheckmateView(2);</b>
+<i>592</i>&nbsp;                    }
+<i>593</i>&nbsp;                    else{
+<b class="nc"><i>594</i>&nbsp;                        initializeCheckmateView(1);</b>
+<i>595</i>&nbsp;                    }
+<b class="nc"><i>596</i>&nbsp;                } catch (IOException e) {</b>
+<b class="nc"><i>597</i>&nbsp;                    e.printStackTrace();</b>
+<b class="nc"><i>598</i>&nbsp;                }</b>
+<i>599</i>&nbsp;            }
+<b class="fc"><i>600</i>&nbsp;            else if(board.isInCheck(playerColor)){</b>
+<b class="nc"><i>601</i>&nbsp;                playerInCheck(playerColor);</b>
+<b class="nc"><i>602</i>&nbsp;                display(gameView);</b>
+<i>603</i>&nbsp;            }
+<i>604</i>&nbsp;        }
+<b class="fc"><i>605</i>&nbsp;    }</b>
+<i>606</i>&nbsp;
+<i>607</i>&nbsp;    /**
+<i>608</i>&nbsp;     * Saves the move to firebase with players turn, from move and destination moves
+<i>609</i>&nbsp;     * @param ChessPiece - the piece to move
+<i>610</i>&nbsp;     * @param PieceLocation - the location to move the piece
+<i>611</i>&nbsp;     */
+<i>612</i>&nbsp;    public void SaveMove(ChessPiece piece, PieceLocation destination, String promotion){
+<b class="fc"><i>613</i>&nbsp;        FirebaseData lastSaved = serverManager.GetLastSavedData();</b>
+<b class="fc"><i>614</i>&nbsp;        Boolean sameMove =  CompareLocation(lastSaved, piece.location, destination); //</b>
+<i>615</i>&nbsp;
+<b class="fc"><i>616</i>&nbsp;        if (sameMove)</b>
+<b class="nc"><i>617</i>&nbsp;            return;</b>
+<i>618</i>&nbsp;
+<b class="fc"><i>619</i>&nbsp;        Boolean isWhiteTurn = false;</b>
+<b class="fc"><i>620</i>&nbsp;        if (playerNumber == 1){</b>
+<b class="fc"><i>621</i>&nbsp;            isWhiteTurn = false;</b>
+<i>622</i>&nbsp;        }
+<b class="nc"><i>623</i>&nbsp;        else if (playerNumber == 2){</b>
+<b class="nc"><i>624</i>&nbsp;            isWhiteTurn = true;</b>
+<i>625</i>&nbsp;        }
+<b class="fc"><i>626</i>&nbsp;        PieceLocation from = piece.location;</b>
+<i>627</i>&nbsp;
+<b class="fc"><i>628</i>&nbsp;        if (piece instanceof Pawn &amp;&amp; (destination.row == 0 || destination.row == 7)){</b>
+<b class="nc"><i>629</i>&nbsp;            generatePromotionButtons((Pawn) piece);</b>
+<i>630</i>&nbsp;        }
+<i>631</i>&nbsp;        else {
+<b class="fc"><i>632</i>&nbsp;            serverManager.SaveData(isWhiteTurn, from, destination, promotion);</b>
+<i>633</i>&nbsp;        }
+<b class="fc"><i>634</i>&nbsp;    }</b>
+<i>635</i>&nbsp;
+<i>636</i>&nbsp;    public Boolean CompareLocation(FirebaseData lastSavedMove, PieceLocation from, PieceLocation destination){
+<b class="fc"><i>637</i>&nbsp;        int board_fromColumn = from.column;</b>
+<b class="fc"><i>638</i>&nbsp;        int board_fromRow = from.row;</b>
+<b class="fc"><i>639</i>&nbsp;        int board_destinationColumn = destination.column;</b>
+<b class="fc"><i>640</i>&nbsp;        int board_destinationRow = destination.row;</b>
+<i>641</i>&nbsp;
+<b class="fc"><i>642</i>&nbsp;        int fireBase_fromColumn = lastSavedMove.movementMade.from.column;</b>
+<b class="fc"><i>643</i>&nbsp;        int fireBase_fromRow = lastSavedMove.movementMade.from.row;</b>
+<b class="fc"><i>644</i>&nbsp;        int fireBase_destinationColumn = lastSavedMove.movementMade.destination.column;</b>
+<b class="fc"><i>645</i>&nbsp;        int fireBase_destinationRow = lastSavedMove.movementMade.destination.row;</b>
+<i>646</i>&nbsp;
+<i>647</i>&nbsp;        //location did not changed. no need to save
+<i>648</i>&nbsp;        //location change need to save
+<b class="fc"><i>649</i>&nbsp;        return board_fromColumn == fireBase_fromColumn</b>
+<i>650</i>&nbsp;                &amp;&amp; board_fromRow == fireBase_fromRow
+<i>651</i>&nbsp;                &amp;&amp; board_destinationColumn == fireBase_destinationColumn
+<i>652</i>&nbsp;                &amp;&amp; board_destinationRow == fireBase_destinationRow;
+<i>653</i>&nbsp;    }
+<i>654</i>&nbsp;
+<i>655</i>&nbsp;    public JFrame getStartView(){
+<b class="fc"><i>656</i>&nbsp;        return startView;</b>
+<i>657</i>&nbsp;    }
+<i>658</i>&nbsp;
+<i>659</i>&nbsp;    public JFrame getConnectView(){
+<b class="fc"><i>660</i>&nbsp;        return connectView;</b>
+<i>661</i>&nbsp;    }
+<i>662</i>&nbsp;
+<i>663</i>&nbsp;    public JFrame getGameView(){
+<b class="fc"><i>664</i>&nbsp;        return gameView;</b>
+<i>665</i>&nbsp;    }
+<i>666</i>&nbsp;
+<i>667</i>&nbsp;    public JFrame getCheckmateView() {
+<b class="fc"><i>668</i>&nbsp;        return checkmateView;</b>
+<i>669</i>&nbsp;    }
+<i>670</i>&nbsp;
+<i>671</i>&nbsp;    public int getPlayerNumber(){
+<b class="nc"><i>672</i>&nbsp;        return playerNumber;</b>
+<i>673</i>&nbsp;    }
+<i>674</i>&nbsp;
+<i>675</i>&nbsp;    public void setPlayerNumber(int playerNumber){
+<b class="fc"><i>676</i>&nbsp;        this.playerNumber = playerNumber;</b>
+<b class="fc"><i>677</i>&nbsp;    }</b>
+<i>678</i>&nbsp;
+<i>679</i>&nbsp;    public ServerManager getServerManager(){
+<b class="fc"><i>680</i>&nbsp;        return serverManager;</b>
+<i>681</i>&nbsp;    }
+<i>682</i>&nbsp;
+<i>683</i>&nbsp;    public PieceColor getPlayerColor(){
+<b class="nc"><i>684</i>&nbsp;        return playerColor;</b>
+<i>685</i>&nbsp;    }
+<i>686</i>&nbsp;
+<i>687</i>&nbsp;    public void setPlayerColor(PieceColor color){
+<b class="fc"><i>688</i>&nbsp;        playerColor = color;</b>
+<b class="fc"><i>689</i>&nbsp;    }</b>
+<i>690</i>&nbsp;
+<i>691</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-03-09 02:40</div>
+</div>
+</body>
+</html>

@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class PieceMovement {
 	private PieceLocation destination;
 	private MovementCondition movementCondition;

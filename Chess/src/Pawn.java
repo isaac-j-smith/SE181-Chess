@@ -29,31 +29,47 @@ public class Pawn extends ChessPiece {
 		moves.add(move);
 		
 		// Add possible diagonal attack moves
+		PieceMovement enPassantMove;
 		if (this.direction == PieceMovementDirection.UpColumn) {
 			move = getMovementInDirection(PieceMovementDirection.UpLeftDiagonal, MovementCondition.OnlyCapture);
+			enPassantMove = getMovementInDirection(PieceMovementDirection.UpLeftDiagonal, MovementCondition.enPassant);
+			
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
 				moves.add(move);
+				enPassantMove.removeNextMoveInSameDirection();
+				moves.add(enPassantMove);
 			}
 			
 			move = getMovementInDirection(PieceMovementDirection.UpRightDiagonal, MovementCondition.OnlyCapture);
+			enPassantMove = getMovementInDirection(PieceMovementDirection.UpRightDiagonal, MovementCondition.enPassant);
+			
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
 				moves.add(move);
+				enPassantMove.removeNextMoveInSameDirection();
+				moves.add(enPassantMove);
 			}
 			
 		}
 		else if (this.direction == PieceMovementDirection.DownColumn) {
 			move = getMovementInDirection(PieceMovementDirection.DownLeftDiagonal, MovementCondition.OnlyCapture);
+			enPassantMove = getMovementInDirection(PieceMovementDirection.DownLeftDiagonal, MovementCondition.enPassant);
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
 				moves.add(move);
+				enPassantMove.removeNextMoveInSameDirection();
+				moves.add(enPassantMove);
 			}
 			
 			move = getMovementInDirection(PieceMovementDirection.DownRightDiagonal, MovementCondition.OnlyCapture);
+			enPassantMove = getMovementInDirection(PieceMovementDirection.DownRightDiagonal, MovementCondition.enPassant);
+			
 			if (move != null) {
 				move.removeNextMoveInSameDirection();
 				moves.add(move);
+				enPassantMove.removeNextMoveInSameDirection();
+				moves.add(enPassantMove);
 			}
 		}
 		

@@ -20,7 +20,7 @@ public class ServerManager extends Observable {
 
     public void Firebase() throws IOException {
 
-        FileInputStream refreshToken = new FileInputStream("./Chess/src/service-account.json");
+        FileInputStream refreshToken = new FileInputStream("./src/service-account.json");
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(refreshToken))

@@ -4,6 +4,8 @@ public class Chessboard {
 	public static int MAX_ROW = 8;
 	public static int MAX_COLUMN = 8;
 	private ArrayList<ArrayList<ChessPiece>> board = new ArrayList<ArrayList<ChessPiece>>();
+	private ChessPiece lastMovedPiece = null;
+	private PieceLocation lastMovedPiecePreviousLocation = null;
 	
 	public Chessboard() {
 		// Create empty board
@@ -24,14 +26,14 @@ public class Chessboard {
 	 */
 	public void setupBoard() {
 		// White pieces
-		ChessPiece whiteKing = new King(new PieceLocation(0,4), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece whiteQueen = new Queen(new PieceLocation(0,3), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece whiteKnight1 = new Knight(new PieceLocation(0,1), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece whiteKnight2 = new Knight(new PieceLocation(0,6), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece whiteRook1 = new Rook(new PieceLocation(0,0), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece whiteRook2 = new Rook(new PieceLocation(0,7), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece whiteBishop1 = new Bishop(new PieceLocation(0,5), PieceColor.White, PieceMovementDirection.DownColumn);
-		ChessPiece whiteBishop2 = new Bishop(new PieceLocation(0,2), PieceColor.White, PieceMovementDirection.DownColumn);
+		ChessPiece whiteKing = new King(new PieceLocation(0,4), PieceColor.White, PieceMovementDirection.UpColumn);
+		ChessPiece whiteQueen = new Queen(new PieceLocation(0,3), PieceColor.White, PieceMovementDirection.UpColumn);
+		ChessPiece whiteKnight1 = new Knight(new PieceLocation(0,1), PieceColor.White, PieceMovementDirection.UpColumn);
+		ChessPiece whiteKnight2 = new Knight(new PieceLocation(0,6), PieceColor.White, PieceMovementDirection.UpColumn);
+		ChessPiece whiteRook1 = new Rook(new PieceLocation(0,0), PieceColor.White, PieceMovementDirection.UpColumn);
+		ChessPiece whiteRook2 = new Rook(new PieceLocation(0,7), PieceColor.White, PieceMovementDirection.UpColumn);
+		ChessPiece whiteBishop1 = new Bishop(new PieceLocation(0,5), PieceColor.White, PieceMovementDirection.UpColumn);
+		ChessPiece whiteBishop2 = new Bishop(new PieceLocation(0,2), PieceColor.White, PieceMovementDirection.UpColumn);
 		
 		placePiece(whiteKing, whiteKing.location);
 		placePiece(whiteQueen,whiteQueen.location);
@@ -119,12 +121,12 @@ public class Chessboard {
 				// Check if there is already a piece there
 				ChessPiece pieceAtDestination = getPiece(movement.getDestination());
 				// If there isn't a piece and the move is valid even when not capturing then the move is valid
-				if (pieceAtDestination == null && movement.getMovementCondition() != MovementCondition.OnlyCapture) {
+				if (pieceAtDestination == null && (movement.getMovementCondition() == MovementCondition.OnlyMove || movement.getMovementCondition() == MovementCondition.None)) {
 					locations.add(movement.getDestination());
 					movement = movement.getNextMoveInSameDirection();
 				}
 				// Else if there is a piece, check if it is the same player's or opponent's and if the piece can capture it
-				else if (pieceAtDestination != null && movement.getMovementCondition() != MovementCondition.OnlyMove) {
+				else if (pieceAtDestination != null && (movement.getMovementCondition() == MovementCondition.OnlyCapture || movement.getMovementCondition() == MovementCondition.None)) {
 					// If it is the same color then the move is not valid
 					if (pieceAtDestination.color == piece.color) {
 						movement = null;
@@ -134,6 +136,38 @@ public class Chessboard {
 						locations.add(movement.getDestination());
 						movement = null;
 					}
+				}
+				// Else handle the pawn En Passant move
+				else if (piece instanceof Pawn && movement.getMovementCondition() == MovementCondition.enPassant && pieceAtDestination == null) {
+					// Check if the last movement was of a pawn of the opposite color
+					if (this.lastMovedPiece instanceof Pawn) {
+						if (this.lastMovedPiece.color != piece.color) {
+							int lastMovedPawnMovementDistance = Math.abs(this.lastMovedPiecePreviousLocation.row - this.lastMovedPiece.location.row);
+							// if the pawn moved twice (which means it was its first move)
+							if (lastMovedPawnMovementDistance == 2) {
+								int pawnGhostRow;
+								int pawnGhostColumn;
+								
+								// Find the ghost location for the last moved pawn
+								if (this.lastMovedPiece.direction == PieceMovementDirection.UpColumn) {
+									pawnGhostRow = this.lastMovedPiece.location.row - 1;
+									pawnGhostColumn = this.lastMovedPiecePreviousLocation.column;
+								}
+								else {
+									pawnGhostRow = this.lastMovedPiece.location.row + 1;
+									pawnGhostColumn = this.lastMovedPiecePreviousLocation.column;
+								}
+								
+								// See if the pawn can capture the ghost opponent pawn
+								if (movement.getDestination().row == pawnGhostRow && movement.getDestination().column == pawnGhostColumn) {
+									locations.add(movement.getDestination());
+									placePiece(null, this.lastMovedPiece.location);
+								}
+							}
+						}
+					}
+					
+					movement = null;
 				}
 				else {
 					movement = null;
@@ -237,6 +271,24 @@ public class Chessboard {
 	 * @param PieceLocation - the location to move the piece
 	 */
 	public void movePiece(ChessPiece piece, PieceLocation destination) {
+		// Handle opponent's En Passant move
+		if (getPiece(destination) == null && piece instanceof Pawn && this.lastMovedPiece != null) {
+			// If the pawn moved to the ghost of the last move pawn
+			if (this.lastMovedPiece.direction == PieceMovementDirection.UpColumn) {
+				if (destination.column == this.lastMovedPiece.location.column && destination.row == this.lastMovedPiece.location.row - 1) {
+					placePiece(null, this.lastMovedPiece.location);
+				}
+			}
+			else if (this.lastMovedPiece.direction == PieceMovementDirection.DownColumn) {
+				if (destination.column == this.lastMovedPiece.location.column && destination.row == this.lastMovedPiece.location.row + 1) {
+					placePiece(null, this.lastMovedPiece.location);
+				}
+			}
+		}
+		
+		// Move piece
+		this.lastMovedPiece = piece;
+		this.lastMovedPiecePreviousLocation = piece.location;
 		placePiece(piece, destination);
 		piece.setLocation(destination);
 	}

@@ -3,17 +3,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
 
-import javax.swing.*;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.time.Period;
-import java.util.ArrayList;
-
-import com.google.firebase.FirebaseOptions;
-
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -102,6 +93,11 @@ public class ServerManager extends Observable {
         deleteObservers();
     }
 
+    public void DenyAccess(){
+        FirebaseApp.getInstance().delete();
+        deleteObservers();
+    }
+
     public static FirebaseData GetLastSavedData(){
         return lastSavedData;
     }
@@ -124,6 +120,10 @@ public class ServerManager extends Observable {
 
     public String getPawnPromotion(){
         return pawnPromotion;
+    }
+
+    public void setPlayersConnected(boolean connected){
+        playersConnected = connected;
     }
 
     public void ListenData(){

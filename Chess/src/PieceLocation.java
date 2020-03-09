@@ -7,24 +7,4 @@ public class PieceLocation {
 		this.row = row;
 		this.column = column;
 	}
-
-	public void SetRow(int row)
-	{
-		this.row = row;
-	}
-
-	public void SetColumn(int column)
-	{
-		this.column = column;
-	}
-
-	public int GetRow()
-	{
-		return this.row;
-	}
-
-	public int GetColumn()
-	{
-		return this.column;
-	}
 }

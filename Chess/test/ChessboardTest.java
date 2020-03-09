@@ -190,6 +190,27 @@ public class ChessboardTest {
     }
 
     @Test
+    public void testPawnPromotion() {
+        Chessboard board = new Chessboard();
+
+        // Black rook 1
+        ChessPiece pawn = board.getPiece(1, 0);
+        assertTrue(pawn instanceof Pawn);
+
+        board.promotePawn((Pawn) pawn, "Bishop");
+        assertTrue(board.getPiece(pawn.location) instanceof Bishop);
+
+        board.promotePawn((Pawn) pawn, "Knight");
+        assertTrue(board.getPiece(pawn.location) instanceof Knight);
+
+        board.promotePawn((Pawn) pawn, "Rook");
+        assertTrue(board.getPiece(pawn.location) instanceof Rook);
+
+        board.promotePawn((Pawn) pawn, "Queen");
+        assertTrue(board.getPiece(pawn.location) instanceof Queen);
+    }
+
+    @Test
     public void testSetBoard() {
         Chessboard board = new Chessboard();
         ArrayList<ArrayList<ChessPiece>> expectedBoard = new ArrayList<>();

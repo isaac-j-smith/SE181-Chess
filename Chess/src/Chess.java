@@ -3,7 +3,7 @@ import java.io.IOException;
 
 public class Chess<options> {
 
-    public Chess() throws IOException {
+    public Chess() {
     }
 
     public static void main(String[] args) throws IOException {

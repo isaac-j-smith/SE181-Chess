@@ -1,7 +1,4 @@
-import io.grpc.Server;
-
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Chessboard {
 	public static int MAX_ROW = 8;
@@ -20,103 +17,6 @@ public class Chessboard {
 		}
 		
 		setupBoard();
-		
-		// USED FOR TESTING, REMOVE LATER
-		//DEBUGGame();
-	}
-	
-	/**
-	 * USED FOR DEBUGGING, NOT INTENDED TO BE INCLUDED IN FINAL BUILD.
-	 * USEFUL FOR TESTING WITHOUT UI
-	 */
-	public void DEBUGGame() {
-		while (true) {
-			DEBUGPrintBoard();
-			
-			System.out.println("MOVE: 2 digit number (row, column) and another 2 digit number, EX: 12 22");
-			Scanner in = new Scanner(System.in);
-			String line = in.nextLine();
-			String[] s = line.split("");
-			
-			int startRow = Integer.parseInt(s[0]);
-			int startColumn = Integer.parseInt(s[1]);
-			int endRow = Integer.parseInt(s[3]);
-			int endColumn = Integer.parseInt(s[4]);
-			
-			PieceLocation start = new PieceLocation(startRow, startColumn);
-			PieceLocation destination = new PieceLocation(endRow, endColumn);
-			ChessPiece piece = this.getPiece(start);
-			
-			if (piece == null) {
-				System.out.println("EMPTY SQUARE");
-			}
-			else {
-				ArrayList<PieceLocation> locations = this.getValidMoves(piece);
-				boolean isValid = false;
-				
-				// Check if the given destination is actually a valid move for the selected piece
-				for (PieceLocation location: locations) {
-					if (location.row == destination.row) {
-						if (location.column == destination.column) {
-							isValid = true;
-						}
-					}
-				}
-				
-				// Move the piece if it is a valid move
-				if (isValid == true) {
-					placePiece(piece, destination);
-					piece.setLocation(destination);
-					
-					// Check for winner
-					if (isInCheckmate(PieceColor.White) == true) {
-						System.out.println("BLACK WINS");
-						break;
-					}
-					if (isInCheckmate(PieceColor.Black) == true) {
-						System.out.println("White WINS");
-						break;
-					}
-				}
-				else {
-					System.out.println("INVALID MOVE");
-				}
-			}
-		}
-	}
-	
-	/**
-	 * USED FOR DEBUGGING, NOT INTENDED TO BE INCLUDED IN FINAL BUILD.
-	 * USEFUL FOR TESTING WITHOUT UI
-	 */
-	public void DEBUGPrintLocations(ArrayList<PieceLocation> pieceLocations) {
-		for (int i = 0; i < pieceLocations.size(); i++) {
-			System.out.println(pieceLocations.get(i).row + "," + pieceLocations.get(i).column);
-		}
-	}
-	
-	/**
-	 * USED FOR DEBUGGING, NOT INTENDED TO BE INCLUDED IN FINAL BUILD.
-	 * USEFUL FOR TESTING WITHOUT UI
-	 */
-	public void DEBUGPrintBoard() {
-		System.out.println("" + "\t" + "  0" + "\t" + "  1" + "\t" + "  2" + "\t" + "  3" + "\t" + "  4" + "\t" + "  5" + "\t" + "  6" + "\t" + "  7" + "\t");
-		int rowNumber = 0;
-		for (ArrayList<ChessPiece> row: board) {
-			String line = "    " + rowNumber + "\t";
-			rowNumber++;
-			
-			for (ChessPiece column: row) {
-				if (column != null) {
-					line += column.color.toString().substring(0,1) + column.toString().split("@")[0] + "\t";
-				}
-				else {
-					line += "[   ]" + "\t";
-				}
-			}
-			
-			System.out.println(line);
-		}
 	}
 	
 	/**

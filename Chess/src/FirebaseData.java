@@ -1,4 +1,3 @@
-
 public class FirebaseData {
     public Boolean isWhiteTurn;
     public MovementMade movementMade;
@@ -13,21 +12,5 @@ public class FirebaseData {
         this.player1Connected = player1Connected;
         this.player2Connected = player2Connected;
         this.promotionChoice = promotionChoice;
-    }
-
-    public Boolean GetIsWhiteTurn(){
-        return this.isWhiteTurn;
-    }
-
-    public MovementMade getMovementMade(){
-        return this.movementMade;
-    }
-
-    public void SetIsWhiteTurn(Boolean isWhiteTurn){
-        this.isWhiteTurn = isWhiteTurn;
-    }
-
-    public void SetMovementMade(MovementMade movementMade){
-        this.movementMade = movementMade;
     }
 }

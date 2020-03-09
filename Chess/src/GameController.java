@@ -3,7 +3,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.*;
 
@@ -22,7 +21,7 @@ public class GameController implements Observer {
     private int playerNumber;
     private PieceColor playerColor;
 
-    public GameController() throws IOException {
+    public GameController() {
         this.map = new HashMap<>();
         this.selectedPiece = null;
     }
@@ -30,8 +29,8 @@ public class GameController implements Observer {
     /**
      * Sends player to start screen
      */
-    public void start() throws IOException {
-        initialStartScreen();
+    public void start() {
+        initializeStartView();
     }
 
     /**
@@ -48,7 +47,7 @@ public class GameController implements Observer {
     /**
      * Initializes JFrame for start screen.
      */
-    public void initialStartScreen(){
+    public void initializeStartView(){
         startView = new GameView("Start Screen");
         JButton b=new JButton("Ready");
 
@@ -76,7 +75,8 @@ public class GameController implements Observer {
         //action listener
         b.addActionListener(e -> {
             try {
-                initializeConnectScreen();
+                playerNumber = 0;
+                initializeConnectView();
                 setUp();
 
             } catch (IOException ex) {
@@ -89,7 +89,7 @@ public class GameController implements Observer {
     /**
      * Initializes JFrame for connection screen.
      */
-    public void initializeConnectScreen() throws IOException {
+    public void initializeConnectView() throws IOException {
         connectView = new GameView("Connect Screen");
         JLabel label = new JLabel("Connection");
         label.setText("Waiting for another player to connect...");
@@ -107,7 +107,7 @@ public class GameController implements Observer {
     /**
      * Initializes the board with new values. Done at the start
      */
-    private void initializeGameView() {
+    public void initializeGameView() {
         this.board = new Chessboard();
 
         this.gameView = new GameView("Chess Game");
@@ -225,7 +225,7 @@ public class GameController implements Observer {
         display(gameView);
     }
 
-    public void initializeCheckmateScreen(int winningPlayer) throws IOException {
+    public void initializeCheckmateView(int winningPlayer) throws IOException {
         checkmateView = new GameView("Checkmate Screen");
 
         JLabel label = new JLabel("Checkmate");
@@ -250,7 +250,7 @@ public class GameController implements Observer {
 
         //action listener
         b.addActionListener(e -> {
-                initialStartScreen();
+                initializeStartView();
                 hide(checkmateView);
         });
         hide(gameView);
@@ -324,7 +324,7 @@ public class GameController implements Observer {
                         if (board.isInCheckmate(PieceColor.Black)){
                             serverManager.ResetData();
                             try {
-                                initializeCheckmateScreen(playerNumber);
+                                initializeCheckmateView(playerNumber);
                                 gameView = null;
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -337,7 +337,7 @@ public class GameController implements Observer {
                         if (board.isInCheckmate(PieceColor.White)){
                             serverManager.ResetData();
                             try {
-                                initializeCheckmateScreen(playerNumber);
+                                initializeCheckmateView(playerNumber);
                                 gameView = null;
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -510,7 +510,9 @@ public class GameController implements Observer {
             }
             else{
                 hide(connectView);
-                initialStartScreen();
+                playerNumber = 3;
+                serverManager.DenyAccess();
+                initializeStartView();
             }
         }
 
@@ -525,25 +527,45 @@ public class GameController implements Observer {
                 this.board.movePiece(piece, destination);
             }
             else {
-                ChessPiece piece = board.getPiece(serverManager.getRecentMove().from.row, serverManager.getRecentMove().from.column);
+                //ChessPiece piece = board.getPiece(serverManager.getRecentMove().from.row, serverManager.getRecentMove().from.column);
                 if (serverManager.getRecentMove().from.row == 7){
-                    piece = board.getPiece(serverManager.getRecentMove().from.row - 1, serverManager.getRecentMove().from.column);
-                    PieceLocation destination = new PieceLocation(serverManager.getRecentMove().destination.row, serverManager.getRecentMove().destination.column);
-                    this.board.movePiece(piece, destination);
+                    ArrayList<ChessPiece> chessPieces = board.getPieces(PieceColor.White);
+                    for (ChessPiece piece : chessPieces){
+                        for (PieceLocation destination : board.getValidMoves(piece)){
+                            if (destination.row == serverManager.getRecentMove().from.row && destination.column == getServerManager().getRecentMove().from.column){
+                                this.board.movePiece(piece, destination);
+                                if (serverManager.getPawnPromotion().compareTo("Bishop") == 0) {
+                                    board.promotePawn((Pawn) piece, "Bishop");
+                                } else if (serverManager.getPawnPromotion().compareTo("Knight") == 0) {
+                                    board.promotePawn((Pawn) piece, "Knight");
+                                } else if (serverManager.getPawnPromotion().compareTo("Rook") == 0) {
+                                    board.promotePawn((Pawn) piece, "Rook");
+                                } else if (serverManager.getPawnPromotion().compareTo("Queen") == 0) {
+                                    board.promotePawn((Pawn) piece, "Queen");
+                                }
+                            }
+                        }
+                    }
+
                 }
                 else if (serverManager.getRecentMove().from.row == 0){
-                    piece = board.getPiece(serverManager.getRecentMove().from.row + 1, serverManager.getRecentMove().from.column);
-                    PieceLocation destination = new PieceLocation(serverManager.getRecentMove().destination.row, serverManager.getRecentMove().destination.column);
-                    this.board.movePiece(piece, destination);
-                }
-                if (serverManager.getPawnPromotion().compareTo("Bishop") == 0) {
-                    board.promotePawn((Pawn) piece, "Bishop");
-                } else if (serverManager.getPawnPromotion().compareTo("Knight") == 0) {
-                    board.promotePawn((Pawn) piece, "Knight");
-                } else if (serverManager.getPawnPromotion().compareTo("Rook") == 0) {
-                    board.promotePawn((Pawn) piece, "Rook");
-                } else if (serverManager.getPawnPromotion().compareTo("Queen") == 0) {
-                    board.promotePawn((Pawn) piece, "Queen");
+                    ArrayList<ChessPiece> chessPieces = board.getPieces(PieceColor.Black);
+                    for (ChessPiece piece : chessPieces){
+                        for (PieceLocation destination : board.getValidMoves(piece)){
+                            if (destination.row == serverManager.getRecentMove().from.row && destination.column == getServerManager().getRecentMove().from.column){
+                                this.board.movePiece(piece, destination);
+                                if (serverManager.getPawnPromotion().compareTo("Bishop") == 0) {
+                                    board.promotePawn((Pawn) piece, "Bishop");
+                                } else if (serverManager.getPawnPromotion().compareTo("Knight") == 0) {
+                                    board.promotePawn((Pawn) piece, "Knight");
+                                } else if (serverManager.getPawnPromotion().compareTo("Rook") == 0) {
+                                    board.promotePawn((Pawn) piece, "Rook");
+                                } else if (serverManager.getPawnPromotion().compareTo("Queen") == 0) {
+                                    board.promotePawn((Pawn) piece, "Queen");
+                                }
+                            }
+                        }
+                    }
                 }
             }
             drawPieces();
@@ -552,10 +574,10 @@ public class GameController implements Observer {
                 serverManager.ResetData();
                 try {
                     if (playerNumber == 1){
-                        initializeCheckmateScreen(2);
+                        initializeCheckmateView(2);
                     }
                     else{
-                        initializeCheckmateScreen(1);
+                        initializeCheckmateView(1);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -615,4 +637,37 @@ public class GameController implements Observer {
                 && board_destinationColumn == fireBase_destinationColumn
                 && board_destinationRow == fireBase_destinationRow;
     }
+
+    public JFrame getStartView(){
+        return startView;
+    }
+
+    public JFrame getConnectView(){
+        return connectView;
+    }
+
+    public JFrame getGameView(){
+        return gameView;
+    }
+
+    public JFrame getCheckmateView() {
+        return checkmateView;
+    }
+
+    public int getPlayerNumber(){
+        return playerNumber;
+    }
+
+    public void setPlayerNumber(int playerNumber){
+        this.playerNumber = playerNumber;
+    }
+
+    public ServerManager getServerManager(){
+        return serverManager;
+    }
+
+    public PieceColor getPlayerColor(){
+        return playerColor;
+    }
+
 }

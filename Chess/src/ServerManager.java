@@ -5,6 +5,7 @@ import com.google.firebase.database.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -20,7 +21,7 @@ public class ServerManager extends Observable {
 
     public void Firebase() throws IOException {
 
-        FileInputStream refreshToken = new FileInputStream("./src/service-account.json");
+        InputStream refreshToken = getClass().getResourceAsStream("/service-account.json");
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(refreshToken))

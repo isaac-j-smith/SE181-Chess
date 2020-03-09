@@ -146,7 +146,7 @@ public class GameController implements Observer {
                         JButton b = new JButton("");
                         if (board.getPiece(i - 1, j - 1) != null) {
                             try {
-                                String location = "images/"
+                                String location = "/images/"
                                         + board.getPiece(i - 1, j - 1).color.toString()
                                         + board.getPiece(i - 1, j - 1).getClass().getSimpleName()
                                         + ".png";
@@ -198,7 +198,7 @@ public class GameController implements Observer {
                         JButton b = new JButton("");
                         if (board.getPiece(i - 1, j - 1) != null) {
                             try {
-                                String location = "images/"
+                                String location = "/images/"
                                         + board.getPiece(i - 1, j - 1).color.toString()
                                         + board.getPiece(i - 1, j - 1).getClass().getSimpleName()
                                         + ".png";
@@ -271,7 +271,7 @@ public class GameController implements Observer {
                 JButton b = this.getButton(i+""+j);
                 if (board.getPiece(i, j) != null) {
                     try {
-                        String location = "images/"
+                        String location = "/images/"
                                 + board.getPiece(i, j).color.toString()
                                 + board.getPiece(i, j).getClass().getSimpleName()
                                 + ".png";

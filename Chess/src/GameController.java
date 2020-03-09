@@ -261,7 +261,7 @@ public class GameController implements Observer {
     /**
      * Draws all the pieces on the board. Used after moving pieces
      */
-    private void drawPieces(){
+    public void drawPieces(){
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 JButton b = this.getButton(i+""+j);
@@ -294,13 +294,14 @@ public class GameController implements Observer {
      * @param name
      */
     private void buttonClicked(String name){
-
+        System.out.println(name);
         int row = Integer.parseInt(String.valueOf(name.charAt(0)));
         int col = Integer.parseInt(String.valueOf(name.charAt(1)));
         ChessPiece piece = this.boardValues.get(row).get(col);
 
         if (piece != null &&  selectedPiece == null) {
             if (serverManager.getPlayerTurn() == playerNumber && piece.color.equals(playerColor)){
+                System.out.println(piece);
                 selectedPiece = piece;
 
                 this.availableMoves = board.getValidMoves(piece);
@@ -313,6 +314,7 @@ public class GameController implements Observer {
         } else {
             for (PieceLocation move : this.availableMoves) {
                 if (row == move.row && col == move.column) {
+                    System.out.println(selectedPiece);
                     SaveMove(selectedPiece, move, "");
                     this.board.movePiece(selectedPiece, move);
                     this.availableMoves = new ArrayList<>();
@@ -384,7 +386,7 @@ public class GameController implements Observer {
         view.setVisible(false);
     }
 
-    private void playerInCheck(PieceColor color){
+    public void playerInCheck(PieceColor color){
         int delay = 2000;
 
         JPanel checkLayer = (JPanel) gameView.getGlassPane();
@@ -412,7 +414,7 @@ public class GameController implements Observer {
         new javax.swing.Timer(delay, taskPerformer).start();
     }
 
-    private void generatePromotionButtons(Pawn pawn){
+    public void generatePromotionButtons(Pawn pawn){
         JPanel promotionLayer = (JPanel) gameView.getGlassPane();
         promotionLayer.setVisible(true);
         promotionLayer.setLayout(new GridBagLayout());
@@ -664,6 +666,10 @@ public class GameController implements Observer {
 
     public ServerManager getServerManager(){
         return serverManager;
+    }
+
+    public void setPlayerColor(PieceColor color){
+        playerColor = color;
     }
 
     public PieceColor getPlayerColor(){

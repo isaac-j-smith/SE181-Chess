@@ -35,7 +35,7 @@ public class ServerManager extends Observable {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference usersRef = ref.child("chess");
+        DatabaseReference usersRef = ref.child("KebChess");
 
         Map<String, FirebaseData> users = new HashMap<>();
 
@@ -57,7 +57,7 @@ public class ServerManager extends Observable {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference usersRef = ref.child("chess");
+        DatabaseReference usersRef = ref.child("KebChess");
 
         Map<String, FirebaseData> users = new HashMap<>();
 
@@ -80,7 +80,7 @@ public class ServerManager extends Observable {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
-        DatabaseReference usersRef = ref.child("chess");
+        DatabaseReference usersRef = ref.child("KebChess");
 
         Map<String, FirebaseData> users = new HashMap<>();
 
@@ -102,6 +102,10 @@ public class ServerManager extends Observable {
         return lastSavedData;
     }
 
+    public static void setLastSavedData(FirebaseData firebaseData){
+        lastSavedData = firebaseData;
+    }
+
     public int getPlayerNumber(){
         return playerNumber;
     }
@@ -112,6 +116,10 @@ public class ServerManager extends Observable {
 
     public int getPlayerTurn(){
         return playerTurn;
+    }
+
+    public void setPlayerTurn (int turn){
+        playerTurn = turn;
     }
 
     public boolean getPlayersConnected(){
@@ -128,7 +136,7 @@ public class ServerManager extends Observable {
 
     public void ListenData(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference().child("chess");
+        DatabaseReference ref = database.getReference().child("KebChess");
 
         // Attach a listener to read the data at our posts reference
         ref.addChildEventListener(new ChildEventListener() {

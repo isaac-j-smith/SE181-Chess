@@ -450,6 +450,33 @@ public class GameController implements Observer {
             promotionLayer.remove(b4);
             drawPieces();
             display(gameView);
+            if (playerNumber == 1){
+                if (board.isInCheckmate(PieceColor.Black)){
+                    serverManager.ResetData();
+                    try {
+                        initializeCheckmateView(playerNumber);
+                        gameView = null;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else if (board.isInCheck(PieceColor.Black)){
+                    playerInCheck(PieceColor.Black);
+                }
+            }else{
+                if (board.isInCheckmate(PieceColor.White)){
+                    serverManager.ResetData();
+                    try {
+                        initializeCheckmateView(playerNumber);
+                        gameView = null;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else if (board.isInCheck(PieceColor.White)){
+                    playerInCheck(PieceColor.White);
+                }
+            }
         });
 
         b2.setBounds(300,500,300, 100);
@@ -467,6 +494,33 @@ public class GameController implements Observer {
             promotionLayer.remove(b4);
             drawPieces();
             display(gameView);
+            if (playerNumber == 1){
+                if (board.isInCheckmate(PieceColor.Black)){
+                    serverManager.ResetData();
+                    try {
+                        initializeCheckmateView(playerNumber);
+                        gameView = null;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else if (board.isInCheck(PieceColor.Black)){
+                    playerInCheck(PieceColor.Black);
+                }
+            }else{
+                if (board.isInCheckmate(PieceColor.White)){
+                    serverManager.ResetData();
+                    try {
+                        initializeCheckmateView(playerNumber);
+                        gameView = null;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else if (board.isInCheck(PieceColor.White)){
+                    playerInCheck(PieceColor.White);
+                }
+            }
         });
 
         b3.setBounds(300,500,300, 100);
@@ -484,6 +538,33 @@ public class GameController implements Observer {
             promotionLayer.remove(b4);
             drawPieces();
             display(gameView);
+            if (playerNumber == 1){
+                if (board.isInCheckmate(PieceColor.Black)){
+                    serverManager.ResetData();
+                    try {
+                        initializeCheckmateView(playerNumber);
+                        gameView = null;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else if (board.isInCheck(PieceColor.Black)){
+                    playerInCheck(PieceColor.Black);
+                }
+            }else{
+                if (board.isInCheckmate(PieceColor.White)){
+                    serverManager.ResetData();
+                    try {
+                        initializeCheckmateView(playerNumber);
+                        gameView = null;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else if (board.isInCheck(PieceColor.White)){
+                    playerInCheck(PieceColor.White);
+                }
+            }
          });
 
 
@@ -502,6 +583,33 @@ public class GameController implements Observer {
             promotionLayer.remove(b4);
             drawPieces();
             display(gameView);
+            if (playerNumber == 1){
+                if (board.isInCheckmate(PieceColor.Black)){
+                    serverManager.ResetData();
+                    try {
+                        initializeCheckmateView(playerNumber);
+                        gameView = null;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else if (board.isInCheck(PieceColor.Black)){
+                    playerInCheck(PieceColor.Black);
+                }
+            }else{
+                if (board.isInCheckmate(PieceColor.White)){
+                    serverManager.ResetData();
+                    try {
+                        initializeCheckmateView(playerNumber);
+                        gameView = null;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else if (board.isInCheck(PieceColor.White)){
+                    playerInCheck(PieceColor.White);
+                }
+            }
         });
 
         promotionLayer.add(b1);
